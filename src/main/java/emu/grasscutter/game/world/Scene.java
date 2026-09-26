@@ -564,7 +564,8 @@ public class Scene {
             }
         }
 
-        this.broadcastPacket(new PacketLifeStateChangeNotify(attackerId, target, LifeState.LIFE_DEAD));
+        var echoOwner = target instanceof EntityClientGadget cg ? cg.getOwner() : null;
+        this.broadcastPacketToOthers(echoOwner, new PacketLifeStateChangeNotify(attackerId, target, LifeState.LIFE_DEAD));
 
         if (target instanceof EntityMonster killed
                 && (attacker != null ? attacker.getTrueOwner() : null)
@@ -599,7 +600,14 @@ public class Scene {
             }
         }
 
-        this.removeEntity(target);
+        if (echoOwner != null) {
+            if (this.removeEntityDirectly(target) != null) {
+                this.broadcastPacketToOthers(
+                        echoOwner, new PacketSceneEntityDisappearNotify(target, VisionType.VisionType_VISION_DIE));
+            }
+        } else {
+            this.removeEntity(target);
+        }
 
         if (target instanceof EntityClientGadget cg && cg.getOwner() != null) {
             cg.getOwner().getTeamManager().getGadgets().remove(cg);

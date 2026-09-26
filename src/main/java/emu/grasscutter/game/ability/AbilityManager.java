@@ -116,6 +116,8 @@ public final class AbilityManager extends BasePlayerManager {
     private boolean abilityInvulnerable = false;
     private int burstCasterId;
     private int burstSkillId;
+    private long burstRequestedAt;
+    private static final long BURST_START_WINDOW_MS = 5000L;
 
     private long arlecchinoChargedAttackTime = 0L;
     private long arlecchinoESkillTime = 0L;
@@ -138,6 +140,10 @@ public final class AbilityManager extends BasePlayerManager {
         }
 
         if (this.burstCasterId == 0) return;
+        if (System.currentTimeMillis() - this.burstRequestedAt > BURST_START_WINDOW_MS) {
+            this.removePendingEnergyClear();
+            return;
+        }
 
         boolean skillInvincibility = modifier.state == AbilityModifier.State.Invincible;
         if (modifier.onAdded != null) {
@@ -574,6 +580,7 @@ public final class AbilityManager extends BasePlayerManager {
 
         this.burstSkillId = skillId;
         this.burstCasterId = casterId;
+        this.burstRequestedAt = System.currentTimeMillis();
     }
 
     public void onSkillEnd(Player player) {

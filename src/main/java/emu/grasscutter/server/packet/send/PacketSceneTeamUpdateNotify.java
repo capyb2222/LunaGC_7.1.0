@@ -31,7 +31,7 @@ public class PacketSceneTeamUpdateNotify extends BasePacket {
 
                 if (player.getWorld().isMultiplayer()) {
                     avatarProto.setAvatarInfo(entityAvatar.getAvatar().toProto());
-                    avatarProto.setSceneAvatarInfo(entityAvatar.getSceneAvatarInfo()); // why mihoyo...
+                    avatarProto.setSceneAvatarInfo(entityAvatar.getSceneAvatarInfo());
                 }
 
                 proto.addSceneTeamAvatarList(avatarProto);

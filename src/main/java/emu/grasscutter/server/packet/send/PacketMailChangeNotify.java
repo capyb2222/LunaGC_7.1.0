@@ -55,8 +55,6 @@ public class PacketMailChangeNotify extends BasePacket {
                 mailData.setIsAttachmentGot(message.isAttachmentGot);
                 mailData.setCollectStateValue(message.stateValue);
 
-                // 6.6's MailChangeNotify carried new and changed mail in separate repeated fields
-                // (mail_list / change_mail_list). 6.7 only has mail_list, so both go there.
                 proto.addMailList(mailData.build());
             }
         }

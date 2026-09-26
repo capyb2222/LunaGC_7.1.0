@@ -23,9 +23,8 @@ public final class ForgingManager extends BasePlayerManager {
     }
 
     public boolean unlockForgingBlueprint(int id) {
-        // Tell the client that this blueprint is now unlocked and add the unlocked item to the player.
         if (!this.player.getUnlockedForgingBlueprints().add(id)) {
-            return false; // Already unlocked
+            return false;
         }
         this.player.sendPacket(new PacketForgeFormulaDataNotify(id));
         return true;
@@ -40,7 +39,6 @@ public final class ForgingManager extends BasePlayerManager {
         Map<Integer, ForgeQueueData> res = new HashMap<>();
         int currentTime = Utils.getCurrentSeconds();
 
-        // Create queue information for all active forges.
         for (int i = 0; i < this.player.getActiveForges().size(); i++) {
             ActiveForgeData activeForge = this.player.getActiveForges().get(i);
 
@@ -62,21 +60,17 @@ public final class ForgingManager extends BasePlayerManager {
     }
 
     public synchronized void sendForgeDataNotify() {
-        // Determine the number of queues and unlocked items.
         int numQueues = this.determineNumberOfQueues();
         var unlockedItems = this.player.getUnlockedForgingBlueprints();
         var queueData = this.determineCurrentForgeQueueData();
 
-        // Send notification.
         this.player.sendPacket(new PacketForgeDataNotify(unlockedItems, numQueues, queueData));
     }
 
     public synchronized void handleForgeGetQueueDataReq() {
-        // Determine the number of queues.
         int numQueues = this.determineNumberOfQueues();
         var queueData = this.determineCurrentForgeQueueData();
 
-        // Reply.
         this.player.sendPacket(new PacketForgeGetQueueDataRsp(Retcode.RET_SUCC, numQueues, queueData));
     }
 
@@ -96,29 +90,25 @@ public final class ForgingManager extends BasePlayerManager {
     }
 
     public synchronized void handleForgeStartReq(ForgeStartReq req) {
-        // Refuse if all queues are already full.
         if (this.player.getActiveForges().size() >= this.determineNumberOfQueues()) {
             this.player.sendPacket(new PacketForgeStartRsp(Retcode.RET_FORGE_QUEUE_FULL));
             return;
         }
 
-        // Get the required forging information for the target item.
         if (!GameData.getForgeDataMap().containsKey(req.getForgeId())) {
             this.player.sendPacket(
-                    new PacketForgeStartRsp(Retcode.RET_FAIL)); // ToDo: Probably the wrong return code.
+                    new PacketForgeStartRsp(Retcode.RET_FAIL));
             return;
         }
 
         ForgeData forgeData = GameData.getForgeDataMap().get(req.getForgeId());
 
-        // Check if the player has sufficient forge points.
         int requiredPoints = forgeData.getForgePoint() * req.getForgeCount();
         if (requiredPoints > this.player.getForgePoints()) {
             this.player.sendPacket(new PacketForgeStartRsp(Retcode.RET_FORGE_POINT_NOT_ENOUGH));
             return;
         }
 
-        // Check if we have enough of each material and consume.
         List<ItemParamData> material = new ArrayList<>(forgeData.getMaterialItems());
         material.add(new ItemParamData(202, forgeData.getScoinCost()));
 
@@ -126,16 +116,13 @@ public final class ForgingManager extends BasePlayerManager {
                 player.getInventory().payItems(material, req.getForgeCount(), ActionReason.ForgeCost);
 
         if (!success) {
-            // TODO:I'm not sure this one is correct.
             this.player.sendPacket(
                     new PacketForgeStartRsp(
-                            Retcode.RET_ITEM_COUNT_NOT_ENOUGH)); // ToDo: Probably the wrong return code.
+                            Retcode.RET_ITEM_COUNT_NOT_ENOUGH));
         }
 
-        // Consume forge points.
         this.player.setForgePoints(this.player.getForgePoints() - requiredPoints);
 
-        // Create and add active forge.
         ActiveForgeData activeForge = new ActiveForgeData();
         activeForge.setForgeId(req.getForgeId());
         activeForge.setAvatarId(req.getAvatarId());
@@ -145,44 +132,37 @@ public final class ForgingManager extends BasePlayerManager {
 
         this.player.getActiveForges().add(activeForge);
 
-        // Done.
         this.sendForgeQueueDataNotify();
         this.player.sendPacket(new PacketForgeStartRsp(Retcode.RET_SUCC));
     }
 
     private synchronized void obtainItems(int queueId) {
-        // Determine how many items are finished.
         int currentTime = Utils.getCurrentSeconds();
         ActiveForgeData forge = this.player.getActiveForges().get(queueId - 1);
 
         int finished = forge.getFinishedCount(currentTime);
         int unfinished = forge.getUnfinishedCount(currentTime);
 
-        // Sanity check: Are any items finished?
         if (finished <= 0) {
             return;
         }
 
-        // Give finished items to the player.
         ForgeData data = GameData.getForgeDataMap().get(forge.getForgeId());
 
         int resultId = data.getResultItemId() > 0 ? data.getResultItemId() : data.getShowItemId();
         ItemData resultItemData = GameData.getItemDataMap().get(resultId);
         GameItem addItem = new GameItem(resultItemData, data.getResultItemCount() * finished);
 
-        // Call the PlayerForgeItemEvent.
         var event = new PlayerForgeItemEvent(this.player, addItem);
         if (!event.call()) return;
 
         addItem = event.getItemForged();
         this.player.getInventory().addItem(addItem);
 
-        // Battle pass trigger handler
         this.player
                 .getBattlePassManager()
                 .triggerMission(WatcherTriggerType.TRIGGER_DO_FORGE, 0, finished);
 
-        // Replace active forge with a new one for the unfinished items, if there are any.
         if (unfinished > 0) {
             ActiveForgeData remainingForge = new ActiveForgeData();
 
@@ -195,14 +175,11 @@ public final class ForgingManager extends BasePlayerManager {
             this.player.getActiveForges().set(queueId - 1, remainingForge);
             this.sendForgeQueueDataNotify();
         }
-        // Otherwise, completely remove it.
         else {
             this.player.getActiveForges().remove(queueId - 1);
-            // this.sendForgeQueueDataNotify(queueId);
             this.sendForgeQueueDataNotify(true);
         }
 
-        // Send response.
         this.player.sendPacket(
                 new PacketForgeQueueManipulateRsp(
                         Retcode.RET_SUCC,
@@ -213,7 +190,6 @@ public final class ForgingManager extends BasePlayerManager {
     }
 
     private synchronized void cancelForge(int queueId) {
-        // Make sure there are no unfinished items.
         int currentTime = Utils.getCurrentSeconds();
         ActiveForgeData forge = this.player.getActiveForges().get(queueId - 1);
 
@@ -221,7 +197,6 @@ public final class ForgingManager extends BasePlayerManager {
             return;
         }
 
-        // Return material items to the player.
         ForgeData data = GameData.getForgeDataMap().get(forge.getForgeId());
 
         var returnItems = new ArrayList<GameItem>();
@@ -238,24 +213,20 @@ public final class ForgingManager extends BasePlayerManager {
             returnItems.add(returnItem);
         }
 
-        // Return Mora to the player.
         this.player.setMora(this.player.getMora() + data.getScoinCost() * forge.getCount());
 
         ItemData moraItem = GameData.getItemDataMap().get(202);
         GameItem returnMora = new GameItem(moraItem, data.getScoinCost() * forge.getCount());
         returnItems.add(returnMora);
 
-        // Return forge points to the player.
         int requiredPoints = data.getForgePoint() * forge.getCount();
         int newPoints = Math.min(this.player.getForgePoints() + requiredPoints, 300_000);
 
         this.player.setForgePoints(newPoints);
 
-        // Remove the forge queue.
         this.player.getActiveForges().remove(queueId - 1);
         this.sendForgeQueueDataNotify(true);
 
-        // Send response.
         this.player.sendPacket(
                 new PacketForgeQueueManipulateRsp(
                         Retcode.RET_SUCC,
@@ -266,15 +237,13 @@ public final class ForgingManager extends BasePlayerManager {
     }
 
     public synchronized void handleForgeQueueManipulateReq(ForgeQueueManipulateReq req) {
-        // Get info from the request.
         int queueId = req.getForgeQueueId();
         var manipulateType = req.getManipulateType();
 
-        // Handle according to the manipulation type.
         switch (manipulateType) {
             case ForgeQueueManipulateType_RECEIVE_OUTPUT -> this.obtainItems(queueId);
             case ForgeQueueManipulateType_STOP_FORGE -> this.cancelForge(queueId);
-            default -> {} // Should never happen.
+            default -> {}
         }
     }
 
@@ -292,10 +261,8 @@ public final class ForgingManager extends BasePlayerManager {
             return;
         }
 
-        // Send notification.
         this.sendForgeQueueDataNotify();
 
-        // Reset changed flags.
         this.player.getActiveForges().stream().forEach(forge -> forge.setChanged(false));
     }
 }

@@ -14,18 +14,15 @@ public final class ActionClearGlobalValue extends AbilityActionHandler {
             Ability ability, AbilityModifierAction action, ByteString abilityData, GameEntity target) {
         var valueKey = action.key;
         if (valueKey == null || valueKey.isEmpty()) {
-            return false; // Invalid key, abort execution.
+            return false;
         }
 
-        // Remove the global value.
         var globalValues = target.getGlobalAbilityValues();
         if (globalValues.containsKey(valueKey)) {
             globalValues.remove(valueKey);
 
-            // Notify the target of the update.
             target.onAbilityValueUpdate();
 
-            // Send a value update packet to the client.
             if (target.getScene() != null && target.getScene().getHost() != null) {
                 target.getScene()
                       .getHost()
@@ -35,7 +32,6 @@ public final class ActionClearGlobalValue extends AbilityActionHandler {
             return true;
         }
 
-        // Key not found, nothing to clear.
         return false;
     }
 }

@@ -20,10 +20,8 @@ public class OpenStateData extends GameResource {
 
     @Override
     public void onLoad() {
-        // Add this open state to the global list.
         GameData.getOpenStateList().add(this);
 
-        // Remove any empty conditions
         if (this.cond != null) {
             this.cond.removeIf(c -> c.getCondType() == null);
         } else {

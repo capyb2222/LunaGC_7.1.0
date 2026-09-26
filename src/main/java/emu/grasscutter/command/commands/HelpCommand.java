@@ -13,7 +13,7 @@ import java.util.*;
         targetRequirement = Command.TargetRequirement.NONE)
 public final class HelpCommand implements CommandHandler {
     private final boolean SHOW_COMMANDS_WITHOUT_PERMISSIONS =
-            false; // TODO: Make this into a server config key
+            false;
 
     private String createCommand(Player player, CommandHandler command, List<String> args) {
         StringBuilder builder =

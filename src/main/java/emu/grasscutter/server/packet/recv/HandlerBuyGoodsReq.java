@@ -27,7 +27,6 @@ public class HandlerBuyGoodsReq extends PacketHandler {
             return;
         }
 
-        // Don't trust your users' input
         var player = session.getPlayer();
 
         int buyCount = buyGoodsReq.getBuyCount();
@@ -66,8 +65,6 @@ public class HandlerBuyGoodsReq extends PacketHandler {
             var artifactShop = session.getServer().getShopSystem().getArtifactShop();
             var piece = artifactShop.getPiece(sg.getGoodsId());
             if (piece != null) {
-                // Artifacts do not stack, so a batch buy needs that many free slots. Asking before
-                // the payment keeps a full bag from swallowing the mora and handing back nothing.
                 var relics = player.getInventory().getInventoryTab(ItemType.ITEM_RELIQUARY);
                 if (buyCount > relics.getMaxCapacity() - relics.getSize()) {
                     session.send(new PacketBuyGoodsRsp(Retcode.RET_PACK_EXCEED_MAX_WEIGHT));
@@ -76,7 +73,7 @@ public class HandlerBuyGoodsReq extends PacketHandler {
             }
 
             List<ItemParamData> costs =
-                    new ArrayList<ItemParamData>(sg.getCostItemList()); // Can this even be null?
+                    new ArrayList<ItemParamData>(sg.getCostItemList());
             costs.add(new ItemParamData(202, sg.getScoin()));
             costs.add(new ItemParamData(201, sg.getHcoin()));
             costs.add(new ItemParamData(203, sg.getMcoin()));
@@ -90,16 +87,12 @@ public class HandlerBuyGoodsReq extends PacketHandler {
             int itemId = sg.getGoodsItem().getId();
             int itemCount;
             try {
-                // A free good passes payItems whatever the count, so this product is the only
-                // thing standing between a crafted request and an overflowed stack.
                 itemCount = Math.multiplyExact(buyCount, sg.getGoodsItem().getCount());
             } catch (ArithmeticException overflow) {
                 session.send(new PacketBuyGoodsRsp(Retcode.RET_SVR_ERROR));
                 continue;
             }
             if (piece != null) {
-                // An artifact never comes out the same twice, so a batch buy is that many
-                // separately rolled pieces rather than one piece counted up.
                 var rolled = new ArrayList<GameItem>(buyCount);
                 for (int i = 0; i < buyCount; i++) {
                     rolled.add(artifactShop.roll(piece));

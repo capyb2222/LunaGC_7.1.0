@@ -37,8 +37,7 @@ public final class TalentCommand implements CommandHandler {
         Avatar avatar = targetPlayer.getTeamManager().getCurrentAvatarEntity().getAvatar();
         AvatarSkillDepotData skillDepot = avatar.getSkillDepot();
         if (skillDepot
-                == null) { // Avatars without skill depots aren't a suitable target even with manual skillId
-            // specified
+                == null) {
             CommandHandler.sendTranslatedMessage(sender, "commands.talent.invalid_skill_id");
             return;
         }
@@ -101,7 +100,6 @@ public final class TalentCommand implements CommandHandler {
                     CommandHandler.sendTranslatedMessage(sender, "commands.talent.invalid_level");
                     return;
                 }
-                // This stops setTalentLevel from outputting 3 "levels out of range" messages
                 if (newLevel < 1 || newLevel > 15) {
                     CommandHandler.sendTranslatedMessage(sender, "commands.talent.out_of_range");
                     return;

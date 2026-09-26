@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.*;
 
-/** Tracks progress the player made in the world, like obtained items, seen characters and more */
 @Getter
 @Entity
 public class PlayerProgress {
@@ -34,9 +33,7 @@ public class PlayerProgress {
     public void markDungeonAsComplete(int dungeonId) {
         if (this.getCompletedDungeons().contains(dungeonId)) return;
 
-        // Mark the dungeon as completed.
         this.getCompletedDungeons().add(dungeonId);
-        // Trigger the completion event.
         if (this.getPlayer() != null) {
             this.getPlayer()
                     .getQuestManager()

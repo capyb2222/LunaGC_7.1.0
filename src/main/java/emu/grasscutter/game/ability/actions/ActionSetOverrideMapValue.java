@@ -16,7 +16,6 @@ public final class ActionSetOverrideMapValue extends AbilityActionHandler {
             var owner = ability.getOwner();
             var properties = new Object2FloatOpenHashMap<String>();
 
-            // Füge die Fight Properties des Besitzers hinzu
             for (var property : FightProperty.values()) {
       
        var name = property.name();
@@ -24,10 +23,8 @@ public final class ActionSetOverrideMapValue extends AbilityActionHandler {
                 properties.put(name, value);
             }
         
-            // Füge die Ability Specials hinzu (damit die Ability-Eigenschaften Vorrang haben, falls doppelt)
             properties.putAll(ability.getAbilitySpecials());
         
-            // Hole den Wert mit allen gesammelten Properties
             String overrideMapKey = action.overrideMapKey;
             float ratio = action.ratio.get(properties, 0f);
         ability.getAbilitySpecials().put(overrideMapKey, ratio);

@@ -33,8 +33,6 @@ public class TrialAvatarActivityHandler extends ActivityHandler {
             PlayerActivityData playerActivityData, ActivityInfo.Builder activityInfo) {
         TrialAvatarPlayerData trialAvatarPlayerData = getTrialAvatarPlayerData(playerActivityData);
 
-        // TODO: Apply trial avatar info.
-        // activityInfo.setTrialAvatarInfo(trialAvatarPlayerData.toProto());
     }
 
     @Override
@@ -73,9 +71,8 @@ public class TrialAvatarActivityHandler extends ActivityHandler {
     }
 
     public boolean enterTrialDungeon(Player player, int trialAvatarIndexId, int enterPointId) {
-        // TODO, not sure if this will cause problem in MP, since we are entering trial activity dungeon
         player.sendPacket(
-                new PacketScenePlayerLocationNotify(player.getScene())); // official does send this
+                new PacketScenePlayerLocationNotify(player.getScene()));
 
         if (!player
                 .getServer()

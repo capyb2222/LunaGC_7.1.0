@@ -31,7 +31,6 @@ import lombok.*;
 
 @Entity
 public final class TeamManager extends BasePlayerDataManager {
-    // Both from MoonPhaseConstValueExcelConfigData. Verdant Dew is "MoonOvergrow" in the configs.
     public static final int MOONSIGN_MAX_LEVEL = 2;
     public static final String VERDANT_DEW = "MoonOvergrowPoint_All";
 
@@ -334,7 +333,6 @@ public final class TeamManager extends BasePlayerDataManager {
         }
     }
 
-    /** Nod-Krai characters in the party, capped: 1 is Nascent Gleam, 2 Ascendant Gleam. */
     public int getMoonsignLevel() {
         long count = this.getActiveTeam().stream()
             .filter(e -> PacketPlayerEnterSceneInfoNotify.getMoonphaseIds().contains(e.getAvatar().getAvatarId()))
@@ -704,8 +702,6 @@ public final class TeamManager extends BasePlayerDataManager {
     public void useTemporaryTeam(int index) {
         int available = this.temporaryTeam == null ? 0 : this.temporaryTeam.size();
         if (index < 0 || index >= available) {
-            // getCurrentTeamInfo falls back to the overworld team here, which is exactly what the
-            // abyss looks like when the selection never landed. Do not let that happen quietly.
             Grasscutter.getLogger()
                     .warn(
                             "Asked to use temporary team {} but only {} are set up; the current team stays",
@@ -713,8 +709,6 @@ public final class TeamManager extends BasePlayerDataManager {
                             available);
         }
         var scene = this.getPlayer().getScene();
-        // Not getCurrentAvatarEntity(): on an empty team that builds a fresh main character and
-        // files it in the avatar list, which is not something reading the current avatar should do.
         var previous =
                 scene == null || this.getActiveTeam().isEmpty()
                         ? null
@@ -725,8 +719,6 @@ public final class TeamManager extends BasePlayerDataManager {
 
         if (scene == null) return;
 
-        // updateTeamEntities keeps whichever avatar was selected even when the new team has no slot
-        // for it, so the half that just finished would otherwise stay standing in the chamber.
         if (previous != null && !this.getActiveTeam().contains(previous)) {
             scene.removeEntity(previous);
         }

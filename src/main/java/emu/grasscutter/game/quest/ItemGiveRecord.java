@@ -18,7 +18,6 @@ public final class ItemGiveRecord {
 
         var builder = ItemGiveRecord.builder().givingId(givingId).finished(false);
 
-        // Create a map.
         var givenItems = new HashMap<Integer, Integer>();
         if (givingData.getGivingMethod() == GiveMethod.GIVING_METHOD_EXACT) {
             givingData.getExactItems().forEach(item -> givenItems.put(item.getItemId(), 0));
@@ -30,7 +29,6 @@ public final class ItemGiveRecord {
                                 var groupData = GameData.getGivingGroupDataMap().get((int) groupId);
                                 if (groupData == null) return;
 
-                                // Add all items in the group.
                                 groupData.getItemIds().forEach(itemId -> givenItems.put(itemId, 0));
                                 builder.groupId(groupId);
                             });

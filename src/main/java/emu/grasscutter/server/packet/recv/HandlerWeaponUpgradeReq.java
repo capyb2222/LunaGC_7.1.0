@@ -11,7 +11,6 @@ public class HandlerWeaponUpgradeReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         WeaponUpgradeReq req = WeaponUpgradeReq.parseFrom(payload);
 
-        // Level up weapon
         session
                 .getServer()
                 .getInventorySystem()

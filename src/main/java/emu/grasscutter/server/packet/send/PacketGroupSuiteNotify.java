@@ -8,7 +8,6 @@ import java.util.*;
 
 public class PacketGroupSuiteNotify extends BasePacket {
 
-    /** Real control which npc suite is loaded EntityNPC is useless */
     public PacketGroupSuiteNotify(List<SceneNpcBornEntry> npcBornEntries) {
         super(PacketOpcodes.GroupSuiteNotify);
 

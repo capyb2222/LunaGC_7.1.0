@@ -12,6 +12,6 @@ public class ComboTokenResJson {
         public String combo_token;
         public String open_id;
         public String data = "{\"guest\":false}";
-        public String fatigue_remind = null; // ?
+        public String fatigue_remind = null;
     }
 }

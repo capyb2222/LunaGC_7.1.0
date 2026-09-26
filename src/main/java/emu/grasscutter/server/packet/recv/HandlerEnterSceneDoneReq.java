@@ -22,20 +22,15 @@ public class HandlerEnterSceneDoneReq extends PacketHandler {
 
         var player = session.getPlayer();
 
-        // Finished loading
         player.setSceneLoadState(SceneLoadState.LOADED);
 
-        // Done
 
-        session.send(new PacketPlayerTimeNotify(player)); // Probably not the right place
+        session.send(new PacketPlayerTimeNotify(player));
 
-        // Spawn player in world
         player.getScene().spawnPlayer(player);
 
-        // Spawn other entites already in world
         player.getScene().showOtherEntities(player);
 
-        // Locations
         session.send(new PacketWorldPlayerLocationNotify(player.getWorld()));
         session.send(new PacketScenePlayerLocationNotify(player.getScene()));
         session.send(new PacketWorldPlayerRTTNotify(player.getWorld()));
@@ -44,10 +39,8 @@ public class HandlerEnterSceneDoneReq extends PacketHandler {
         if (currentHpDebts > 0.0f) {
             avatarEntity.getWorld().broadcastPacket(new PacketEntityFightPropChangeReasonNotify(avatarEntity, FightProperty.FIGHT_PROP_CUR_HP_DEBTS, currentHpDebts, PropChangeReasonOuterClass.PropChangeReason.PropChangeReason_PROP_CHANGE_NONE, ChangeHpDebtsReasonOuterClass.ChangeHpDebtsReason.CHANGE_HP_DEBTS_REASON_CHANGE_HP_DEBTS_NONE));
         }
-        // spawn NPC
         player.getScene().loadNpcForPlayerEnter(player);
 
-        // notify client to load the npc for quest
         var questGroupSuites = player.getQuestManager().getSceneGroupSuite(player.getSceneId());
 
         player.getScene().loadGroupForQuest(questGroupSuites);
@@ -61,10 +54,8 @@ public class HandlerEnterSceneDoneReq extends PacketHandler {
             dailyTaskManager.syncAll();
         }
 
-        // Reset timer for sending player locations
         player.resetSendPlayerLocTime();
 
-        // Rsp
         session.send(new PacketEnterSceneDoneRsp(player));
     }
 }

@@ -15,7 +15,6 @@ public class HandlerPlayerSetPauseReq extends PacketHandler {
         var player = session.getPlayer();
         var world = player.getWorld();
 
-        // Check if the player is in a multiplayer world.
         if (player.isInMultiplayer()) {
             session.send(new PacketPlayerSetPauseRsp(Retcode.RET_FAIL));
         } else {

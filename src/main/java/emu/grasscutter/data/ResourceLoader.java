@@ -424,8 +424,6 @@ public final class ResourceLoader {
     }
 
     private static void loadAbilityData(AbilityData data) {
-        // An ability config from a dump whose field names are still obfuscated leaves this null.
-        // Skip it rather than let abilityHash NPE and take the whole main thread down with it.
         if (data.abilityName == null) return;
 
         GameData.getAbilityDataMap().put(data.abilityName, data);

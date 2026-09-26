@@ -42,14 +42,12 @@ public final class NameCommand implements CommandHandler {
     }
 
     private void gradient(Player sender, Player targetPlayer, List<String> args) {
-        // gradient <text> <start> <end>
         if (args.size() != 4) {
             CommandHandler.sendMessage(sender, translate(sender, "commands.name.gradient_usage"));
             return;
         }
 
         var text = args.get(1);
-        // "uid" is the common case for this, so let it stand in for the digits.
         if (text.equalsIgnoreCase("uid")) {
             text = String.valueOf(targetPlayer.getUid());
         }
@@ -87,7 +85,6 @@ public final class NameCommand implements CommandHandler {
 
         targetPlayer.setNickname(nickname);
         targetPlayer.save();
-        // Echo the new value so the client refreshes without a relog.
         targetPlayer.sendPacket(new PacketSetPlayerNameRsp(targetPlayer));
 
         CommandHandler.sendMessage(

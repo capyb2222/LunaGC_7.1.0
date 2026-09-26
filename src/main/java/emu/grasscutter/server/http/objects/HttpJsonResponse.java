@@ -13,8 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public final class HttpJsonResponse implements Handler {
     private final String response;
     private final String[]
-            missingRoutes = { // TODO: When http requests for theses routes are found please remove it
-        // from this list and update the route request type in the DispatchServer
+            missingRoutes = {
         "/common/hk4e_global/announcement/api/getAlertPic",
         "/common/hk4e_global/announcement/api/getAlertAnn",
         "/common/hk4e_global/announcement/api/getAnnList",
@@ -33,7 +32,6 @@ public final class HttpJsonResponse implements Handler {
 
     @Override
     public void handle(@NotNull Context ctx) throws Exception {
-        // Checking for ALL here isn't required as when ALL is enabled enableDevLogging() gets enabled
         if (DISPATCH_INFO.logRequests == ServerDebugMode.MISSING
                 && Arrays.stream(missingRoutes)
                         .anyMatch(x -> Objects.equals(x, ctx.endpointHandlerPath()))) {

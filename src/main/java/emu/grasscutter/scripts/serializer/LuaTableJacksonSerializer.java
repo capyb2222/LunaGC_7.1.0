@@ -40,7 +40,6 @@ public class LuaTableJacksonSerializer extends JsonSerializer<LuaTable> implemen
             return;
         }
 
-        // Detect table type
         boolean isArray = false;
         LuaValue[] keys = value.keys();
         if (keys.length == 0) {

@@ -27,7 +27,6 @@ public final class UnlockAllCommand implements CommandHandler {
                 targetPlayer.getOpenStates().put(state.getId(), 1);
             }
         }
-        // the whole map at once - a change notify pops a window per state, ~690 of them
         targetPlayer.sendPacket(new PacketOpenStateUpdateNotify(targetPlayer));
 
         GameData.getScenePointsPerScene().forEach((sceneId, scenePoints) -> {
@@ -50,8 +49,6 @@ public final class UnlockAllCommand implements CommandHandler {
         targetPlayer.sendPacket(new PacketSceneAreaUnlockNotify(
                 curScene, targetPlayer.getUnlockedSceneAreas(curScene)));
 
-        // straight onto the lists: addFlycloak/addTraceEffect pop a window each, and
-        // addTraceEffect saves the whole player every time
         GameData.getAvatarFlycloakDataMap()
                 .keySet()
                 .forEach(targetPlayer.getFlyCloakList()::add);
@@ -73,11 +70,8 @@ public final class UnlockAllCommand implements CommandHandler {
             }
             avatar.save();
         }
-        // carries the owned flycloak, costume and trace effect lists, so one refresh covers them
         targetPlayer.sendPacket(new PacketAvatarDataNotify(targetPlayer));
 
-        // Scene tags. New regions are routinely gated behind these - scene 3 alone ships 635 tags
-        // with only 194 valid by default, so leaving them out left a lot of the map switched off.
         GameData.getSceneTagDataMap()
                 .values()
                 .forEach(

@@ -10,11 +10,9 @@ import emu.grasscutter.game.quest.handlers.QuestExecHandler;
 public final class ExecStartBargain extends QuestExecHandler {
     @Override
     public boolean execute(GameQuest quest, QuestData.QuestExecParam condition, String... paramStr) {
-        // Get the bargain data from the quest parameters.
         var bargainId = Integer.parseInt(condition.getParam()[0]);
 
         try {
-            // Start the bargain.
             quest.getOwner().getQuestManager().startBargain(bargainId);
             Grasscutter.getLogger().debug("Bargain {} started.", bargainId);
             return true;

@@ -20,8 +20,6 @@ public class ContentAddQuestProgress extends BaseContent {
         if (targetAmount == 0) {
             targetAmount = 1;
         }
-        // if the condition count is 0 I think it is safe to assume that the
-        // condition count from EXEC only needs to be 1
         return currentCount >= targetAmount;
     }
 }

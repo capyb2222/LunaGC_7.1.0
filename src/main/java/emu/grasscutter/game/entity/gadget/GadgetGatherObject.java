@@ -24,7 +24,6 @@ public final class GadgetGatherObject extends GadgetContent {
     public GadgetGatherObject(EntityGadget gadget) {
         super(gadget);
 
-        // overwrites the default spawn handling
         if (gadget.getSpawnEntry() != null) {
             this.itemId = gadget.getSpawnEntry().getGatherItemId();
             return;
@@ -48,7 +47,6 @@ public final class GadgetGatherObject extends GadgetContent {
     }
 
     public boolean onInteract(Player player, GadgetInteractReq req) {
-        // Sanity check
         ItemData itemData = GameData.getItemDataMap().get(getItemId());
         if (itemData == null) {
             return false;
@@ -100,6 +98,5 @@ public final class GadgetGatherObject extends GadgetContent {
         }
 
         scene.killEntity(this.getGadget(), player.getTeamManager().getCurrentAvatarEntity().getId());
-        // Todo: add record
     }
 }

@@ -11,7 +11,6 @@ import emu.grasscutter.utils.Utils;
 import lombok.Getter;
 
 public class GachaBanner {
-    // Constants used by the BannerType enum
     static final int[][] DEFAULT_WEIGHTS_4 = {{1, 510}, {8, 510}, {10, 10000}};
     static final int[][] DEFAULT_WEIGHTS_4_WEAPON = {{1, 600}, {7, 600}, {8, 6600}, {10, 12600}};
     static final int[][] DEFAULT_WEIGHTS_5 = {{1, 75}, {73, 150}, {90, 10000}};
@@ -20,18 +19,18 @@ public class GachaBanner {
     static final int[] DEFAULT_FALLBACK_ITEMS_4_POOL_1 = {
         1014, 1020, 1023, 1024, 1025, 1027, 1031, 1032, 1034, 1036, 1039, 1043, 1044, 1045, 1048, 1053,
         1055, 1056, 1059, 1064, 1065, 1067, 1068, 1072
-    }; // Default avatars
+    };
     static final int[] DEFAULT_FALLBACK_ITEMS_4_POOL_2 = {
         11401, 11402, 11403, 11405, 12401, 12402, 12403, 12405, 13401, 13407, 14401, 14402, 14403,
         14409, 15401, 15402, 15403, 15405
-    }; // Default weapons
+    };
     static final int[] DEFAULT_FALLBACK_ITEMS_5_POOL_1 = {
         1003, 1016, 1042, 1035, 1041, 1069
-    }; // Default avatars
+    };
     static final int[] DEFAULT_FALLBACK_ITEMS_5_POOL_2 = {
         11501, 11502, 12501, 12502, 13502, 13505, 14501, 14502, 15501, 15502
-    }; // Default weapons
-    static final int[] EMPTY_POOL = {}; // Used to remove a type of fallback
+    };
+    static final int[] EMPTY_POOL = {};
     static final int[] DEFAULT_CAPTURING_RADIANCE = {0, 10, 50, 100};
     @Getter int scheduleId = -1;
     @Getter int sortId = -1;
@@ -48,9 +47,7 @@ public class GachaBanner {
     @Getter private int gachaTimesLimit = Integer.MAX_VALUE;
     @Getter private int[] rateUpItems4 = {};
     @Getter private int[] rateUpItems5 = {};
-    // This now handles default values for the fields below
     @Getter private BannerType bannerType = BannerType.STANDARD;
-    // These don't change between banner types (apart from Standard having three extra 4star avatars)
     @Getter
     private int[] fallbackItems3 = {
         11301, 11302, 11306, 12301, 12302, 12305, 13303, 14301, 14302, 14304, 15301, 15302, 15304
@@ -58,26 +55,22 @@ public class GachaBanner {
 
     @Getter private int[] fallbackItems4Pool1 = DEFAULT_FALLBACK_ITEMS_4_POOL_1;
     @Getter private int[] fallbackItems4Pool2 = DEFAULT_FALLBACK_ITEMS_4_POOL_2;
-    // Different banner types have different defaults, see above for default values and the enum for
-    // which are used where.
     @Getter private int[] fallbackItems5Pool1;
     @Getter private int[] fallbackItems5Pool2;
     private int[][] weights4;
     private int[][] weights5;
-    private int eventChance4 = -1; // Chance to win a featured event item
-    private int eventChance5 = -1; // Chance to win a featured event item
-    private int[] capturingRadianceChances = null; // Defaults to the banner type, see onLoad()
-    //
+    private int eventChance4 = -1;
+    private int eventChance5 = -1;
+    private int[] capturingRadianceChances = null;
     @Getter private boolean removeC6FromPool = false;
 
     @Getter
     private boolean autoStripRateUpFromFallback =
-            true; // Ensures that featured items won't "double dip" into the losing pool
+            true;
 
     private int[][] poolBalanceWeights4 = {
         {1, 255}, {17, 255}, {21, 10455}
-    }; // Used to ensure that players won't go too many rolls without getting something from pool 1
-    // (avatar) or pool 2 (weapon)
+    };
     private int[][] poolBalanceWeights5 = {{1, 30}, {147, 150}, {181, 10230}};
     @Getter private int wishMaxProgress = 0;
 
@@ -104,7 +97,6 @@ public class GachaBanner {
     }
 
     public void onLoad() {
-        // Handle deprecated configs
         if (eventChance != -1) warnDeprecated("eventChance", "eventChance4 & eventChance5");
         if (costItem != 0) warnDeprecated("costItem", "costItemId");
         if (softPity != -1) warnDeprecated("softPity", "weights5");
@@ -114,7 +106,6 @@ public class GachaBanner {
         if (rateUpItems1.length > 0) warnDeprecated("rateUpItems1", "rateUpItems5");
         if (rateUpItems2.length > 0) warnDeprecated("rateUpItems2", "rateUpItems4");
 
-        // Handle default values
         if (this.previewPrefabPath != null
                 && this.previewPrefabPath.equals("UI_Tab_" + this.prefabPath))
             Grasscutter.getLogger()
@@ -137,10 +128,8 @@ public class GachaBanner {
             this.capturingRadianceChances =
                     switch (this.bannerType) {
                         case EVENT, CHARACTER, CHARACTER2 -> DEFAULT_CAPTURING_RADIANCE;
-                        default -> EMPTY_POOL; // Capturing Radiance only exists on character banners
+                        default -> EMPTY_POOL;
                     };
-        // Set max wish progress based on wish type, otherwise its 0.
-        // The Epitomized Path costs one Fate Point since 5.0; it was two from 2.0 to 4.8.
         if (this.bannerType.equals(BannerType.WEAPON)) this.wishMaxProgress = 1;
         if (this.bannerType.equals(BannerType.CHRONICLE)) this.wishMaxProgress = 1;
     }
@@ -177,7 +166,6 @@ public class GachaBanner {
 
     public int getCapturingRadianceChance(int consecutiveLosses) {
         if (capturingRadianceChances == null || capturingRadianceChances.length == 0) return 0;
-        // Streaks longer than the table keep the last (guaranteed) entry
         int index = Math.min(Math.max(consecutiveLosses, 0), capturingRadianceChances.length - 1);
         return capturingRadianceChances[index];
     }
@@ -190,7 +178,6 @@ public class GachaBanner {
     }
 
     public GachaInfo toProto(Player player) {
-        // TODO: use other Nonce/key insteadof session key to ensure the overall security for the player
         String sessionKey = player.getAccount().getSessionKey();
 
         String record =
@@ -216,7 +203,6 @@ public class GachaBanner {
                         + "&scheduleId="
                         + scheduleId;
 
-        // Grasscutter.getLogger().info("record = " + record);
         PlayerGachaBannerInfo gachaInfo = player.getGachaInfo().getBannerInfo(this);
         int leftGachaTimes =
                 switch (gachaTimesLimit) {
@@ -265,7 +251,6 @@ public class GachaBanner {
             for (int id : getRateUpItems5()) {
                 upInfo.addItemIdList(id);
                 info.addDisplayUp5ItemList(id);
-                // NEEDED for new chronicle wish or else selector bugs
                 if (hasEpitomized()) info.addDisplayChronicle5ItemList(id);
             }
 
@@ -315,7 +300,7 @@ public class GachaBanner {
                 50,
                 50,
                 DEFAULT_FALLBACK_ITEMS_5_POOL_1,
-                DEFAULT_FALLBACK_ITEMS_5_POOL_2), // Legacy value for CHARACTER
+                DEFAULT_FALLBACK_ITEMS_5_POOL_2),
         CHARACTER(
                 301,
                 223,

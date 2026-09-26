@@ -11,7 +11,6 @@ public class BaseContent extends QuestBaseHandler<QuestData.QuestContentConditio
     @Override
     public boolean execute(
             GameQuest quest, QuestData.QuestContentCondition condition, String paramStr, int... params) {
-        // TODO Auto-generated method stub
         return false;
     }
 }

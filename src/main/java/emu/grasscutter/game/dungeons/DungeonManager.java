@@ -79,7 +79,6 @@ public final class DungeonManager {
         if (isTowerDungeon() && !scene.getPlayers().isEmpty()) {
             return scene.getPlayers().get(0).getTowerManager().getCurrentMonsterLevel();
         } else {
-            // TODO should use levelConfigMap? and how?
             return dungeonData.getShowLevel();
         }
     }
@@ -102,7 +101,7 @@ public final class DungeonManager {
     }
 
     @Nullable public Position getRespawnLocation() {
-        if (newestWayPoint == 0) { // validity is checked before setting it, so if != 0 its always valid
+        if (newestWayPoint == 0) {
             return null;
         }
         var pointData = GameData.getScenePointEntryById(scene.getId(), newestWayPoint).getPointData();
@@ -110,7 +109,7 @@ public final class DungeonManager {
     }
 
     public Position getRespawnRotation() {
-        if (newestWayPoint == 0) { // validity is checked before setting it, so if != 0 its always valid
+        if (newestWayPoint == 0) {
             return null;
         }
         val pointData = GameData.getScenePointEntryById(scene.getId(), newestWayPoint).getPointData();
@@ -124,7 +123,6 @@ public final class DungeonManager {
             return false;
         }
 
-        // Already rewarded
         if (rewardedPlayers.contains(player.getUid())) {
             return false;
         }
@@ -133,14 +131,12 @@ public final class DungeonManager {
             return false;
         }
 
-        // Get and roll rewards.
         List<GameItem> rewards;
         if (usesLegacyLostValleyDrops(dungeonData.getId())) {
             rewards = new ArrayList<>(this.rollRewards(useCondensed));
         } else {
             int statueDropId = dungeonData.getStatueDrop();
 
-            // A fallback domain has no statue drop of its own; borrow one that exists.
             int fallbackStatueDropId =
                     MissingDomainFallbackManager.getStatueDropOverride(dungeonData.getId());
             if (fallbackStatueDropId != 0) {
@@ -151,12 +147,10 @@ public final class DungeonManager {
                     player.getServer().getDropSystem().handleDungeonRewardDrop(statueDropId, useCondensed);
 
             if (rewards.isEmpty()) {
-                // fallback to legacy drop system
                 Grasscutter.getLogger().debug("dungeon drop failed for {}", dungeonData.getId());
                 rewards = new ArrayList<>(this.rollRewards(useCondensed));
             }
         }
-        // Add rewards to player and send notification.
         player.getInventory().addItems(rewards, ActionReason.DungeonStatueDrop);
         player.sendPacket(new PacketGadgetAutoPickDropInfoNotify(rewards));
 
@@ -168,7 +162,6 @@ public final class DungeonManager {
 
     private static boolean usesLegacyLostValleyDrops(int dungeonId) {
         return switch (dungeonId) {
-                // The Lost Valley / Domain of Blessing: Machine Nest I-IV
             case 5125, 5126, 5127, 5128 -> true;
             default -> false;
         };
@@ -184,10 +177,8 @@ public final class DungeonManager {
                 return false;
             }
 
-            // Spend the condensed resin and only proceed if the transaction succeeds.
             return player.getResinManager().useCondensedResin(1);
         } else if (dungeonData.getStatueCostID() == 106) {
-            // Spend the resin and only proceed if the transaction succeeds.
             return player.getResinManager().useResin(resinCost);
         }
         return true;
@@ -196,13 +187,10 @@ public final class DungeonManager {
     private List<GameItem> rollRewards(boolean useCondensed) {
         List<GameItem> rewards = new ArrayList<>();
         int dungeonId = this.dungeonData.getId();
-        // If we have specific drop data for this dungeon, we use it.
         if (GameData.getDungeonDropDataMap().containsKey(dungeonId)) {
             List<DungeonDropEntry> dropEntries = GameData.getDungeonDropDataMap().get(dungeonId);
 
-            // Roll for each drop group.
             for (var entry : dropEntries) {
-                // Determine the number of drops we get for this entry.
                 int start = entry.getCounts().get(0);
                 int end = entry.getCounts().get(entry.getCounts().size() - 1);
                 var candidateAmounts = IntStream.range(start, end + 1).boxed().collect(Collectors.toList());
@@ -213,7 +201,6 @@ public final class DungeonManager {
                     amount += Utils.drawRandomListElement(candidateAmounts, entry.getProbabilities());
                 }
 
-                // Double rewards in multiply mode, if specified.
                 if (entry.isMpDouble() && this.getScene().getPlayerCount() > 1) {
                     amount *= 2;
                 }
@@ -222,8 +209,6 @@ public final class DungeonManager {
                     rewards.add(new GameItem(entry.getItems().get(0), amount));
                 } else {
                     for (int i = 0; i < amount; i++) {
-                        // int itemIndex = ThreadLocalRandom.current().nextInt(0, entry.getItems().size());
-                        // int itemId = entry.getItems().get(itemIndex);
                         int itemId =
                                 Utils.drawRandomListElement(entry.getItems(), entry.getItemProbabilities());
                         rewards.add(new GameItem(itemId, 1));
@@ -231,7 +216,6 @@ public final class DungeonManager {
                 }
             }
         }
-        // Otherwise, we fall back to the preview data.
         else {
             Grasscutter.getLogger()
                     .info("No drop data found or dungeon {}, falling back to preview data ...", dungeonId);
@@ -247,7 +231,6 @@ public final class DungeonManager {
         if (getDungeonData() == null) return;
 
         switch (getDungeonData().getType()) {
-                // case DUNGEON_PLOT is handled by quest execs
             case DUNGEON_ACTIVITY -> {
                 switch (getDungeonData().getPlayType()) {
                     case DUNGEON_PLAY_TYPE_TRIAL_AVATAR -> {
@@ -262,7 +245,7 @@ public final class DungeonManager {
                     }
                 }
             }
-            case DUNGEON_ELEMENT_CHALLENGE -> {} // TODO
+            case DUNGEON_ELEMENT_CHALLENGE -> {}
         }
 
         if (this.trialTeam != null) {
@@ -293,10 +276,8 @@ public final class DungeonManager {
         this.notifyEndDungeon(true);
         this.endDungeon(BaseDungeonResult.DungeonEndReason.COMPLETED);
 
-        // Call PlayerFinishDungeonEvent.
         new PlayerFinishDungeonEvent(this.getScene().getPlayers(), this.getScene(), this).call();
 
-        // jump players to next dungeon if available
         if (this.dungeonData.getPassJumpDungeon() != 0) {
             for (var player : this.getScene().getPlayers()) {
                 player
@@ -322,7 +303,6 @@ public final class DungeonManager {
                 .getPlayers()
                 .forEach(
                         p -> {
-                            // Trigger the fail and success event.
                             if (successfully) {
                                 var dungeonId = this.getDungeonData().getId();
                                 p.getPlayerProgress().markDungeonAsComplete(dungeonId);
@@ -331,7 +311,6 @@ public final class DungeonManager {
                                         .queueEvent(QuestContent.QUEST_CONTENT_FAIL_DUNGEON, dungeonData.getId());
                             }
 
-                            // Battle pass trigger
                             if (dungeonData.getType().isCountsToBattlepass() && successfully) {
                                 p.getBattlePassManager().triggerMission(WatcherTriggerType.TRIGGER_FINISH_DUNGEON);
                             }

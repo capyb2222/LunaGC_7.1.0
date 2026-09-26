@@ -12,7 +12,6 @@ public class ActionExecuteGadgetLua extends AbilityActionHandler {
             Ability ability, AbilityModifierAction action, ByteString abilityData, GameEntity target) {
         GameEntity owner = ability.getOwner();
 
-        // Investigate if we need to use target
 
         if (owner.getEntityController() != null) {
             var param1 = action.param1.getInt(ability);

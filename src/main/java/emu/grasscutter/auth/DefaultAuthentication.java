@@ -28,12 +28,10 @@ public final class DefaultAuthentication implements AuthenticationSystem {
 
     @Override
     public void createAccount(String username, String password) {
-        // Unhandled. The default authenticator doesn't store passwords.
     }
 
     @Override
     public void resetPassword(String username) {
-        // Unhandled. The default authenticator doesn't store passwords.
     }
 
     @Override

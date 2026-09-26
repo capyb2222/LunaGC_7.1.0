@@ -22,7 +22,6 @@ public class EntityTeam extends GameEntity {
 
     @Override
     public void initAbilities() {
-        // Load abilities from levelElementAbilities
         var defaultAbilities = GameData.getConfigGlobalCombat().getDefaultAbilities();
         if (defaultAbilities.getDefaultTeamAbilities() != null)
             for (var ability : defaultAbilities.getDefaultTeamAbilities()) {
@@ -44,13 +43,11 @@ public class EntityTeam extends GameEntity {
 
     @Override
     public Int2FloatMap getFightProperties() {
-        // TODO
         return new Int2FloatArrayMap();
     }
 
     @Override
     public Position getPosition() {
-        // TODO Auto-generated method stub
         return new Position(0, 0, 0);
     }
 

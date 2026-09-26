@@ -43,7 +43,6 @@ public class HandlerSelectWorktopOptionReq extends PacketHandler {
             MissingDomainFallbackManager.handleSelectWorktopOption(
                     session.getPlayer().getScene(), entity, req.getOptionId());
         } finally {
-            // Always send packet
             session.send(new PacketSelectWorktopOptionRsp(req.getGadgetEntityId(), req.getOptionId()));
         }
     }

@@ -12,5 +12,5 @@ public class ConfigEntityBase {
     @Nullable ConfigCombat combat;
     Collection<ConfigAbilityData> abilities;
     @SerializedName(value = "globalValue", alternate = {"OCDDHEEDBBH"})
-    ConfigGlobalValue globalValue; // used for SGV in monsters and Gadgets
+    ConfigGlobalValue globalValue;
 }

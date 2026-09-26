@@ -5,7 +5,6 @@ import emu.grasscutter.server.event.Event;
 import javax.annotation.Nullable;
 import lombok.*;
 
-/** Invoked when an entity is created. */
 @AllArgsConstructor
 public final class EntityCreationEvent extends Event {
     public static <T extends GameEntity> T call(Class<T> type, Class<?>[] argTypes, Object[] args) {

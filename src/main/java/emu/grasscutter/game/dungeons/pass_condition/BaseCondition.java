@@ -10,7 +10,6 @@ public class BaseCondition extends DungeonBaseHandler {
 
     @Override
     public boolean execute(DungeonPassConfigData.DungeonPassCondition condition, int... params) {
-        // TODO Auto-generated method stub
         return false;
     }
 }

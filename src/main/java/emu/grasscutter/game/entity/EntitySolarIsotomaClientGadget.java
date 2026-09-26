@@ -18,7 +18,6 @@ public class EntitySolarIsotomaClientGadget extends EntityClientGadget {
 
     @Override
     public void onCreate() {
-        // Create solar isotoma elevator and send to all.
         this.platformGadget =
                 new EntitySolarIsotomaElevatorPlatform(
                         this, getScene(), ELEVATOR_GADGET_ID, getPosition(), getRotation());
@@ -27,7 +26,6 @@ public class EntitySolarIsotomaClientGadget extends EntityClientGadget {
 
     @Override
     public void onRemoved() {
-        // Remove solar isotoma elevator entity.
         getScene().removeEntity(this.platformGadget);
     }
 }

@@ -54,7 +54,7 @@ public class LuaSerializer implements Serializer {
                     } else if (keyValue.isint()) {
                         object = (T) (Integer) keyValue.toint();
                     } else if (keyValue.isnumber()) {
-                        object = (T) (Float) keyValue.tofloat(); // terrible...
+                        object = (T) (Float) keyValue.tofloat();
                     } else if (keyValue.isstring()) {
                         object = (T) keyValue.tojstring();
                     } else if (keyValue.isboolean()) {
@@ -97,7 +97,7 @@ public class LuaSerializer implements Serializer {
                     } else if (keyValue.isint()) {
                         object = (T) (Integer) keyValue.toint();
                     } else if (keyValue.isnumber()) {
-                        object = (T) (Float) keyValue.tofloat(); // terrible...
+                        object = (T) (Float) keyValue.tofloat();
                     } else if (keyValue.isstring()) {
                         object = (T) keyValue.tojstring();
                     } else if (keyValue.isboolean()) {
@@ -185,7 +185,6 @@ public class LuaSerializer implements Serializer {
                         methodAccess.invoke(object, fieldMeta.index, keyValue.tojstring());
                     }
                 } catch (Exception ex) {
-                    // ex.printStackTrace();
                     continue;
                 }
             }

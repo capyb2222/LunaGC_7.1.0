@@ -22,7 +22,7 @@ public class Friendship {
 
     private PlayerProfile profile;
 
-    @Deprecated // Morphia use only
+    @Deprecated
     public Friendship() {}
 
     public Friendship(Player owner, Player friend, Player asker) {
@@ -87,7 +87,7 @@ public class Friendship {
     }
 
     public FriendBrief toProto() {
-        var player = this.getFriendProfile().getPlayer(); // get latest player and sync.
+        var player = this.getFriendProfile().getPlayer();
 
         return FriendBrief.newBuilder()
                 .setUid(getFriendProfile().getUid())

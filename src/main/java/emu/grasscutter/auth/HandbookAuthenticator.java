@@ -3,7 +3,6 @@ package emu.grasscutter.auth;
 import emu.grasscutter.auth.AuthenticationSystem.AuthenticationRequest;
 import lombok.*;
 
-/** Handles player authentication for the web GM handbook. */
 public interface HandbookAuthenticator {
     @Getter
     @Builder

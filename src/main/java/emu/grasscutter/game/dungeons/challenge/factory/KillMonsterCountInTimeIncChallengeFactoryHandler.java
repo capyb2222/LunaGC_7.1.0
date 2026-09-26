@@ -28,11 +28,11 @@ public class KillMonsterCountInTimeIncChallengeFactoryHandler implements Challen
         return new WorldChallenge(
                 scene,
                 realGroup,
-                challengeId, // Id
-                challengeIndex, // Index
+                challengeId,
+                challengeIndex,
                 List.of(monsterCount, timeLimit, timeInc),
-                timeLimit, // Limit
-                monsterCount, // Goal
+                timeLimit,
+                monsterCount,
                 List.of(
                         new KillMonsterCountTrigger(),
                         new InTimeTrigger(),

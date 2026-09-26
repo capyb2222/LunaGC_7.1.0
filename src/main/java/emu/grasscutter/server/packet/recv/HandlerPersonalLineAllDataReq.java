@@ -13,7 +13,6 @@ public class HandlerPersonalLineAllDataReq extends PacketHandler {
         session.send(
                 new PacketPersonalLineAllDataRsp(
                         session.getPlayer().getQuestManager().getMainQuests().values()));
-        // TODO: this should maybe be at player login?
         session.send(new PacketCoopDataNotify());
     }
 }

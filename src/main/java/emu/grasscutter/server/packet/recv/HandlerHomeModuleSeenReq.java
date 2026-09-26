@@ -12,7 +12,6 @@ public class HandlerHomeModuleSeenReq extends PacketHandler {
         var req = HomeModuleSeenReq.parseFrom(payload);
         var seen = req.getSeenModuleIdListList();
 
-        // As multiple may be seen at once, add each
         for (int i : seen) {
             session.getPlayer().addSeenRealmList(i);
         }

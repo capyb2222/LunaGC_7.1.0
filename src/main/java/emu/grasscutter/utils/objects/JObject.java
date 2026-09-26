@@ -6,9 +6,7 @@ import com.google.gson.stream.*;
 import emu.grasscutter.utils.JsonUtils;
 import java.io.IOException;
 
-/* Replica of JsonObject. Includes chaining. */
 public final class JObject {
-    /* Type adapter for gson. */
     public static class Adapter extends TypeAdapter<JObject> {
         @Override
         public void write(JsonWriter out, JObject value) throws IOException {

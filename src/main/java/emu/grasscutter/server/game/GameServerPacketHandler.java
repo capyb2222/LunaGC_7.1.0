@@ -112,7 +112,6 @@ public final class GameServerPacketHandler {
         }
     }
 
-    /** Opcodes already reported as unhandled, so the log says it once rather than every packet. */
     private final Set<Integer> unannounced = ConcurrentHashMap.newKeySet();
 
     private static boolean shouldDump(GameSession session, int opcode) {

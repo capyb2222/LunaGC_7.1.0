@@ -73,7 +73,6 @@ public final class TimeCommand implements CommandHandler {
         }
     }
 
-    /** Applies a target minute-of-day, optionally animating the transition. */
     private void applyTime(
             Player sender, Player targetPlayer, int targetMinute, boolean isStep, boolean animate, int seconds) {
         World world = targetPlayer.getWorld();
@@ -92,10 +91,9 @@ public final class TimeCommand implements CommandHandler {
             return;
         }
 
-        // Animate: advance the world time every 20ms toward the target, then snap to it.
         long startMs = world.getWorldTime();
         long targetMs = startMs + diff * 1000L;
-        int totalFrames = Math.max(1, seconds * 50); // 50 frames per second (20ms each)
+        int totalFrames = Math.max(1, seconds * 50);
         Timer timer = new Timer("time-command-anim", true);
         final long[] frame = {0};
         timer.scheduleAtFixedRate(
@@ -125,12 +123,10 @@ public final class TimeCommand implements CommandHandler {
                         + " 秒动画）。");
     }
 
-    /** Formats a minute-of-day (0-1439) value as {@code HH:mm}. */
     private static String formatTime(int minutes) {
         return String.format("%02d:%02d", minutes / 60, minutes % 60);
     }
 
-    /** Parses {@code HH:mm}, returning {@code [hours, minutes]} or {@code null} on failure. */
     private static int[] parseTime(String s) {
         String[] parts = s.split(":");
         if (parts.length < 2) return null;

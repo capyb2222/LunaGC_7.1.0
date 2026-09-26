@@ -11,7 +11,6 @@ public class HandlerAvatarUpgradeReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         AvatarUpgradeReq req = AvatarUpgradeReq.parseFrom(payload);
 
-        // Level up avatar (NEW 4.5 UI)
         session
                 .getServer()
                 .getInventorySystem()

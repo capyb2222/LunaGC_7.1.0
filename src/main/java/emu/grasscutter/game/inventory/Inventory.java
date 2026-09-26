@@ -117,7 +117,6 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
             this.triggerAddItemEvents(result);
             getPlayer().sendPacket(new PacketStoreItemChangeNotify(result));
 
-            // Call PlayerObtainItemEvent.
             new PlayerObtainItemEvent(this.getPlayer(), item).call();
             return true;
         }
@@ -132,7 +131,6 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
     public boolean addItem(GameItem item, ActionReason reason, boolean forceNotify) {
         boolean result = addItem(item);
 
-        // putItem() bails out on a null itemData, so an unknown item id gets this far with none.
         var itemData = item.getItemData();
         if (itemData != null && itemData.getMaterialType() == MaterialType.MATERIAL_AVATAR) {
             getPlayer()
@@ -255,7 +253,6 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
     }
 
     private synchronized GameItem putItem(GameItem item) {
-        // Dont add items that dont have a valid item definition.
         var data = item.getItemData();
         if (data == null) return null;
         try {
@@ -271,26 +268,20 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
             return null;
         }
 
-        // Add item to inventory store
         ItemType type = item.getItemData().getItemType();
         InventoryTab tab = getInventoryTab(type);
 
-        // Add
         switch (type) {
             case ITEM_WEAPON:
             case ITEM_RELIQUARY:
                 if (tab.getSize() >= tab.getMaxCapacity()) {
                     return null;
                 }
-                // Duplicates cause problems
                 item.setCount(Math.max(item.getCount(), 1));
-                // Adds to inventory
                 this.putItem(item, tab);
-                // Set ownership and save to db
                 item.save();
                 return item;
             case ITEM_VIRTUAL:
-                // Handle
                 this.addVirtualItem(item.getItemId(), item.getCount());
                 return item;
             default:
@@ -311,17 +302,13 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
                         }
                         GameItem existingItem = tab.getItemById(item.getItemId());
                         if (existingItem == null) {
-                            // Item type didnt exist before, we will add it to main inventory map if there is
-                            // enough space
                             if (tab.getSize() >= tab.getMaxCapacity()) {
                                 return null;
                             }
                             this.putItem(item, tab);
-                            // Set ownership and save to db
                             item.save();
                             return item;
                         } else {
-                            // Add count
                             existingItem.setCount(
                                     Math.min(
                                             existingItem.getCount() + item.getCount(),
@@ -335,10 +322,8 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
 
     private synchronized void putItem(GameItem item, InventoryTab tab) {
         this.player.getCodex().checkAddedItem(item);
-        // Set owner and guid FIRST!
         item.setOwner(this.player);
         item.checkIsNew(this);
-        // Put in item store
         getItems().put(item.getGuid(), item);
         if (tab != null) {
             tab.onAddItem(item);
@@ -347,7 +332,7 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
 
     private void addVirtualItem(int itemId, int count) {
         switch (itemId) {
-            case 101 -> // Character exp
+            case 101 ->
             this.player.getTeamManager().getActiveTeam().stream()
                     .map(e -> e.getAvatar())
                     .forEach(
@@ -356,9 +341,9 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
                                             .getServer()
                                             .getInventorySystem()
                                             .upgradeAvatar(this.player, avatar, count));
-            case 102 -> // Adventure exp
+            case 102 ->
             this.player.addExpDirectly(count);
-            case 105 -> // Companionship exp
+            case 105 ->
             this.player.getTeamManager().getActiveTeam().stream()
                     .map(e -> e.getAvatar())
                     .forEach(
@@ -368,36 +353,36 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
                                             .getInventorySystem()
                                             .upgradeAvatarFetterLevel(
                                                     this.player, avatar, count * (this.player.isInMultiplayer() ? 2 : 1)));
-            case 106 -> // Resin
+            case 106 ->
             this.player.getResinManager().addResin(count);
-            case 107 -> // Legendary Key
+            case 107 ->
             this.player.addLegendaryKey(count);
-            case 121 -> // Home exp
+            case 121 ->
             this.player.getHome().addExp(this.player, count);
-            case 201 -> // Primogem
+            case 201 ->
             this.player.setPrimogems(this.player.getPrimogems() + count);
-            case 202 -> // Mora
+            case 202 ->
             this.player.setMora(this.player.getMora() + count);
-            case 203 -> // Genesis Crystals
+            case 203 ->
             this.player.setCrystals(this.player.getCrystals() + count);
-            case 204 -> // Home Coin
+            case 204 ->
             this.player.setHomeCoin(this.player.getHomeCoin() + count);
         }
     }
 
     private GameItem payVirtualItem(int itemId, int count) {
         switch (itemId) {
-            case 201 -> // Primogem
+            case 201 ->
             player.setPrimogems(player.getPrimogems() - count);
-            case 202 -> // Mora
+            case 202 ->
             player.setMora(player.getMora() - count);
-            case 203 -> // Genesis Crystals
+            case 203 ->
             player.setCrystals(player.getCrystals() - count);
-            case 106 -> // Resin
+            case 106 ->
             player.getResinManager().useResin(count);
-            case 107 -> // LegendaryKey
+            case 107 ->
             player.useLegendaryKey(count);
-            case 204 -> // Home Coin
+            case 204 ->
             player.setHomeCoin(player.getHomeCoin() - count);
             default -> {
                 var gameItem = getInventoryTab(ItemType.ITEM_MATERIAL).getItemById(itemId);
@@ -410,23 +395,23 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
 
     private int getVirtualItemCount(int itemId) {
         switch (itemId) {
-            case 201: // Primogem
+            case 201:
                 return this.player.getPrimogems();
-            case 202: // Mora
+            case 202:
                 return this.player.getMora();
-            case 203: // Genesis Crystals
+            case 203:
                 return this.player.getCrystals();
-            case 106: // Resin
+            case 106:
                 return this.player.getProperty(PlayerProperty.PROP_PLAYER_RESIN);
-            case 107: // Legendary Key
+            case 107:
                 return this.player.getProperty(PlayerProperty.PROP_PLAYER_LEGENDARY_KEY);
-            case 204: // Home Coin
+            case 204:
                 return this.player.getHomeCoin();
             default:
                 GameItem item =
                         getInventoryTab(ItemType.ITEM_MATERIAL)
                                 .getItemById(
-                                        itemId); // What if we ever want to operate on weapons/relics/furniture? :S
+                                        itemId);
                 return (item == null) ? 0 : item.getCount();
         }
     }
@@ -451,18 +436,14 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
 
     public synchronized boolean payItems(
             ItemParamData[] costItems, int quantity, ActionReason reason) {
-        // Make sure player has requisite items
         for (ItemParamData cost : costItems)
             if (this.getVirtualItemCount(cost.getId()) < (cost.getCount() * quantity)) return false;
-        // All costs are satisfied, now remove them all
         for (ItemParamData cost : costItems) {
             this.payVirtualItem(cost.getId(), cost.getCount() * quantity);
         }
 
-        if (reason != null) { // Do we need these?
-            // getPlayer().sendPacket(new PacketItemAddHintNotify(changedItems, reason));
+        if (reason != null) {
         }
-        // getPlayer().sendPacket(new PacketStoreItemChangeNotify(changedItems));
         return true;
     }
 
@@ -476,17 +457,13 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
 
     public synchronized boolean payItems(
             Iterable<ItemParamData> costItems, int quantity, ActionReason reason) {
-        // Make sure player has requisite items
         for (ItemParamData cost : costItems)
             if (getVirtualItemCount(cost.getId()) < (cost.getCount() * quantity)) return false;
-        // All costs are satisfied, now remove them all
         costItems.forEach(cost -> this.payVirtualItem(cost.getId(), cost.getCount() * quantity));
-        // TODO:handle the reason(need to send certain package)
         return true;
     }
 
     public void removeItems(List<GameItem> items) {
-        // TODO Bulk delete
         for (GameItem item : items) {
             this.removeItem(item, item.getCount());
         }
@@ -505,7 +482,6 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
     public synchronized boolean removeItem(int itemId, int count) {
         var item = this.getItems().values().stream().filter(i -> i.getItemId() == itemId).findFirst();
 
-        // Check if the item is in the player's inventory.
         return item.filter(gameItem -> this.removeItem(gameItem, count)).isPresent();
     }
 
@@ -522,7 +498,6 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
     public synchronized boolean removeItemById(int itemId, int count) {
         var item = this.getItems().values().stream().filter(i -> i.getItemId() == itemId).findFirst();
 
-        // Check if the item is in the player's inventory.
         return item.filter(gameItem -> this.removeItem(gameItem, count)).isPresent();
     }
 
@@ -531,7 +506,6 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
     }
 
     public synchronized boolean removeItem(GameItem item, int count) {
-        // Sanity check
         if (count <= 0 || item == null) {
             return false;
         }
@@ -545,14 +519,11 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
         }
 
         if (item.getCount() <= 0) {
-            // Remove from inventory tab too
             InventoryTab tab = null;
             if (item.getItemData() != null) {
                 tab = getInventoryTab(item.getItemData().getItemType());
             }
-            // Remove if less than 0
             deleteItem(item, tab);
-            //
             getPlayer().sendPacket(new PacketStoreItemDelNotify(item));
         } else {
             getPlayer().sendPacket(new PacketStoreItemChangeNotify(item));
@@ -561,10 +532,8 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
         int removeCount = Math.min(count, countBefore);
         this.triggerRemItemEvents(item, removeCount);
 
-        // Update in db
         item.save();
 
-        // Returns true on success
         return true;
     }
 
@@ -604,13 +573,11 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
     public void loadFromDatabase() {
         if (this.isLoaded()) return;
 
-        // Wait for avatars to load.
         Utils.waitFor(this.getPlayer().getAvatars()::isLoaded);
 
         List<GameItem> items = DatabaseHelper.getInventoryItems(getPlayer());
 
         for (GameItem item : items) {
-            // Should never happen
             if (item.getObjectId() == null) {
                 continue;
             }
@@ -629,7 +596,6 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
 
             this.putItem(item, tab);
 
-            // Equip to a character if possible
             if (item.isEquipped()) {
                 Avatar avatar = getPlayer().getAvatars().getAvatarById(item.getEquipCharacter());
                 boolean hasEquipped = false;
@@ -645,7 +611,6 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
             }
         }
 
-        // Load avatars after inventory.
         this.getPlayer().getAvatars().postLoad();
         this.setLoaded(true);
     }

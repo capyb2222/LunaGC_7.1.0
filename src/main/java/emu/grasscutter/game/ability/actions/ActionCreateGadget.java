@@ -15,8 +15,6 @@ public class ActionCreateGadget extends AbilityActionHandler {
     private static boolean clientOwnsChain(GameEntity entity) {
         if (entity instanceof EntityClientGadget || entity instanceof EntityAvatar) return true;
 
-        // Owners are only ever set at creation, to an entity that already exists, so walking up
-        // cannot come back around.
         while (entity instanceof EntityGadget summon && summon.getOwner() != null) {
             entity = summon.getOwner();
             if (entity instanceof EntityAvatar || entity instanceof EntityClientGadget) return true;
@@ -57,8 +55,6 @@ public class ActionCreateGadget extends AbilityActionHandler {
         var owner = action.ownerIsTarget ? target : entity;
         entityCreated.setOwner(owner);
 
-        // Nothing on this side runs the summon's own KillSelf, so without this every charged attack
-        // would leave another copy standing in the scene. One summon of a given kind per owner.
         entity.getScene().getEntities().values().stream()
                 .filter(e -> e instanceof EntityGadget g
                         && g.getGadgetId() == action.gadgetID

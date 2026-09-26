@@ -16,7 +16,6 @@ public class PacketCreateVehicleRsp extends BasePacket {
         super(PacketOpcodes.CreateVehicleRsp);
         CreateVehicleRsp.Builder proto = CreateVehicleRsp.newBuilder();
 
-        // Eject vehicle members and Kill previous vehicles if there are any
         List<GameEntity> previousVehicles =
                 player.getScene().getEntities().values().stream()
                         .filter(

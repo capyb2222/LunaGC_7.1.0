@@ -60,7 +60,7 @@ public final class TrialAvatarActivityCommand implements CommandHandler {
         switch (action) {
             default -> this.sendUsageMessage(sender);
             case "change" -> {
-                if (!param.chars().allMatch(Character::isDigit)) { // if its not number
+                if (!param.chars().allMatch(Character::isDigit)) {
                     CommandHandler.sendMessage(
                             sender, translate(sender, "commands.trialAvatarActivity.invalid_param"));
                     return;
@@ -82,7 +82,7 @@ public final class TrialAvatarActivityCommand implements CommandHandler {
                                 sender, "commands.trialAvatarActivity.success_schedule", Integer.parseInt(param)));
             }
             case "toggledungeon" -> {
-                if (param.chars().allMatch(Character::isDigit)) { // if its number
+                if (param.chars().allMatch(Character::isDigit)) {
                     if (Integer.parseInt(param) - 1 >= trialAvatarPlayerData.getRewardInfoList().size()
                             || Integer.parseInt(param) - 1 <= 0) {
                         CommandHandler.sendMessage(
@@ -114,7 +114,7 @@ public final class TrialAvatarActivityCommand implements CommandHandler {
                 }
             }
             case "togglereward" -> {
-                if (param.chars().allMatch(Character::isDigit)) { // if its number
+                if (param.chars().allMatch(Character::isDigit)) {
                     if (Integer.parseInt(param) - 1 >= trialAvatarPlayerData.getRewardInfoList().size()
                             || Integer.parseInt(param) - 1 <= 0) {
                         CommandHandler.sendMessage(

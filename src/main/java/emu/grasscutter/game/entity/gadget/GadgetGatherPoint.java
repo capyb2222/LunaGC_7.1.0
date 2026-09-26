@@ -10,7 +10,6 @@ import emu.grasscutter.net.proto.GadgetInteractReqOuterClass.GadgetInteractReq;
 import emu.grasscutter.net.proto.GatherGadgetInfoOuterClass.GatherGadgetInfo;
 import emu.grasscutter.net.proto.SceneGadgetInfoOuterClass.SceneGadgetInfo;
 
-/** Spawner for the gather objects */
 public final class GadgetGatherPoint extends GadgetContent {
     private final GatherData gatherData;
     private final EntityGadget gatherObjectChild;
@@ -53,7 +52,6 @@ public final class GadgetGatherPoint extends GadgetContent {
     }
 
     public void onBuildProto(SceneGadgetInfo.Builder gadgetInfo) {
-        // todo does official use this for the spawners?
         GatherGadgetInfo gatherGadgetInfo =
                 GatherGadgetInfo.newBuilder()
                         .setItemId(this.getItemId())

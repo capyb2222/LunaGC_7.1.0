@@ -16,9 +16,9 @@ import java.util.TreeMap;
         label = "waypoints",
         aliases = {"wp", "unlockwp"},
         usage = {
-            "",                 // every waypoint in the scene you are standing in
-            "<area id> ...",    // only those areas
-            "list"              // what areas exist here, and how many waypoints each has
+            "",
+            "<area id> ...",
+            "list"
         },
         permission = "player.waypoints",
         permissionTargeted = "player.waypoints.others")
@@ -28,7 +28,6 @@ public final class WaypointsCommand implements CommandHandler {
     public void execute(Player sender, Player targetPlayer, List<String> args) {
         int sceneId = targetPlayer.getSceneId();
 
-        // pointId -> areaId, for every waypoint in this scene that is allowed to be simple-unlocked
         var waypoints = new TreeMap<Integer, Integer>();
         var pointIds = GameData.getScenePointsPerScene().get(sceneId);
         if (pointIds != null) {
@@ -104,10 +103,9 @@ public final class WaypointsCommand implements CommandHandler {
                         + " region boundary is usually a scene tag rather than an area lock.");
     }
 
-    /** Shows what is here, so an area can be picked without guessing at ids. */
     private void list(
             Player sender, int sceneId, TreeMap<Integer, Integer> waypoints, Player targetPlayer) {
-        var perArea = new TreeMap<Integer, int[]>(); // areaId -> {total, unlocked}
+        var perArea = new TreeMap<Integer, int[]>();
         var unlocked = targetPlayer.getUnlockedScenePoints(sceneId);
         for (var e : waypoints.entrySet()) {
             var counts = perArea.computeIfAbsent(e.getValue(), k -> new int[2]);

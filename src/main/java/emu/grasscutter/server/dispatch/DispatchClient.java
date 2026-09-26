@@ -30,7 +30,6 @@ public final class DispatchClient extends WebSocketClient implements IDispatcher
     public DispatchClient(URI serverUri) {
         super(serverUri);
 
-        // Mark this client as authenticated.
         this.setAttachment(true);
 
         this.registerHandler(PacketIds.GachaHistoryReq, this::fetchGachaHistory);
@@ -46,10 +45,8 @@ public final class DispatchClient extends WebSocketClient implements IDispatcher
         var page = message.get("page").getAsInt();
         var type = message.get("gachaType").getAsInt();
 
-        // Create a response object.
         var response = new JsonObject();
 
-        // Find a player with the specified account ID.
         var player = DatabaseHelper.getPlayerByAccount(accountId);
         if (player == null) {
             response.addProperty("retcode", 1);
@@ -57,10 +54,8 @@ public final class DispatchClient extends WebSocketClient implements IDispatcher
             return;
         }
 
-        // Fetch the gacha records.
         GachaHandler.fetchGachaRecords(player, response, page, type);
 
-        // Send the response.
         this.sendMessage(PacketIds.GachaHistoryRsp, response);
     }
 
@@ -69,10 +64,8 @@ public final class DispatchClient extends WebSocketClient implements IDispatcher
         var actionStr = message.get("action").getAsString();
         var data = message.getAsJsonObject("data");
 
-        // Parse the action into an enum.
         var action = HandbookBody.Action.valueOf(actionStr);
 
-        // Produce a handbook response.
         var response =
                 DispatchUtils.performHandbookAction(
                         action,
@@ -83,10 +76,8 @@ public final class DispatchClient extends WebSocketClient implements IDispatcher
                             case SPAWN_ENTITY -> JsonUtils.decode(data, HandbookBody.SpawnEntity.class);
                         });
 
-        // Check if the response's status is '1'.
         if (response.getStatus() == 1) return;
 
-        // Send the response to the server.
         this.sendMessage(PacketIds.GmTalkRsp, response);
     }
 
@@ -95,16 +86,13 @@ public final class DispatchClient extends WebSocketClient implements IDispatcher
         var playerId = message.get("playerId").getAsInt();
         var fieldsRaw = message.get("fields").getAsJsonArray();
 
-        // Get the player with the specified ID.
         var player = Grasscutter.getGameServer().getPlayerByUid(playerId, true);
         if (player == null) return;
 
-        // Convert the fields array.
         var fieldsList = new ArrayList<String>();
         for (var field : fieldsRaw) fieldsList.add(field.getAsString());
         var fields = fieldsList.toArray(new String[0]);
 
-        // Return the response object.
         this.sendMessage(PacketIds.GetPlayerFieldsRsp, DispatchUtils.getPlayerFields(playerId, fields));
     }
 
@@ -113,33 +101,26 @@ public final class DispatchClient extends WebSocketClient implements IDispatcher
         var accountId = message.get("accountId").getAsString();
         var fieldsRaw = message.get("fields").getAsJsonArray();
 
-        // Get the player with the specified ID.
         var player = Grasscutter.getGameServer().getPlayerByAccountId(accountId);
         if (player == null) return;
 
-        // Convert the fields array.
         var fieldsList = new ArrayList<String>();
         for (var field : fieldsRaw) fieldsList.add(field.getAsString());
         var fields = fieldsList.toArray(new String[0]);
 
-        // Return the response object.
         this.sendMessage(
                 PacketIds.GetPlayerByAccountRsp, DispatchUtils.getPlayerByAccount(accountId, fields));
     }
 
     public void sendMessage(int packetId, Object message) {
         var serverMessage = this.encodeMessage(packetId, message);
-        // Serialize the message into JSON.
         var serialized = JSON.toJson(serverMessage).getBytes(StandardCharsets.UTF_8);
-        // Encrypt the message.
         Crypto.xor(serialized, DISPATCH_INFO.encryptionKey);
-        // Send the message.
         this.send(serialized);
     }
 
     @Override
     public void onOpen(ServerHandshake handshake) {
-        // Attempt to handshake with the server.
         this.sendMessage(PacketIds.LoginNotify, DISPATCH_INFO.dispatchKey);
 
         this.getLogger().info("Dispatch connection opened.");
@@ -159,16 +140,13 @@ public final class DispatchClient extends WebSocketClient implements IDispatcher
     public void onClose(int code, String reason, boolean remote) {
         this.getLogger().info("Dispatch connection closed.");
 
-        // Attempt to reconnect.
         new Thread(
                         () -> {
                             try {
-                                // Wait 5 seconds before reconnecting.
                                 Thread.sleep(5000L);
                             } catch (Exception ignored) {
                             }
 
-                            // Attempt to reconnect.
                             Grasscutter.getGameServer()
                                     .setDispatchClient(new DispatchClient(GameServer.getDispatchUrl()));
                             Grasscutter.getGameServer().getDispatchClient().connect();

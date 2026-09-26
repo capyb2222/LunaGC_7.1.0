@@ -15,5 +15,5 @@ public final class MapLayerGroupData extends GameResource {
     private List<Integer> areaIds;
 
     @SerializedName("DAMKLEIJMAG")
-    private float mapFloorId; // MapLayerFloorExcel (first level of the maplayer)
+    private float mapFloorId;
 }

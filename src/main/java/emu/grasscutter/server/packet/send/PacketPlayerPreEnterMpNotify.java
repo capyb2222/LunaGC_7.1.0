@@ -13,7 +13,6 @@ public class PacketPlayerPreEnterMpNotify extends BasePacket {
                 PlayerPreEnterMpNotifyOuterClass.PlayerPreEnterMpNotify.newBuilder()
                         .setUid(player.getUid())
                         .setNickname(player.getNickname())
-                        // 7.0 has a top-level State enum as well, so name the nested one explicitly.
                         .setState(
                                 PlayerPreEnterMpNotifyOuterClass.PlayerPreEnterMpNotify.State
                                         .State_START));

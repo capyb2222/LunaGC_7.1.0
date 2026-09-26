@@ -44,7 +44,6 @@ public class ProudSkillData extends GameResource {
 
     @Override
     public void onLoad() {
-        // Fight props
         var parsed = new ArrayList<FightPropData>(getAddProps().length);
         for (var prop : getAddProps()) {
             if (prop.getPropType() != null && prop.getValue() != 0f) {

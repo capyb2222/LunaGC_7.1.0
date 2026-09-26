@@ -32,7 +32,7 @@ public class SetUIDWatermarkTextCommand implements CommandHandler {
     private void set(Player sender, Player target, List<String> args) {
         String text = String.join(" ", args);
         if (!WatermarkUtils.fits(text)) {
-            CommandHandler.sendMessage(sender, "The number of characters you entered is too large!"); // TODO: add translation.
+            CommandHandler.sendMessage(sender, "The number of characters you entered is too large!");
             return;
         }
         CommandHandler.sendMessage(sender, "Successfully changed your UID to " + text);

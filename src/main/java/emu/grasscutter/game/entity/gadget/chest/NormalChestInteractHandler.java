@@ -20,7 +20,6 @@ public class NormalChestInteractHandler implements ChestInteractHandler {
 
     @Override
     public boolean onInteract(GadgetChest chest, Player player) {
-        // Invoke open chest event.
         var event = new PlayerOpenChestEvent(player, chest, this.chestReward);
         event.call();
         if (event.isCanceled()) return true;

@@ -55,7 +55,6 @@ public class PacketEntityFightPropChangeReasonNotify extends BasePacket {
         PropChangeDetailInfo detailInfo = null;
         if (detailAbility != null) {
             detailInfo = PropChangeDetailInfo.newBuilder()
-                //.setDetailAbilityInfo(detailAbility)
                 .build();
         }
 
@@ -66,7 +65,6 @@ public class PacketEntityFightPropChangeReasonNotify extends BasePacket {
                         .setPropType(prop.getId())
                         .setPropDelta(value)
                         .setReason(reason)
-                        //.setDetailInfo(detailInfo != null ? detailInfo : PropChangeDetailInfo.getDefaultInstance())  // Only set if not null
                         .setChangeHpReason(changeHpReason)
                         .build();
 
@@ -116,7 +114,6 @@ public class PacketEntityFightPropChangeReasonNotify extends BasePacket {
         PropChangeDetailInfo detailInfo = null;
         if (detailAbility != null) {
             detailInfo = PropChangeDetailInfo.newBuilder()
-                //.setDetailAbilityInfo(detailAbility)
                 .build();
         }
 
@@ -125,9 +122,7 @@ public class PacketEntityFightPropChangeReasonNotify extends BasePacket {
                         .setEntityId(entity.getId())
                         .setPropType(prop.getId())
                         .setPropDelta(value)
-                        //.setPaidHpDebts(value)
                         .setReason(reason)
-                        //.setDetailInfo(detailInfo != null ? detailInfo : PropChangeDetailInfo.getDefaultInstance())  // Only set if not null
                         .setChangeHpDebtsReason(changeHpDebts)
                         .build();
         this.setData(proto);
@@ -142,7 +137,6 @@ public class PacketEntityFightPropChangeReasonNotify extends BasePacket {
     PropChangeDetailInfo detailInfo = null;
     if (detailAbility != null) {
         detailInfo = PropChangeDetailInfo.newBuilder()
-            //.setDetailAbilityInfo(detailAbility)
             .build();
     }
 
@@ -152,7 +146,6 @@ public class PacketEntityFightPropChangeReasonNotify extends BasePacket {
                     .setPropType(prop.getId())
                     .setPropDelta(value)
                     .setReason(reason)
-                    //.setDetailInfo(detailInfo != null ? detailInfo : PropChangeDetailInfo.getDefaultInstance())  // Only set if not null
                     .setChangeEnergyReson(energyReason)
                     .build();
 

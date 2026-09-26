@@ -10,7 +10,6 @@ import emu.grasscutter.server.scheduler.ServerTaskScheduler;
 import java.util.*;
 import java.util.stream.Stream;
 
-/** Hooks into the {@link GameServer} class, adding convenient ways to do certain things. */
 public final class ServerHelper {
     private static ServerHelper instance;
     private final GameServer gameServer;

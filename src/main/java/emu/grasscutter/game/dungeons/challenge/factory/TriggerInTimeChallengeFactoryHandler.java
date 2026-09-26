@@ -28,11 +28,11 @@ public class TriggerInTimeChallengeFactoryHandler implements ChallengeFactoryHan
         return new WorldChallenge(
                 scene,
                 group,
-                challengeId, // Id
-                challengeIndex, // Index
+                challengeId,
+                challengeIndex,
                 List.of(timeLimit, triggerCount),
-                timeLimit, // Limit
-                triggerCount, // Goal
+                timeLimit,
+                triggerCount,
                 List.of(new InTimeTrigger(), new TriggerGroupTriggerTrigger(Integer.toString(triggerTag))));
     }
 }

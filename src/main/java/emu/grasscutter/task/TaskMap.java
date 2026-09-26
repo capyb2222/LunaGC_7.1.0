@@ -26,12 +26,10 @@ public final class TaskMap {
     }
 
     public void resetNow() {
-        // Unregister all tasks
         for (TaskHandler task : this.tasks.values()) {
             unregisterTask(task);
         }
 
-        // Run all afterReset tasks
         for (TaskHandler task : this.afterReset.values()) {
             try {
                 task.restartExecute();
@@ -40,10 +38,8 @@ public final class TaskMap {
             }
         }
 
-        // Remove all afterReset tasks
         this.afterReset.clear();
 
-        // Register all tasks
         for (TaskHandler task : this.tasks.values()) {
             registerTask(task.getClass().getAnnotation(Task.class).taskName(), task);
         }
@@ -104,7 +100,6 @@ public final class TaskMap {
         this.annotations.put(taskName, annotation);
         this.tasks.put(taskName, task);
 
-        // register task
         try {
             Scheduler scheduler = schedulerFactory.getScheduler();
             JobDetail job = JobBuilder.newJob(task.getClass()).withIdentity(taskName).build();

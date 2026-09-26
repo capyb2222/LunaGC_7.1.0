@@ -12,8 +12,6 @@ public class HandlerQuestUpdateQuestVarReq extends PacketHandler {
 
     @Override
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
-        // Client sends packets. One with the value, and one with the index and the new value to
-        // set/inc/dec
         var req = QuestUpdateQuestVarReq.parseFrom(payload);
         var questManager = session.getPlayer().getQuestManager();
         var subQuest = questManager.getQuestById(req.getQuestId());
@@ -32,8 +30,6 @@ public class HandlerQuestUpdateQuestVarReq extends PacketHandler {
             return;
         }
 
-        // 7.0's QuestUpdateQuestVarReq carries no quest_var_op_list under any recoverable
-        // name, so there is nothing to apply here yet.
 
         session.send(new PacketQuestUpdateQuestVarRsp(req));
     }

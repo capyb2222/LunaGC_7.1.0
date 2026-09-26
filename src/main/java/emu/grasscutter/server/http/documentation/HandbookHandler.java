@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.*;
 
-/** Handles requests for the new GM Handbook. */
 public final class HandbookHandler implements Router {
     private String handbook;
     private final boolean serve;
@@ -22,8 +21,6 @@ public final class HandbookHandler implements Router {
     private final Map<String, Integer> currentRequests = new ConcurrentHashMap<>();
 
     public HandbookHandler() {
-        // The handbook is optional - it is skipped by -PskipHandbook - so read it without
-        // FileUtils' "Failed to read resource" warning, which fired on every single start
         this.handbook = readHandbook();
         this.serve = HANDBOOK.enable && this.handbook.length() > 0;
 
@@ -36,7 +33,6 @@ public final class HandbookHandler implements Router {
                             .replace("{{DETAILS_DISABLE}}", Boolean.toString(!server.canChange));
         }
 
-        // Create a new task to reset the request count.
         if (HANDBOOK.limits.enabled) {
             new Timer()
                     .scheduleAtFixedRate(
@@ -63,13 +59,10 @@ public final class HandbookHandler implements Router {
     public void applyRoutes(Javalin javalin) {
         if (!this.serve) return;
 
-        // The handbook content. (built from src/handbook)
         javalin.get("/handbook", this::serveHandbook);
-        // The handbook authentication page.
         javalin.get("/handbook/authenticate", this::authenticate);
         javalin.post("/handbook/authenticate", this::performAuthentication);
 
-        // Handbook control routes.
         javalin.post("/handbook/avatar", this::grantAvatar);
         javalin.post("/handbook/item", this::giveItem);
         javalin.post("/handbook/teleport", this::teleportTo);
@@ -84,16 +77,13 @@ public final class HandbookHandler implements Router {
         var limits = HANDBOOK.limits;
         if (!limits.enabled) return true;
 
-        // Check the request count.
         var address = Utils.address(ctx);
         var count = this.currentRequests.getOrDefault(address, 0);
         if (++count >= limits.maxRequests) {
-            // Respond to the request.
             ctx.status(429).result(JObject.c().add("timestamp", System.currentTimeMillis()).toString());
             return false;
         }
 
-        // Update the request count.
         this.currentRequests.put(address, count);
         return true;
     }
@@ -110,7 +100,6 @@ public final class HandbookHandler implements Router {
         if (!this.serve) {
             ctx.status(500).result("Handbook not found.");
         } else {
-            // Pass the request to the authenticator.
             Grasscutter.getAuthenticationSystem()
                     .getHandbookAuthenticator()
                     .presentPage(AuthenticationRequest.builder().context(ctx).build());
@@ -121,7 +110,6 @@ public final class HandbookHandler implements Router {
         if (!this.serve) {
             ctx.status(500).result("Handbook not found.");
         } else {
-            // Pass the request to the authenticator.
             var result =
                     Grasscutter.getAuthenticationSystem()
                             .getHandbookAuthenticator()
@@ -142,14 +130,10 @@ public final class HandbookHandler implements Router {
             return;
         }
 
-        // Check for rate limiting.
         if (!this.normalLimit(ctx)) return;
 
-        // Parse the request body into a class.
         var request = ctx.bodyAsClass(HandbookBody.GrantAvatar.class);
-        // Get the response.
         var response = DispatchUtils.performHandbookAction(Action.GRANT_AVATAR, request);
-        // Send the response.
         ctx.status(response.getStatus() > 100 ? response.getStatus() : 500).json(response);
     }
 
@@ -159,14 +143,10 @@ public final class HandbookHandler implements Router {
             return;
         }
 
-        // Check for rate limiting.
         if (!this.normalLimit(ctx)) return;
 
-        // Parse the request body into a class.
         var request = ctx.bodyAsClass(HandbookBody.GiveItem.class);
-        // Get the response.
         var response = DispatchUtils.performHandbookAction(Action.GIVE_ITEM, request);
-        // Send the response.
         ctx.status(response.getStatus() > 100 ? response.getStatus() : 500).json(response);
     }
 
@@ -176,14 +156,10 @@ public final class HandbookHandler implements Router {
             return;
         }
 
-        // Check for rate limiting.
         if (!this.normalLimit(ctx)) return;
 
-        // Parse the request body into a class.
         var request = ctx.bodyAsClass(HandbookBody.TeleportTo.class);
-        // Get the response.
         var response = DispatchUtils.performHandbookAction(Action.TELEPORT_TO, request);
-        // Send the response.
         ctx.status(response.getStatus() > 100 ? response.getStatus() : 500).json(response);
     }
 
@@ -193,12 +169,9 @@ public final class HandbookHandler implements Router {
             return;
         }
 
-        // Check for rate limiting.
         if (!this.normalLimit(ctx)) return;
 
-        // Parse the request body into a class.
         var request = ctx.bodyAsClass(HandbookBody.SpawnEntity.class);
-        // Check the entity limit.
         var entityLimit =
                 HANDBOOK.limits.enabled ? Math.max(HANDBOOK.limits.maxEntities, 0) : Long.MAX_VALUE;
         if (request.getAmount() > entityLimit) {
@@ -211,9 +184,7 @@ public final class HandbookHandler implements Router {
             return;
         }
 
-        // Get the response.
         var response = DispatchUtils.performHandbookAction(Action.SPAWN_ENTITY, request);
-        // Send the response.
         ctx.status(response.getStatus() > 100 ? response.getStatus() : 500).json(response);
     }
 }

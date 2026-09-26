@@ -16,8 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.luaj.vm2.LuaError;
 
 public class WorldDataSystem extends BaseGameSystem {
-    private final Map<String, ChestInteractHandler> chestInteractHandlerMap; // chestType-Handler
-    private final Map<String, SceneGroup> sceneInvestigationGroupMap; // <sceneId_groupId, Group>
+    private final Map<String, ChestInteractHandler> chestInteractHandlerMap;
+    private final Map<String, SceneGroup> sceneInvestigationGroupMap;
 
     public WorldDataSystem(GameServer server) {
         super(server);
@@ -28,7 +28,6 @@ public class WorldDataSystem extends BaseGameSystem {
     }
 
     public synchronized void loadChestConfig() {
-        // set the special chest first
         chestInteractHandlerMap.put("SceneObj_Chest_Flora", new BossChestInteractHandler());
 
         try {
@@ -79,7 +78,6 @@ public class WorldDataSystem extends BaseGameSystem {
     }
 
     public int getMonsterLevel(SceneMonster monster, World world) {
-        // Calculate level
         int level = monster.level;
         WorldLevelData worldLevelData = GameData.getWorldLevelDataMap().get(world.getWorldLevel());
 
@@ -112,8 +110,6 @@ public class WorldDataSystem extends BaseGameSystem {
 
         var builder = InvestigationMonsterOuterClass.InvestigationMonster.newBuilder();
 
-        // 7.0 moved everything except id/city_id/lock_state down into a repeated detail entry, with
-        // scene/group/monster ids nested one level deeper again in its config.
         builder.setId(imd.getId()).setCityId(imd.getCityId());
 
         var detail =

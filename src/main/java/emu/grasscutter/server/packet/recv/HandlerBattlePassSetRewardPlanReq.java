@@ -19,7 +19,6 @@ public class HandlerBattlePassSetRewardPlanReq extends PacketHandler {
         session.send(new PacketBattlePassCurScheduleUpdateNotify(player));
     }
 
-    // no proto for this one, so the plan is read as the only varint the request carries
     private static int firstVarint(byte[] payload) {
         try {
             for (var field : UnknownFieldSet.parseFrom(payload).asMap().values()) {

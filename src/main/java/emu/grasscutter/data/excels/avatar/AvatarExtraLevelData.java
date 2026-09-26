@@ -36,7 +36,7 @@ public class AvatarExtraLevelData extends GameResource {
             Grasscutter.getLogger()
                     .warn(
                             "AvatarExtraLevelExcelConfigData row has requireLevel {} and maxLevel {} - its"
-                                    + " level keys were probably renamed; run `lgc.py resources map`",
+                                    + " level keys were probably renamed",
                             this.requireLevel,
                             this.maxLevel);
         }

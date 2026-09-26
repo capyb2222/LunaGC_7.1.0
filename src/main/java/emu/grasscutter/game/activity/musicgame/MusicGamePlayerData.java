@@ -59,19 +59,13 @@ public class MusicGamePlayerData {
             var musicGameBeatmap = MusicGameBeatmap.getByShareId(musicShareId);
 
             return UgcMusicBriefInfoOuterClass.UgcMusicBriefInfo.newBuilder()
-                    //                .setCanShare(true)
-                    //                .setCreateTime(musicGameBeatmap.getCreateTime())
                     .setMusicId(musicGameBeatmap.getMusicId());
-                    //                .setPosition(musicGameBeatmap.getSavePosition())
-                    //                .setMusicNoteCount(musicGameBeatmap.getMusicNoteCount())
         }
 
         public UgcMusicBriefInfoOuterClass.UgcMusicBriefInfo.Builder toOthersBriefProto() {
             var musicGameBeatmap = MusicGameBeatmap.getByShareId(musicShareId);
 
             return musicGameBeatmap.toBriefProto()
-            //                .setScore(score)
-            //                .setSettle(settle)
             ;
         }
     }

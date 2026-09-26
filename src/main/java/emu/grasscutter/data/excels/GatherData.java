@@ -8,7 +8,7 @@ public class GatherData extends GameResource {
     private int id;
     private int gadgetId;
     private int itemId;
-    private int cd; // Probably hours
+    private int cd;
     private boolean isForbidGuest;
     private boolean initDisableInteract;
 

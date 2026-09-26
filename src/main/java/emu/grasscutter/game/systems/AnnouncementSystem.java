@@ -87,12 +87,11 @@ public class AnnouncementSystem extends BaseGameSystem {
 
             proto
                     .setConfigId(templateId)
-                    // I found the time here is useless
                     .setBeginTime(Utils.getCurrentSeconds() + 1)
                     .setEndTime(Utils.getCurrentSeconds() + 10);
 
             if (type == AnnounceType.CENTER) {
-                proto.setCenterSystemFrequency(frequency); // center_system_text unnamed in 7.0
+                proto.setCenterSystemFrequency(frequency);
             } else {
                 proto.setCountDownFrequency(frequency);
             }

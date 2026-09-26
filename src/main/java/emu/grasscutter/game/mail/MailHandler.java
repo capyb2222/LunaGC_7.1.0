@@ -20,10 +20,8 @@ public class MailHandler extends BasePlayerManager {
         return mail;
     }
 
-    // ---------------------MAIL------------------------
 
     public void sendMail(Mail message) {
-        // Call mail receive event.
         PlayerReceiveMailEvent event = new PlayerReceiveMailEvent(this.getPlayer(), message);
         event.call();
         if (event.isCanceled()) return;
@@ -44,8 +42,7 @@ public class MailHandler extends BasePlayerManager {
 
         if (this.getPlayer().isOnline()) {
             this.getPlayer().sendPacket(new PacketMailChangeNotify(this.getPlayer(), message));
-        } // TODO: setup a way for the mail notification to show up when someone receives mail when they
-        // were offline
+        }
     }
 
     public boolean deleteMail(int mailId) {

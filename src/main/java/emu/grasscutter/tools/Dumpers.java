@@ -14,11 +14,9 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 
 public interface Dumpers {
-    // See `src/handbook/data/README.md` for attributions.
 
     private static String commandDescription(String locale, Command command) {
         try {
-            // Get the language by the locale.
             var language = Language.getLanguage(locale);
             if (language == null) throw new IllegalArgumentException("Invalid language.");
 
@@ -39,11 +37,9 @@ public interface Dumpers {
     }
 
     static void dumpCommands(String locale) {
-        // Check that commands are registered.
         var commandMap = CommandMap.getInstance();
         if (commandMap == null) commandMap = new CommandMap(true);
 
-        // Convert all registered commands to an info map.
         var dump = new HashMap<String, CommandInfo>();
         commandMap
                 .getAnnotationsAsList()
@@ -58,7 +54,6 @@ public interface Dumpers {
                                         }
                                     };
 
-                            // Add the command info to the list.
                             dump.put(
                                     command.label(),
                                     new CommandInfo(
@@ -70,13 +65,11 @@ public interface Dumpers {
                         });
 
         try {
-            // Create a file for the dump.
             var file = new File("commands.json");
             if (file.exists() && !file.delete()) throw new RuntimeException("Failed to delete file.");
             if (!file.exists() && !file.createNewFile())
                 throw new RuntimeException("Failed to create file.");
 
-            // Write the dump to the file.
             Files.writeString(file.toPath(), JsonUtils.encode(dump));
         } catch (IOException ignored) {
             throw new RuntimeException("Failed to write to file.");
@@ -84,11 +77,9 @@ public interface Dumpers {
     }
 
     static void dumpAvatars(String locale) {
-        // Reload resources.
         ResourceLoader.loadAll();
         Language.loadTextMaps();
 
-        // Convert all known avatars to an avatar map.
         var dump = new HashMap<Integer, AvatarInfo>();
         GameData.getAvatarDataMap()
                 .forEach(
@@ -106,13 +97,11 @@ public interface Dumpers {
                         });
 
         try {
-            // Create a file for the dump.
             var file = new File("avatars.csv");
             if (file.exists() && !file.delete()) throw new RuntimeException("Failed to delete file.");
             if (!file.exists() && !file.createNewFile())
                 throw new RuntimeException("Failed to create file.");
 
-            // Write the dump to the file.
             Files.writeString(file.toPath(), Dumpers.miniEncode(dump));
         } catch (IOException ignored) {
             throw new RuntimeException("Failed to write to file.");
@@ -120,11 +109,9 @@ public interface Dumpers {
     }
 
     static void dumpItems(String locale) {
-        // Reload resources.
         ResourceLoader.loadAll();
         Language.loadTextMaps();
 
-        // Convert all known items to an item map.
         var originalDump = new ArrayList<ItemInfo>();
         GameData.getItemDataMap()
                 .forEach(
@@ -137,41 +124,33 @@ public interface Dumpers {
                                                 item.getItemType(),
                                                 item.getIcon().length() > 0 ? item.getIcon().substring(3) : "")));
 
-        // Create a new dump with filtered duplicates.
         var names = new ArrayList<String>();
         var dump = new HashMap<Integer, ItemInfo>();
         originalDump.forEach(
                 item -> {
-                    // Validate the item.
                     if (item.name.contains("[CHS]")) return;
                     if (names.contains(item.name)) return;
                     if (dump.containsKey(item.id)) return;
-                    // Add the item to the dump.
                     names.add(item.name);
                     dump.put(item.id, item);
                 });
 
         try {
-            // Create a file for the dump.
             var file = new File("items.csv");
             if (file.exists() && !file.delete()) throw new RuntimeException("Failed to delete file.");
             if (!file.exists() && !file.createNewFile())
                 throw new RuntimeException("Failed to create file.");
 
-            // Write the dump to the file.
             Files.writeString(file.toPath(), Dumpers.miniEncode(dump));
         } catch (IOException ignored) {
             throw new RuntimeException("Failed to write to file.");
         }
     }
 
-    /** Dumps all scenes to a CSV file. */
     static void dumpScenes() {
-        // Reload resources.
         ResourceLoader.loadAll();
         Language.loadTextMaps();
 
-        // Convert all known scenes to a scene map.
         var dump = new HashMap<Integer, SceneInfo>();
         GameData.getSceneDataMap()
                 .forEach(
@@ -179,13 +158,11 @@ public interface Dumpers {
                                 dump.put(id, new SceneInfo(scene.getScriptData(), scene.getSceneType())));
 
         try {
-            // Create a file for the dump.
             var file = new File("scenes.csv");
             if (file.exists() && !file.delete()) throw new RuntimeException("Failed to delete file.");
             if (!file.exists() && !file.createNewFile())
                 throw new RuntimeException("Failed to create file.");
 
-            // Write the dump to the file.
             Files.writeString(file.toPath(), Dumpers.miniEncode(dump));
         } catch (IOException ignored) {
             throw new RuntimeException("Failed to write to file.");
@@ -193,11 +170,9 @@ public interface Dumpers {
     }
 
     static void dumpEntities(String locale) {
-        // Reload resources.
         ResourceLoader.loadAll();
         Language.loadTextMaps();
 
-        // Convert all known avatars to an avatar map.
         var dump = new HashMap<Integer, EntityInfo>();
         GameData.getMonsterDataMap()
                 .forEach(
@@ -213,13 +188,11 @@ public interface Dumpers {
                         });
 
         try {
-            // Create a file for the dump.
             var file = new File("entities.csv");
             if (file.exists() && !file.delete()) throw new RuntimeException("Failed to delete file.");
             if (!file.exists() && !file.createNewFile())
                 throw new RuntimeException("Failed to create file.");
 
-            // Write the dump to the file.
             Files.writeString(file.toPath(), Dumpers.miniEncode(dump));
         } catch (IOException ignored) {
             throw new RuntimeException("Failed to write to file.");
@@ -227,11 +200,9 @@ public interface Dumpers {
     }
 
     static void dumpQuests(String locale) {
-        // Reload resources.
         ResourceLoader.loadAll();
         Language.loadTextMaps();
 
-        // Convert all known quests to a quest map.
         var dump = new HashMap<Integer, QuestInfo>();
         GameData.getQuestDataMap()
                 .forEach(
@@ -246,7 +217,6 @@ public interface Dumpers {
                                             quest.getMainId()));
                         });
 
-        // Convert all known main quests into a quest map.
         var mainDump = new HashMap<Integer, MainQuestInfo>();
         GameData.getMainQuestDataMap()
                 .forEach(
@@ -261,26 +231,22 @@ public interface Dumpers {
                         });
 
         try {
-            // Create a file for the dump.
             var file = new File("quests.csv");
             if (file.exists() && !file.delete()) throw new RuntimeException("Failed to delete file.");
             if (!file.exists() && !file.createNewFile())
                 throw new RuntimeException("Failed to create file.");
 
-            // Write the dump to the file.
             Files.writeString(file.toPath(), Dumpers.miniEncode(dump, "id", "description", "mainId"));
         } catch (IOException ignored) {
             throw new RuntimeException("Failed to write to file.");
         }
 
         try {
-            // Create a file for the dump.
             var file = new File("mainquests.csv");
             if (file.exists() && !file.delete()) throw new RuntimeException("Failed to delete file.");
             if (!file.exists() && !file.createNewFile())
                 throw new RuntimeException("Failed to create file.");
 
-            // Write the dump to the file.
             Files.writeString(file.toPath(), Dumpers.miniEncode(mainDump, "id", "title"));
         } catch (IOException ignored) {
             throw new RuntimeException("Failed to write to file.");
@@ -288,11 +254,9 @@ public interface Dumpers {
     }
 
     static void dumpAreas(String locale) {
-        // Reload resources.
         ResourceLoader.loadAll();
         Language.loadTextMaps();
 
-        // Convert all known areas to an area map.
         var dump = new HashMap<Integer, AreaInfo>();
         GameData.getWorldAreaDataMap()
                 .forEach(
@@ -306,13 +270,11 @@ public interface Dumpers {
                         });
 
         try {
-            // Create a file for the dump.
             var file = new File("areas.csv");
             if (file.exists() && !file.delete()) throw new RuntimeException("Failed to delete file.");
             if (!file.exists() && !file.createNewFile())
                 throw new RuntimeException("Failed to create file.");
 
-            // Write the dump to the file.
             Files.writeString(file.toPath(), Dumpers.miniEncode(dump, "id", "parent", "name"));
         } catch (IOException ignored) {
             throw new RuntimeException("Failed to write to file.");

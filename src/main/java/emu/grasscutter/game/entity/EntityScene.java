@@ -15,7 +15,6 @@ public class EntityScene extends GameEntity {
 
     @Override
     public void initAbilities() {
-        // Load abilities from levelElementAbilities
         for (var ability :
                 GameData.getConfigGlobalCombat().getDefaultAbilities().getLevelElementAbilities()) {
             AbilityData data = GameData.getAbilityData(ability);
@@ -31,13 +30,11 @@ public class EntityScene extends GameEntity {
 
     @Override
     public Int2FloatMap getFightProperties() {
-        // TODO
         return new Int2FloatArrayMap();
     }
 
     @Override
     public Position getPosition() {
-        // TODO Auto-generated method stub
         return new Position(0, 0, 0);
     }
 

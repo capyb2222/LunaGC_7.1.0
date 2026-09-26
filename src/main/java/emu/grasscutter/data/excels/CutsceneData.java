@@ -10,6 +10,5 @@ public final class CutsceneData extends GameResource {
     @Getter(onMethod_ = @Override)
     private int id;
 
-    /** No text map entry exists for these, so the asset path is the only readable name. */
     private String path;
 }

@@ -63,7 +63,6 @@ public class HomeSceneItem {
         }
 
         this.bornPos = new Position(arrangementInfo.getBornPos());
-        // born_rot is one of four unnamed Vectors in 7.0's HomeSceneArrangementInfo.
         this.bornRot = new Position();
         this.djinnPos = new Position(arrangementInfo.getDjinnPos());
         this.homeBgmId = arrangementInfo.getBgmId();

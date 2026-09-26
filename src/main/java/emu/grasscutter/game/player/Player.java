@@ -127,7 +127,6 @@ public class Player implements PlayerHook, FieldFetch {
 
     @Getter private Set<Integer> forcedFinishedQuests;
 
-    /** Set the first time the opening cutscene plays, so it never plays twice. */
     @Getter @Setter private boolean playedFirstLoginCutscene;
 
     @Transient private long nextGuid = 0;
@@ -1169,7 +1168,6 @@ public class Player implements PlayerHook, FieldFetch {
             .build();
     }
 
-    /** Loaded the same way the battle pass is, since both are per player and persisted. */
     public void loadDailyTaskManager() {
         if (this.dailyTaskManager != null) return;
         this.dailyTaskManager = DatabaseHelper.loadDailyTaskManager(this);
@@ -1268,8 +1266,6 @@ public class Player implements PlayerHook, FieldFetch {
 
         this.getSatiationManager().reduceSatiation();
 
-        // A player who has not been through onLogin has no home yet, and this used to throw on
-        // every tick, taking the quest tick below down with it
         if (this.getHome() != null) {
             this.getHome().updateHourlyResources(this);
         }
@@ -1303,8 +1299,6 @@ public class Player implements PlayerHook, FieldFetch {
         BirthdayMailSystem.checkAndSend(this, currentDate);
 
         if (this.dailyTaskManager != null) {
-            // Asked, not forced: the commissions keep their own record of which day they belong to,
-            // and only draw a new set when the one they are holding is genuinely from an older one.
             this.dailyTaskManager.resetDailyTasksForNewDay();
         }
 
@@ -1397,8 +1391,6 @@ public class Player implements PlayerHook, FieldFetch {
             emu.grasscutter.game.quest.ForcedQuests.apply(
                     this, emu.grasscutter.game.quest.ForcedQuests.allMainQuests());
         }
-        // Replayed every login: these have no server-side quest data, so nothing else would tell
-        // the client about them and the region would lock itself again.
         if (this.forcedFinishedQuests != null && !this.forcedFinishedQuests.isEmpty()) {
             emu.grasscutter.game.quest.ForcedQuests.notify(this, this.forcedFinishedQuests);
         }

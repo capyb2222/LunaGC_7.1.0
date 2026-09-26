@@ -73,21 +73,17 @@ public class HomeWorld extends World {
 
     @Override
     public synchronized void addPlayer(Player player) {
-        // Check if player already in
         if (this.getPlayers().contains(player)) {
             return;
         }
 
-        // Remove player from prev world
         if (player.getWorld() != null) {
             player.getWorld().removePlayer(player);
         }
 
-        // Register
         player.setWorld(this);
         this.getPlayers().add(player);
 
-        // Set player variables
         if (this.getHost().equals(player)) {
             player.setPeerId(1);
             this.getGuests().forEach(player1 -> player1.setPeerId(player1.getPeerId() + 1));
@@ -97,7 +93,6 @@ public class HomeWorld extends World {
 
         player.getTeamManager().setEntity(new EntityTeam(player));
 
-        // Copy main team to multiplayer team
         if (this.isMultiplayer()) {
             player
                     .getTeamManager()
@@ -120,11 +115,9 @@ public class HomeWorld extends World {
             }
         }
 
-        // Add to scene
         var scene = this.getSceneById(player.getSceneId());
         scene.addPlayer(player);
 
-        // Info packet for other players
         if (this.getPlayers().size() > 1) {
             this.updatePlayerInfos(player);
         }
@@ -132,7 +125,6 @@ public class HomeWorld extends World {
 
     @Override
     public synchronized void removePlayer(Player player) {
-        // Remove team entities
         this.broadcastPacket(
                 new PacketDelTeamEntityNotify(
                         player.getSceneId(),
@@ -144,17 +136,14 @@ public class HomeWorld extends World {
                                                         : p.getTeamManager().getEntity().getId())
                                 .toList()));
 
-        // Deregister
         this.getPlayers().remove(player);
         player.setWorld(null);
 
-        // Remove from scene
         var scene = this.getSceneById(player.getSceneId());
         if (scene != null) {
             scene.removePlayer(player);
         }
 
-        // Info packet for other players
         if (!this.getPlayers().isEmpty()) {
             this.updatePlayerInfos(player);
         }

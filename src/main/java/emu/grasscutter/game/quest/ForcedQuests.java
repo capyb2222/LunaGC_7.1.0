@@ -12,12 +12,10 @@ import java.util.List;
 public final class ForcedQuests {
     private ForcedQuests() {}
 
-    /** Sent in batches - one notify carrying four thousand quests is a needlessly large packet. */
     private static final int BATCH = 512;
 
     private static List<Integer> allMainQuests;
 
-    /** Every main quest id the client knows about, across both the old and new data sets. */
     public static synchronized List<Integer> allMainQuests() {
         if (allMainQuests != null) return allMainQuests;
 
@@ -30,7 +28,6 @@ public final class ForcedQuests {
                 try {
                     ids.add(Integer.parseInt(line));
                 } catch (NumberFormatException ignored) {
-                    // A malformed line costs one quest, not the whole list.
                 }
             }
         } catch (Exception e) {
@@ -40,7 +37,6 @@ public final class ForcedQuests {
         return ids;
     }
 
-    /** Tells the client these are finished, without touching the player's saved state. */
     public static void notify(Player player, Collection<Integer> questIds) {
         var batch = new ArrayList<Integer>(BATCH);
         for (var id : questIds) {
@@ -53,7 +49,6 @@ public final class ForcedQuests {
         if (!batch.isEmpty()) send(player, batch);
     }
 
-    /** Marks them finished, remembers it, and tells the client. Survives a relog. */
     public static int apply(Player player, Collection<Integer> questIds) {
         var forced = player.getForcedFinishedQuests();
         int before = forced.size();

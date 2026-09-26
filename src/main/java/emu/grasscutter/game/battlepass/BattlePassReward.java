@@ -13,7 +13,7 @@ public class BattlePassReward {
 
     @Transient private BattlePassMissionData data;
 
-    @Deprecated // Morphia only
+    @Deprecated
     public BattlePassReward() {}
 
     public BattlePassReward(int level, int rewardId, boolean paid) {

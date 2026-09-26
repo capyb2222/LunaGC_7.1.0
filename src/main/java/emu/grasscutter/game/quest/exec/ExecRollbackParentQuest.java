@@ -17,7 +17,6 @@ public class ExecRollbackParentQuest extends QuestExecHandler {
         quest.getOwner().getPosition().set(targetPosition.get(0));
         quest.getOwner().getRotation().set(targetPosition.get(1));
         quest.getOwner().sendPacket(new PacketScenePlayerLocationNotify(quest.getOwner().getScene()));
-        // todo proper reset and warp
         return true;
     }
 }

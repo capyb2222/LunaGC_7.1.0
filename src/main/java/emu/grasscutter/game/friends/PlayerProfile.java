@@ -24,12 +24,12 @@ public class PlayerProfile {
     private int worldLevel;
     private int lastActiveTime;
 
-    private boolean isInDuel = false; // TODO: Implement duels. (TCG)
-    private boolean isDuelObservable = false; // TODO: Implement duels. (TCG)
+    private boolean isInDuel = false;
+    private boolean isDuelObservable = false;
 
     @Getter private int enterHomeOption;
 
-    @Deprecated // Morphia only
+    @Deprecated
     public PlayerProfile() {}
 
     public PlayerProfile(Player player) {

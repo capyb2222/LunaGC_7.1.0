@@ -16,6 +16,5 @@ public class HandlerPullPrivateChatReq extends PacketHandler {
                 .getChatSystem()
                 .handlePullPrivateChatReq(session.getPlayer(), req.getTargetUid());
 
-        // session.send(new PacketPullPrivateChatRsp(req.getTargetUid()));
     }
 }

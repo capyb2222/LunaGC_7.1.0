@@ -11,6 +11,5 @@ public final class DebugConstants {
     public static final boolean ACCEPT_CLIENT_TOKEN = false;
 
     private DebugConstants() {
-        // Prevent instantiation.
     }
 }

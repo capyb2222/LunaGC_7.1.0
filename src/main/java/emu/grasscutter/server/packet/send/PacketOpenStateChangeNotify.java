@@ -4,7 +4,6 @@ import emu.grasscutter.net.packet.*;
 import emu.grasscutter.net.proto.OpenStateChangeNotifyOuterClass.OpenStateChangeNotify;
 import java.util.Map;
 
-// Sets openState to value
 public class PacketOpenStateChangeNotify extends BasePacket {
 
     public PacketOpenStateChangeNotify(int openState, int value) {

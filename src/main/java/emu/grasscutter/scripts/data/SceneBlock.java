@@ -22,7 +22,7 @@ public class SceneBlock {
     public Map<Integer, SceneGroup> groups;
     public RTree<SceneGroup, Geometry> sceneGroupIndex;
 
-    private transient boolean loaded; // Not an actual variable in the scripts either
+    private transient boolean loaded;
 
     public boolean isLoaded() {
         return this.loaded;
@@ -55,11 +55,9 @@ public class SceneBlock {
             return null;
         }
 
-        // Eval script
         try {
             ScriptLoader.eval(cs, bindings);
 
-            // Set groups
             this.groups =
                     ScriptLoader.getSerializer().toList(SceneGroup.class, bindings.get("groups")).stream()
                             .collect(Collectors.toMap(x -> x.id, y -> y, (a, b) -> a));

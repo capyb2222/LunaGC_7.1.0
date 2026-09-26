@@ -15,7 +15,7 @@ public final class SceneTagData extends GameResource {
 
     private boolean isSkipLoading;
 
-    private boolean isDefaultValid; // shld be there by default
+    private boolean isDefaultValid;
 
     private String sceneTagName;
     private int sceneId;

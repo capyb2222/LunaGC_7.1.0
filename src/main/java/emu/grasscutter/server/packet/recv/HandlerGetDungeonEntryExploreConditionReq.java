@@ -11,7 +11,6 @@ public class HandlerGetDungeonEntryExploreConditionReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         var req = GetDungeonEntryExploreConditionReq.parseFrom(payload);
 
-        // For now, just unlock any domain the player touches.
         session.send(
                 new PacketDungeonEntryToBeExploreNotify(
                         req.getDungeonEntryScenePointId(), req.getSceneId(), req.getDungeonEntryConfigId()));

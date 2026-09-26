@@ -60,7 +60,7 @@ public class EntityVehicle extends EntityBaseGadget {
                 this.fightProperties = new Int2FloatOpenHashMap();
                 this.gadgetId = gadgetId;
                 this.pointId = pointId;
-                this.curStamina = 240; // might be in configGadget.GCALKECLLLP.JBAKBEFIMBN.ANBMPHPOALP
+                this.curStamina = 240;
                 this.curPhlogiston = 50;
                 this.vehicleMembers = new ArrayList<>();
                 GadgetData data = GameData.getGadgetDataMap().get(gadgetId);
@@ -144,7 +144,6 @@ public class EntityVehicle extends EntityBaseGadget {
 
     @Override
     public void initAbilities() {
-        // TODO Auto-generated method stub
         if (this.configGadget != null && this.configGadget.getAbilities() != null) {
             for (var ability : this.configGadget.getAbilities()) {
                 this.addConfigAbility(ability);

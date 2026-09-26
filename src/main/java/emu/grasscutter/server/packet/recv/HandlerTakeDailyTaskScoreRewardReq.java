@@ -30,7 +30,6 @@ public class HandlerTakeDailyTaskScoreRewardReq extends PacketHandler {
             return;
         }
 
-        // No-op when the automatic grant already ran; it still saves and resyncs.
         manager.claimScoreReward();
 
         List<emu.grasscutter.data.common.ItemParamData> items = manager.getScoreRewardItems();

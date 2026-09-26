@@ -31,10 +31,6 @@ public final class VehiclePhlogistonPointsNotifyOuterClass {
     int getEntityId();
   }
   /**
-   * <pre>
-   * 7.0 calls this _VehiclePhlogistonNotify (CmdID 4673) and moved both fields.
-   * </pre>
-   *
    * Protobuf type {@code VehiclePhlogistonPointsNotify}
    */
   public static final class VehiclePhlogistonPointsNotify extends
@@ -312,10 +308,6 @@ public final class VehiclePhlogistonPointsNotifyOuterClass {
       return builder;
     }
     /**
-     * <pre>
-     * 7.0 calls this _VehiclePhlogistonNotify (CmdID 4673) and moved both fields.
-     * </pre>
-     *
      * Protobuf type {@code VehiclePhlogistonPointsNotify}
      */
     public static final class Builder extends

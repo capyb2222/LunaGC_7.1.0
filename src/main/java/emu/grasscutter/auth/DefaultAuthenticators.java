@@ -20,40 +20,32 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.concurrent.*;
 import javax.crypto.Cipher;
 
-/** A class containing default authenticators. */
 public final class DefaultAuthenticators {
 
-    /** Handles the authentication request from the username and password form. */
     public static class PasswordAuthenticator implements Authenticator<LoginResultJson> {
         @Override
         public LoginResultJson authenticate(AuthenticationRequest request) {
             var response = new LoginResultJson();
 
             var requestData = request.getPasswordRequest();
-            assert requestData != null; // This should never be null.
+            assert requestData != null;
 
             boolean successfulLogin = false;
             String address = Utils.address(request.getContext());
             String responseMessage = translate("messages.dispatch.account.username_error");
             String loggerMessage = "";
 
-            // Get account from database.
             Account account = DatabaseHelper.getAccountByName(requestData.account);
-            // Check if account exists.
             if (account == null && ACCOUNT.autoCreate) {
-                // This account has been created AUTOMATICALLY. There will be no permissions added.
                 account = DatabaseHelper.createAccountWithUid(requestData.account, 0);
 
-                // Check if the account was created successfully.
                 if (account == null) {
                     responseMessage = translate("messages.dispatch.account.username_create_error");
                     Grasscutter.getLogger()
                             .info(translate("messages.dispatch.account.account_login_create_error", address));
                 } else {
-                    // Continue with login.
                     successfulLogin = true;
 
-                    // Log the creation.
                     Grasscutter.getLogger()
                             .info(
                                     translate(
@@ -62,8 +54,6 @@ public final class DefaultAuthenticators {
                                             account.getId()));
                 }
             } else if (account != null) {
-                // Lock the entered password as the account password on first login
-                // (covers both newly auto-created accounts and old accounts with an empty password).
                 String rawPassword = requestData.password;
                 if ((account.getPassword() == null || account.getPassword().isEmpty())
                         && rawPassword != null
@@ -72,7 +62,6 @@ public final class DefaultAuthenticators {
                             BCrypt.withDefaults().hashToString(10, rawPassword.toCharArray()));
                     account.save();
                 }
-                // Verify the password for accounts that have one set.
                 if (account.getPassword() == null
                         || account.getPassword().isEmpty()
                         || account.verifyPassword(rawPassword)) {
@@ -84,7 +73,6 @@ public final class DefaultAuthenticators {
             } else
                 loggerMessage = translate("messages.dispatch.account.account_login_exist_error", address);
 
-            // Set response data.
             if (successfulLogin) {
                 response.message = "OK";
                 response.data.account.uid = account.getId();
@@ -109,7 +97,7 @@ public final class DefaultAuthenticators {
             var response = new LoginResultJson();
 
             var requestData = request.getPasswordRequest();
-            assert requestData != null; // This should never be null.
+            assert requestData != null;
 
             boolean successfulLogin = false;
             String address = Utils.address(request.getContext());
@@ -140,27 +128,21 @@ public final class DefaultAuthenticators {
                 responseMessage = translate("messages.dispatch.account.password_error");
             }
 
-            // Get account from database.
             Account account = DatabaseHelper.getAccountByName(requestData.account);
-            // Check if account exists.
             if (account == null && ACCOUNT.autoCreate) {
-                // This account has been created AUTOMATICALLY. There will be no permissions added.
                 if (decryptedPassword.length() >= 8) {
                     account = DatabaseHelper.createAccountWithUid(requestData.account, 0);
                     account.setPassword(
                             BCrypt.withDefaults().hashToString(12, decryptedPassword.toCharArray()));
                     account.save();
 
-                    // Check if the account was created successfully.
                     if (account == null) {
                         responseMessage = translate("messages.dispatch.account.username_create_error");
                         loggerMessage =
                                 translate("messages.dispatch.account.account_login_create_error", address);
                     } else {
-                        // Continue with login.
                         successfulLogin = true;
 
-                        // Log the creation.
                         Grasscutter.getLogger()
                                 .info(
                                         translate(
@@ -185,7 +167,6 @@ public final class DefaultAuthenticators {
                         responseMessage = translate("messages.dispatch.account.password_error");
                     }
                 } else {
-                    // Empty password account: lock the entered password on first login.
                     if (decryptedPassword != null && !decryptedPassword.isEmpty()) {
                         account.setPassword(
                                 BCrypt.withDefaults()
@@ -203,7 +184,6 @@ public final class DefaultAuthenticators {
                 loggerMessage = translate("messages.dispatch.account.account_login_exist_error", address);
             }
 
-            // Set response data.
             if (successfulLogin) {
                 response.message = "OK";
                 response.data.account.uid = account.getId();
@@ -222,7 +202,6 @@ public final class DefaultAuthenticators {
         }
     }
 
-    /** Handles the authentication request from the game when using a registry token. */
     public static class TokenAuthenticator implements Authenticator<LoginResultJson> {
         @Override
         public LoginResultJson authenticate(AuthenticationRequest request) {
@@ -235,31 +214,25 @@ public final class DefaultAuthenticators {
             String address = Utils.address(request.getContext());
             String loggerMessage;
 
-            // Log the attempt.
             Grasscutter.getLogger()
                     .info(translate("messages.dispatch.account.login_token_attempt", address));
 
-            // Get account from database.
             Account account = DatabaseHelper.getAccountById(requestData.uid);
 
-            // Check if account exists/token is valid.
             successfulLogin = account != null && account.getSessionKey().equals(requestData.token);
 
-            // Set response data.
             if (successfulLogin) {
                 response.message = "OK";
                 response.data.account.uid = account.getId();
                 response.data.account.token = account.getSessionKey();
                 response.data.account.email = account.getEmail();
 
-                // Log the login.
                 loggerMessage =
                         translate("messages.dispatch.account.login_token_success", address, requestData.uid);
             } else {
                 response.retcode = -201;
                 response.message = translate("messages.dispatch.account.account_cache_error");
 
-                // Log the failure.
                 loggerMessage = translate("messages.dispatch.account.login_token_error", address);
             }
 
@@ -268,7 +241,6 @@ public final class DefaultAuthenticators {
         }
     }
 
-    /** Handles the authentication request from the game when using a combo token/session key. */
     public static class SessionKeyAuthenticator implements Authenticator<ComboTokenResJson> {
         @Override
         public ComboTokenResJson authenticate(AuthenticationRequest request) {
@@ -283,7 +255,6 @@ public final class DefaultAuthenticators {
             String address = Utils.address(request.getContext());
             String loggerMessage;
 
-            // Log the combo login attempt for diagnostics.
             String dbKey = "";
             Account account = DatabaseHelper.getAccountById(loginData.uid);
             if (account != null) {
@@ -314,21 +285,18 @@ public final class DefaultAuthenticators {
             }
             Grasscutter.getLogger().info("[Combo] verification=" + successfulLogin);
 
-            // Set response data.
             if (successfulLogin) {
                 response.message = "OK";
                 response.data.open_id = account.getId();
                 response.data.combo_id = "157795300";
                 response.data.combo_token = account.generateLoginToken();
 
-                // Log the login.
                 loggerMessage = translate("messages.dispatch.account.combo_token_success", address);
 
             } else {
                 response.retcode = -201;
                 response.message = translate("messages.dispatch.account.session_key_error");
 
-                // Log the failure.
                 loggerMessage = translate("messages.dispatch.account.combo_token_error", address);
             }
 
@@ -337,7 +305,6 @@ public final class DefaultAuthenticators {
         }
     }
 
-    /** Handles authentication requests from external sources. */
     public static class ExternalAuthentication implements ExternalAuthenticator {
         @Override
         public void handleLogin(AuthenticationRequest request) {
@@ -361,7 +328,6 @@ public final class DefaultAuthenticators {
         }
     }
 
-    /** Handles authentication requests from OAuth sources.Zenlith */
     public static class OAuthAuthentication implements OAuthAuthenticator {
         @Override
         public void handleLogin(AuthenticationRequest request) {
@@ -385,7 +351,6 @@ public final class DefaultAuthenticators {
         }
     }
 
-    /** Validates a session token during game login. */
     public static class SessionTokenValidator implements Authenticator<Account> {
         @Override
         public Account authenticate(AuthenticationRequest request) {
@@ -395,7 +360,6 @@ public final class DefaultAuthenticators {
                 return null;
             }
 
-            // Prepare the request.
             var client = Grasscutter.getGameServer().getDispatchClient();
             var future = new CompletableFuture<Account>();
 
@@ -404,14 +368,12 @@ public final class DefaultAuthenticators {
                     packet -> {
                         var data = IDispatcher.decode(packet);
 
-                        // Check if the token is valid.
                         var valid = data.get("valid").getAsBoolean();
                         if (!valid) {
                             future.complete(null);
                             return;
                         }
 
-                        // Return the account data.
                         future.complete(IDispatcher.decode(data.get("account"), Account.class));
                     });
             client.sendMessage(PacketIds.TokenValidateReq, tokenRequest);
@@ -424,7 +386,6 @@ public final class DefaultAuthenticators {
         }
     }
 
-    /** Handles authentication for the web GM Handbook. */
     public static class HandbookAuthentication implements HandbookAuthenticator {
         private final String authPage;
 
@@ -441,13 +402,10 @@ public final class DefaultAuthenticators {
             var ctx = request.getContext();
             if (ctx == null) return;
 
-            // Check to see if an IP authentication can be performed.
             if (Grasscutter.getRunMode() == ServerRunMode.HYBRID) {
                 var player = Grasscutter.getGameServer().getPlayerByIpAddress(Utils.address(ctx));
                 if (player != null) {
-                    // Get the player's session token.
                     var sessionKey = player.getAccount().getSessionKey();
-                    // Respond with the handbook auth page.
                     ctx.status(200)
                             .result(
                                     this.authPage
@@ -458,7 +416,6 @@ public final class DefaultAuthenticators {
                 }
             }
 
-            // Respond with the handbook auth page.
             ctx.contentType(ContentType.TEXT_HTML).result(this.authPage);
         }
 
@@ -467,20 +424,17 @@ public final class DefaultAuthenticators {
             var ctx = request.getContext();
             if (ctx == null) return null;
 
-            // Get the body data.
             var playerId = ctx.formParam("playerid");
             if (playerId == null) {
                 return Response.builder().status(400).body("Invalid player ID.").build();
             }
 
             try {
-                // Get the player's session token.
                 var sessionKey = DispatchUtils.fetchSessionKey(Integer.parseInt(playerId));
                 if (sessionKey == null) {
                     return Response.builder().status(400).body("Invalid player ID.").build();
                 }
 
-                // Check if the account is banned.
                 return Response.builder()
                         .status(200)
                         .body(

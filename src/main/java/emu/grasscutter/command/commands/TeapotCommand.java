@@ -68,7 +68,6 @@ public final class TeapotCommand implements CommandHandler {
                     return;
                 }
 
-                // addRealmList() already persists the unlock notify (and home claim reward) for modules > 3.
                 targetPlayer.addRealmList(param);
                 targetPlayer.save();
                 targetPlayer.sendPacket(new PacketPlayerHomeCompInfoNotify(targetPlayer));
@@ -115,8 +114,6 @@ public final class TeapotCommand implements CommandHandler {
                 CommandHandler.sendMessage(sender, translate(sender, "commands.teapot.give_furniture_success"));
             }
             case "refreshlimitedshop" -> {
-                // TODO: the Serenitea Pot limited shop (weekly Djinn shop) is not implemented yet -
-                // it requires client packets/proto messages LunaGC doesn't currently have mapped.
                 CommandHandler.sendMessage(sender, translate(sender, "commands.teapot.refresh_limited_shop_success"));
             }
             default -> sendUsageMessage(sender);

@@ -15,6 +15,6 @@ message _BeyondBattlePassMission {
 	uint32 mission_id = 4;
 	uint32 total_progress = 11;
 	_BeyondMissionStatus mission_status = 3;
-	uint32 reward_battle_pass_point = 50000;
-	uint32 mission_type = 50001;
+	uint32 reward_battle_pass_point = 15;
+	uint32 mission_type = 10;
 }

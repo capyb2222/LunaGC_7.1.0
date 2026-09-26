@@ -63,7 +63,6 @@ public final class GridPosition implements Serializable {
         return this;
     }
 
-    // Deep copy
     public GridPosition set(GridPosition pos) {
         return this.set(pos.getX(), pos.getZ(), pos.getWidth());
     }
@@ -115,7 +114,6 @@ public final class GridPosition implements Serializable {
         if (o == null) return false;
         if (getClass() != o.getClass()) return false;
         GridPosition pos = (GridPosition) o;
-        // field comparison
         return pos.x == x && pos.z == z && pos.width == width;
     }
 }

@@ -67,11 +67,10 @@ public class MonsterData extends GameResource {
     private long nameTextMapHash;
     private int campID;
 
-    // Transient
     private int weaponId;
     private MonsterDescribeData describeData;
 
-    private int specialNameId; // will only be set if describe data is available
+    private int specialNameId;
 
     @Override
     public void onLoad() {

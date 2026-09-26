@@ -128,7 +128,6 @@ public class Achievements {
             a.setStatus(Status.FINISHED);
             a.setFinishTimestampSec(currentTimeSecs.getAsInt());
 
-            // Call PlayerCompleteAchievementEvent.
             new PlayerCompleteAchievementEvent(this.player, a).call();
 
             return true;

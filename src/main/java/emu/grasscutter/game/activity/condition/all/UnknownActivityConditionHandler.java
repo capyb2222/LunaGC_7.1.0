@@ -5,7 +5,6 @@ import emu.grasscutter.game.activity.*;
 import emu.grasscutter.game.activity.condition.*;
 import lombok.AllArgsConstructor;
 
-/** This class is used when condition was not found */
 @AllArgsConstructor
 public class UnknownActivityConditionHandler extends ActivityConditionBaseHandler {
     private final ActivityConditions conditions;

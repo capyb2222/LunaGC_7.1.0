@@ -10,7 +10,6 @@ import java.net.URLClassLoader;
 import lombok.EqualsAndHashCode;
 import org.slf4j.*;
 
-/** The base class for all plugins to extend. */
 @EqualsAndHashCode
 public abstract class Plugin {
     private final ServerHelper server = ServerHelper.getInstance();
@@ -32,7 +31,6 @@ public abstract class Plugin {
         this.dataFolder = FileUtils.getPluginPath(identifier.name).toFile();
         this.logger = LoggerFactory.getLogger(identifier.name);
 
-        // Check if the logger should be set in debug mode.
         if (Grasscutter.getLogger().isDebugEnabled())
             ((ch.qos.logback.classic.Logger) logger).setLevel(Level.DEBUG);
 
@@ -46,17 +44,14 @@ public abstract class Plugin {
         return this.identifier;
     }
 
-    /** Get the plugin's name. */
     public final String getName() {
         return this.identifier.name;
     }
 
-    /** Get the plugin's description. */
     public final String getDescription() {
         return this.identifier.description;
     }
 
-    /** Get the plugin's version. */
     public final String getVersion() {
         return this.identifier.version;
     }
@@ -81,12 +76,9 @@ public abstract class Plugin {
         return this.logger;
     }
 
-    /* Called when the plugin is first loaded. */
     public void onLoad() {}
 
-    /* Called after (most of) the server enables. */
     public void onEnable() {}
 
-    /* Called before the server disables. */
     public void onDisable() {}
 }

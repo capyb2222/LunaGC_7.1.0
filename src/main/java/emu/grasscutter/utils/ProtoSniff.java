@@ -6,7 +6,6 @@ public final class ProtoSniff {
 
     private ProtoSniff() {}
 
-    /** One line per payload: {@code #2="10008" #347=varint(2) #1475=<344 b64>}. */
     public static String describe(byte[] data) {
         if (data == null || data.length == 0) return "(empty)";
         var sb = new StringBuilder();
@@ -72,7 +71,6 @@ public final class ProtoSniff {
         return sb.toString();
     }
 
-    /** Length-delimited fields are the informative ones, so say what they look like. */
     private static String renderBytes(byte[] data, int off, int n) {
         var s = new String(data, off, n, StandardCharsets.UTF_8);
         boolean printable = true;

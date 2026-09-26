@@ -84,7 +84,6 @@ public class EntityItem extends EntityBaseGadget {
 
     @Override
     public void onInteract(Player player, GadgetInteractReq interactReq) {
-        // check drop owner to avoid someone picked up item in others' world
         if (!this.isShare()) {
             int dropOwner = (int) (this.getGuid() >> 32);
             if (dropOwner != player.getUid()) {
@@ -94,15 +93,13 @@ public class EntityItem extends EntityBaseGadget {
 
         GameItem item = new GameItem(this.getItemData(), this.getCount());
 
-        // Add to inventory before despawning: removing first meant a rejected add (a full bag,
-        // most often) destroyed the drop and told nobody, so the item was simply gone.
         if (!player.getInventory().addItem(item, ActionReason.SubfieldDrop)) {
             return;
         }
 
         this.getScene().removeEntity(this);
 
-        if (!this.isShare()) { // not shared drop
+        if (!this.isShare()) {
             player.sendPacket(new PacketGadgetInteractRsp(this, InteractType.InteractType_INTERACT_PICK_ITEM));
         } else {
             this.getScene()
@@ -160,7 +157,5 @@ public class EntityItem extends EntityBaseGadget {
 
     @Override
     public void initAbilities() {
-        // A dropped item is a trifle gadget with no config abilities. This used to throw, so any
-        // generic pass over scene entities died on the first item lying on the ground.
     }
 }

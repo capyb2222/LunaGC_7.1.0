@@ -27,8 +27,6 @@ public class InventorySystem extends BaseGameSystem {
     private static final Int2IntMap weaponRefundMaterials = new Int2IntArrayMap();
 
     {
-        // Use a sorted map, use exp as key to sort by exp
-        // We want to have weaponRefundMaterials as (id, exp) in descending exp order
         var temp = new Int2IntRBTreeMap(Collections.reverseOrder());
         GameData.getItemDataMap()
                 .forEach(
@@ -52,7 +50,6 @@ public class InventorySystem extends BaseGameSystem {
     }
 
     public static synchronized int checkPlayerAvatarConstellationLevel(Player player, int id) {
-        // Try to accept itemId OR avatarId
         int avatarId = 0;
         if (GameData.getAvatarDataMap().containsKey(id)) {
             avatarId = id;
@@ -73,12 +70,11 @@ public class InventorySystem extends BaseGameSystem {
                             .orElse(0);
         }
 
-        if (avatarId == 0) return -2; // Not an Avatar
+        if (avatarId == 0) return -2;
 
         Avatar avatar = player.getAvatars().getAvatarById(avatarId);
-        if (avatar == null) return -1; // Doesn't have
+        if (avatar == null) return -1;
 
-        // Constellation
         int constLevel = avatar.getCoreProudSkillLevel();
         val avatarData = avatar.getSkillDepot();
         if (avatarData == null) {
@@ -129,16 +125,13 @@ public class InventorySystem extends BaseGameSystem {
 
         List<GameItem> foodRelics = new ArrayList<GameItem>();
         for (long guid : foodRelicList) {
-            // Add to delete queue
             GameItem food = player.getInventory().getItemByGuid(guid);
             if (food == null || !food.isDestroyable()) {
                 continue;
             }
-            // Calculate mora cost
             int exp = food.getItemData().getBaseConvExp();
             moraCost += exp;
             expGain += exp;
-            // Feeding artifact with exp already
             if (food.getTotalExp() > 0) {
                 expGain += (food.getTotalExp() * 4) / 5;
             }
@@ -148,8 +141,7 @@ public class InventorySystem extends BaseGameSystem {
         for (ItemParam itemParam : list) {
             int amount =
                     itemParam
-                            .getCount(); // Previously this capped to inventory amount, but rejecting the payment
-            // makes more sense for an invalid order
+                            .getCount();
             int gain = 0;
             var data = GameData.getItemDataMap().get(itemParam.getItemId());
             if (data != null) {
@@ -168,21 +160,17 @@ public class InventorySystem extends BaseGameSystem {
             payList.add(new ItemParamData(itemParam.getItemId(), itemParam.getCount()));
         }
 
-        // Make sure exp gain is valid
         if (expGain <= 0) {
             return;
         }
 
-        // Confirm payment of materials and mora (assume food relics are payable afterwards)
         payList.add(new ItemParamData(202, moraCost));
         if (!player.getInventory().payItems(payList)) {
             return;
         }
 
-        // Consume food relics
         player.getInventory().removeItems(foodRelics);
 
-        // Implement random rate boost
         int rate = 1;
         int boost = Utils.randomRange(1, 100);
         if (boost == 100) {
@@ -192,7 +180,6 @@ public class InventorySystem extends BaseGameSystem {
         }
         expGain *= rate;
 
-        // Now we upgrade
         int level = relic.getLevel();
         int oldLevel = level;
         int exp = relic.getExp();
@@ -202,35 +189,28 @@ public class InventorySystem extends BaseGameSystem {
         List<Integer> oldAppendPropIdList = new ArrayList<>(relic.getAppendPropIdList());
 
         while (expGain > 0 && reqExp > 0 && level < relic.getItemData().getMaxLevel()) {
-            // Do calculations
             int toGain = Math.min(expGain, reqExp - exp);
             exp += toGain;
             totalExp += toGain;
             expGain -= toGain;
-            // Level up
             if (exp >= reqExp) {
-                // Exp
                 exp = 0;
                 level += 1;
-                // On relic levelup
                 if (relic.getItemData().getAddPropLevelSet() != null
                         && relic.getItemData().getAddPropLevelSet().contains(level)) {
                     upgrades += 1;
                 }
-                // Set req exp
                 reqExp = GameData.getRelicExpRequired(relic.getItemData().getRankLevel(), level);
             }
         }
 
         relic.addAppendProps(upgrades);
 
-        // Save
         relic.setLevel(level);
         relic.setExp(exp);
         relic.setTotalExp(totalExp);
         relic.save();
 
-        // Avatar
         if (oldLevel != level) {
             Avatar avatar =
                     relic.getEquipCharacter() > 0
@@ -241,7 +221,6 @@ public class InventorySystem extends BaseGameSystem {
             }
         }
 
-        // Packet
         player.sendPacket(new PacketStoreItemChangeNotify(relic));
         player.sendPacket(new PacketReliquaryUpgradeRsp(relic, rate, oldLevel, oldAppendPropIdList));
     }
@@ -253,7 +232,6 @@ public class InventorySystem extends BaseGameSystem {
             List<ItemParam> itemParamList) {
         GameItem weapon = player.getInventory().getItemByGuid(targetGuid);
 
-        // Sanity checks
         if (weapon == null || weapon.getItemType() != ItemType.ITEM_WEAPON) {
             return null;
         }
@@ -265,7 +243,6 @@ public class InventorySystem extends BaseGameSystem {
             return null;
         }
 
-        // Get exp gain
         int expGain =
                 foodWeaponGuidList.stream()
                         .map(player.getInventory()::getItemByGuid)
@@ -273,7 +250,6 @@ public class InventorySystem extends BaseGameSystem {
                         .mapToInt(
                                 food -> food.getItemData().getWeaponBaseExp() + ((food.getTotalExp() * 4) / 5))
                         .sum();
-        // Stream::ofNullable version
         expGain +=
                 itemParamList.stream()
                         .mapToInt(
@@ -291,23 +267,18 @@ public class InventorySystem extends BaseGameSystem {
                                 })
                         .sum();
 
-        // Try
         int maxLevel = promoteData.getUnlockMaxLevel();
         int level = weapon.getLevel();
         int exp = weapon.getExp();
         int reqExp = GameData.getWeaponExpRequired(weapon.getItemData().getRankLevel(), level);
 
         while (expGain > 0 && reqExp > 0 && level < maxLevel) {
-            // Do calculations
             int toGain = Math.min(expGain, reqExp - exp);
             exp += toGain;
             expGain -= toGain;
-            // Level up
             if (exp >= reqExp) {
-                // Exp
                 exp = 0;
                 level += 1;
-                // Set req exp
                 reqExp = GameData.getWeaponExpRequired(weapon.getItemData().getRankLevel(), level);
             }
         }
@@ -322,7 +293,6 @@ public class InventorySystem extends BaseGameSystem {
             List<ItemParam> itemParamList) {
         GameItem weapon = player.getInventory().getItemByGuid(targetGuid);
 
-        // Sanity checks
         if (weapon == null || weapon.getItemType() != ItemType.ITEM_WEAPON) {
             return;
         }
@@ -334,7 +304,6 @@ public class InventorySystem extends BaseGameSystem {
             return;
         }
 
-        // Get exp gain
         int expGain = 0, expGainFree = 0;
         List<GameItem> foodWeapons = new ArrayList<GameItem>();
         for (long guid : foodWeaponGuidList) {
@@ -344,15 +313,14 @@ public class InventorySystem extends BaseGameSystem {
             }
             expGain += food.getItemData().getWeaponBaseExp();
             if (food.getTotalExp() > 0) {
-                expGainFree += (food.getTotalExp() * 4) / 5; // No tax :D
+                expGainFree += (food.getTotalExp() * 4) / 5;
             }
             foodWeapons.add(food);
         }
         List<ItemParamData> payList = new ArrayList<ItemParamData>();
         for (ItemParam param : itemParamList) {
             int amount =
-                    param.getCount(); // Previously this capped to inventory amount, but rejecting the payment
-            // makes more sense for an invalid order
+                    param.getCount();
 
             var data = GameData.getItemDataMap().get(param.getItemId());
             if (data != null) {
@@ -369,21 +337,18 @@ public class InventorySystem extends BaseGameSystem {
             payList.add(new ItemParamData(param.getItemId(), amount));
         }
 
-        // Make sure exp gain is valid
         int moraCost = expGain / 10;
         expGain += expGainFree;
         if (expGain <= 0) {
             return;
         }
 
-        // Confirm payment of materials and mora (assume food weapons are payable afterwards)
         payList.add(new ItemParamData(202, moraCost));
         if (!player.getInventory().payItems(payList)) {
             return;
         }
         player.getInventory().removeItems(foodWeapons);
 
-        // Level up
         int maxLevel = promoteData.getUnlockMaxLevel();
         int level = weapon.getLevel();
         int oldLevel = level;
@@ -392,17 +357,13 @@ public class InventorySystem extends BaseGameSystem {
         int reqExp = GameData.getWeaponExpRequired(weapon.getItemData().getRankLevel(), level);
 
         while (expGain > 0 && reqExp > 0 && level < maxLevel) {
-            // Do calculations
             int toGain = Math.min(expGain, reqExp - exp);
             exp += toGain;
             totalExp += toGain;
             expGain -= toGain;
-            // Level up
             if (exp >= reqExp) {
-                // Exp
                 exp = 0;
                 level += 1;
-                // Set req exp
                 reqExp = GameData.getWeaponExpRequired(weapon.getItemData().getRankLevel(), level);
             }
         }
@@ -415,7 +376,6 @@ public class InventorySystem extends BaseGameSystem {
         weapon.setTotalExp(totalExp);
         weapon.save();
 
-        // Avatar
         if (oldLevel != level) {
             Avatar avatar =
                     weapon.getEquipCharacter() > 0
@@ -426,11 +386,9 @@ public class InventorySystem extends BaseGameSystem {
             }
         }
 
-        // Packets
         player.sendPacket(new PacketStoreItemChangeNotify(weapon));
         player.sendPacket(new PacketWeaponUpgradeRsp(weapon, oldLevel, leftovers));
 
-        // Call PlayerLevelItemEvent.
         new PlayerLevelItemEvent(player, oldLevel, weapon);
     }
 
@@ -453,7 +411,6 @@ public class InventorySystem extends BaseGameSystem {
         GameItem weapon = player.getInventory().getItemByGuid(targetGuid);
         GameItem feed = player.getInventory().getItemByGuid(feedGuid);
 
-        // Sanity checks
         if (weapon == null || feed == null || !feed.isDestroyable()) {
             return;
         }
@@ -475,7 +432,6 @@ public class InventorySystem extends BaseGameSystem {
             return;
         }
 
-        // Calculate
         int oldRefineLevel = weapon.getRefinement();
         int targetRefineLevel = Math.min(oldRefineLevel + feed.getRefinement() + 1, 4);
         int moraCost = 0;
@@ -486,21 +442,17 @@ public class InventorySystem extends BaseGameSystem {
             return;
         }
 
-        // Mora check
         if (player.getMora() >= moraCost) {
             player.setMora(player.getMora() - moraCost);
         } else {
             return;
         }
 
-        // Consume weapon
         player.getInventory().removeItem(feed, 1);
 
-        // Get
         weapon.setRefinement(targetRefineLevel);
         weapon.save();
 
-        // Avatar
         Avatar avatar =
                 weapon.getEquipCharacter() > 0
                         ? player.getAvatars().getAvatarById(weapon.getEquipCharacter())
@@ -509,7 +461,6 @@ public class InventorySystem extends BaseGameSystem {
             avatar.recalcStats();
         }
 
-        // Packets
         player.sendPacket(new PacketStoreItemChangeNotify(weapon));
         player.sendPacket(new PacketWeaponAwakenRsp(avatar, weapon, feed, oldRefineLevel));
     }
@@ -531,13 +482,11 @@ public class InventorySystem extends BaseGameSystem {
             return;
         }
 
-        // Level check
         if (weapon.getLevel() != currentPromoteData.getUnlockMaxLevel()) {
             return;
         }
 
-        // Pay materials and mora if possible
-        ItemParamData[] costs = nextPromoteData.getCostItems(); // Can this be null?
+        ItemParamData[] costs = nextPromoteData.getCostItems();
         if (nextPromoteData.getCoinCost() > 0) {
             costs = Arrays.copyOf(costs, costs.length + 1);
             costs[costs.length - 1] = new ItemParamData(202, nextPromoteData.getCoinCost());
@@ -550,7 +499,6 @@ public class InventorySystem extends BaseGameSystem {
         weapon.setPromoteLevel(nextPromoteLevel);
         weapon.save();
 
-        // Avatar
         Avatar avatar =
                 weapon.getEquipCharacter() > 0
                         ? player.getAvatars().getAvatarById(weapon.getEquipCharacter())
@@ -559,7 +507,6 @@ public class InventorySystem extends BaseGameSystem {
             avatar.recalcStats();
         }
 
-        // Packets
         player.sendPacket(new PacketStoreItemChangeNotify(weapon));
         player.sendPacket(new PacketWeaponPromoteRsp(weapon, oldPromoteLevel));
     }
@@ -567,7 +514,6 @@ public class InventorySystem extends BaseGameSystem {
     public void promoteAvatar(Player player, long guid) {
         Avatar avatar = player.getAvatars().getAvatarByGuid(guid);
 
-        // Sanity checks
         if (avatar == null) {
             return;
         }
@@ -583,13 +529,11 @@ public class InventorySystem extends BaseGameSystem {
             return;
         }
 
-        // Level check
         if (avatar.getLevel() != currentPromoteData.getUnlockMaxLevel()) {
             return;
         }
 
-        // Pay materials and mora if possible
-        ItemParamData[] costs = nextPromoteData.getCostItems(); // Can this be null?
+        ItemParamData[] costs = nextPromoteData.getCostItems();
         if (nextPromoteData.getCoinCost() > 0) {
             costs = Arrays.copyOf(costs, costs.length + 1);
             costs[costs.length - 1] = new ItemParamData(202, nextPromoteData.getCoinCost());
@@ -598,10 +542,8 @@ public class InventorySystem extends BaseGameSystem {
             return;
         }
 
-        // Update promote level
         avatar.setPromoteLevel(nextPromoteLevel);
 
-        // Update proud skills
         Optional.ofNullable(GameData.getAvatarSkillDepotDataMap().get(avatar.getSkillDepotId()))
                 .map(AvatarSkillDepotData::getInherentProudSkillOpens)
                 .ifPresent(
@@ -619,11 +561,9 @@ public class InventorySystem extends BaseGameSystem {
                                                     player.sendPacket(new PacketProudSkillChangeNotify(avatar));
                                                 }));
 
-        // Packets
         player.sendPacket(new PacketAvatarPropNotify(avatar));
         player.sendPacket(new PacketAvatarPromoteRsp(avatar));
 
-        // TODO Send entity prop update packet to world
         avatar.recalcStats(true);
         avatar.save();
     }
@@ -661,12 +601,10 @@ public class InventorySystem extends BaseGameSystem {
         new PlayerLevelAvatarEvent(player, oldLevel, avatar).call();
     }
 
-    // Old upgrade UI
     @Deprecated(forRemoval = true)
     public void upgradeAvatar(Player player, long guid, int itemId, int count) {
         Avatar avatar = player.getAvatars().getAvatarByGuid(guid);
 
-        // Sanity checks
         if (avatar == null) {
             return;
         }
@@ -678,7 +616,6 @@ public class InventorySystem extends BaseGameSystem {
             return;
         }
 
-        // Calc exp
         int expGain = 0;
 
         var data = GameData.getItemDataMap().get(itemId);
@@ -693,12 +630,10 @@ public class InventorySystem extends BaseGameSystem {
             }
         }
 
-        // Sanity check
         if (expGain <= 0) {
             return;
         }
 
-        // Payment check
         int moraCost = expGain / 5;
         ItemParamData[] costItems =
                 new ItemParamData[] {new ItemParamData(itemId, count), new ItemParamData(202, moraCost)};
@@ -706,15 +641,12 @@ public class InventorySystem extends BaseGameSystem {
             return;
         }
 
-        // Level up
         upgradeAvatar(player, avatar, promoteData, expGain);
     }
 
-    // New Upgrade UI in 4.5
     public void upgradeAvatar(Player player, long guid, List<ItemParam> itemParamList) {
         Avatar avatar = player.getAvatars().getAvatarByGuid(guid);
 
-        // Sanity checks
         if (avatar == null) {
             return;
         }
@@ -726,7 +658,6 @@ public class InventorySystem extends BaseGameSystem {
             return;
         }
 
-        // Calc exp
         List<ItemParamData> costItems = new ArrayList<>();
         int expGain = 0;
 
@@ -745,19 +676,16 @@ public class InventorySystem extends BaseGameSystem {
             }
         }
 
-        // Sanity check
         if (expGain <= 0) {
             return;
         }
 
-        // Payment check
         int moraCost = expGain / 5;
         costItems.add(new ItemParamData(202, moraCost));
         if (!player.getInventory().payItems(costItems)) {
             return;
         }
 
-        // Level up
         upgradeAvatar(player, avatar, promoteData, expGain);
     }
 
@@ -781,46 +709,35 @@ public class InventorySystem extends BaseGameSystem {
         int reqExp = GameData.getAvatarLevelExpRequired(level);
 
         while (expGain > 0 && reqExp > 0 && level < maxLevel) {
-            // Do calculations
             int toGain = Math.min(expGain, reqExp - exp);
             exp += toGain;
             expGain -= toGain;
-            // Level up
             if (exp >= reqExp) {
-                // Exp
                 exp = 0;
                 level += 1;
-                // Set req exp
                 reqExp = GameData.getAvatarLevelExpRequired(level);
             }
         }
 
-        // Old map for packet
         Map<Integer, Float> oldPropMap = avatar.getFightProperties();
         if (oldLevel != level) {
-            // Deep copy if level has changed
             oldPropMap = new Int2FloatArrayMap(avatar.getFightProperties());
         }
 
-        // Done
         avatar.setLevel(level);
         avatar.setExp(exp);
         avatar.recalcStats();
         avatar.save();
 
-        // TODO Send entity prop update packet to world
 
-        // Packets
         player.sendPacket(new PacketAvatarPropNotify(avatar));
         player.sendPacket(new PacketAvatarUpgradeRsp(avatar, oldLevel, oldPropMap));
 
-        // Call PlayerLevelAvatarEvent.
         new PlayerLevelAvatarEvent(player, oldLevel, avatar).call();
     }
 
     public void upgradeAvatarFetterLevel(Player player, Avatar avatar, int expGain) {
-        // May work. Not test.
-        int maxLevel = 10; // Keep it until I think of a more "elegant" way
+        int maxLevel = 10;
         int level = avatar.getFetterLevel();
         int exp = avatar.getFetterExp();
         int reqExp = GameData.getAvatarFetterLevelExpRequired(level);
@@ -846,7 +763,6 @@ public class InventorySystem extends BaseGameSystem {
 
     @Deprecated(forRemoval = true)
     public void upgradeAvatarSkill(Player player, long guid, int skillId) {
-        // Sanity checks
         Avatar avatar = player.getAvatars().getAvatarByGuid(guid);
         if (avatar == null) return;
 
@@ -855,7 +771,6 @@ public class InventorySystem extends BaseGameSystem {
 
     @Deprecated(forRemoval = true)
     public void unlockAvatarConstellation(Player player, long guid) {
-        // Sanity check
         Avatar avatar = player.getAvatars().getAvatarByGuid(guid);
         if (avatar == null) return;
 
@@ -863,12 +778,10 @@ public class InventorySystem extends BaseGameSystem {
     }
 
     public void destroyMaterial(Player player, List<MaterialInfo> list) {
-        // Return materials
         val returnMaterialMap = new Int2IntOpenHashMap();
         val inventory = player.getInventory();
 
         for (MaterialInfo info : list) {
-            // Sanity check
             if (info.getCount() <= 0) {
                 continue;
             }
@@ -878,11 +791,9 @@ public class InventorySystem extends BaseGameSystem {
                 continue;
             }
 
-            // Remove
             int removeAmount = Math.min(info.getCount(), item.getCount());
             inventory.removeItem(item, removeAmount);
 
-            // Delete material return items
             val data = item.getItemData();
             if (data.getDestroyReturnMaterial().length > 0) {
                 for (int i = 0; i < data.getDestroyReturnMaterial().length; i++) {
@@ -892,16 +803,13 @@ public class InventorySystem extends BaseGameSystem {
             }
         }
 
-        // Give back items
         if (returnMaterialMap.size() > 0) {
             returnMaterialMap.forEach((id, count) -> inventory.addItem(new GameItem(id, count)));
         }
 
-        // Packets
         player.sendPacket(new PacketDestroyMaterialRsp(returnMaterialMap));
     }
 
-    // Uses an item from the player's inventory.
     public synchronized GameItem useItem(
             Player player,
             long targetGuid,
@@ -933,11 +841,9 @@ public class InventorySystem extends BaseGameSystem {
         }
     }
 
-    // Uses an item without checking the player's inventory.
     public synchronized boolean useItemDirect(ItemData itemData, UseItemParams params) {
         if (itemData == null) return false;
 
-        // Ensure targeting conditions are satisfied
         val target = Optional.ofNullable(params.targetAvatar);
         switch (params.itemUseTarget) {
             case ITEM_USE_TARGET_NONE -> {}
@@ -956,7 +862,6 @@ public class InventorySystem extends BaseGameSystem {
 
         int[] satiationParams = itemData.getSatiationParams();
         if (satiationParams != null && satiationParams.length > 0 && target.isPresent()) {
-            // Invoke and call player use food event.
             var event =
                     new PlayerUseFoodEvent(params.player, itemData, params.targetAvatar.getAsEntity());
             event.call();
@@ -972,18 +877,17 @@ public class InventorySystem extends BaseGameSystem {
                     .addSatiation(
                             params.targetAvatar,
                             satiationIncrease,
-                            itemData.getId())) { // Make sure avatar can eat
+                            itemData.getId())) {
                 return false;
             }
         }
 
-        // Use
         var actions = itemData.getItemUseActions();
         Grasscutter.getLogger().trace("Using - actions - {}", actions);
-        if (actions == null) return true; // Maybe returning false would be more appropriate?
+        if (actions == null) return true;
         return actions.stream()
                 .map(use -> use.useItem(params))
-                .reduce(false, (a, b) -> a || b); // Don't short-circuit!!!
+                .reduce(false, (a, b) -> a || b);
     }
     public void favouriteEquip(Player player, long itemId, boolean isFavourite) {
         GameItem equip = player.getInventory().getItemByGuid(itemId);

@@ -12,8 +12,6 @@ public class ItemUseUnlockPaidBattlePassNormal extends ItemUseAction {
 
     @Override
     public boolean useItem(UseItemParams params) {
-        // TODO: add paid BP
-        // return params.player.getBattlePassManager().setPaid(true);
         return false;
     }
 }

@@ -4,7 +4,6 @@ import emu.grasscutter.net.packet.*;
 import emu.grasscutter.net.proto.HitTreeNotifyOuterClass.HitTreeNotify;
 import emu.grasscutter.server.game.GameSession;
 
-/** Implement Deforestation Function */
 @Opcodes(PacketOpcodes.HitTreeNotify)
 public class HandlerHitTreeNotify extends PacketHandler {
     @Override

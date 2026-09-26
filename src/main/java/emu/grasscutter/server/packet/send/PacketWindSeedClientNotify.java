@@ -19,7 +19,6 @@ public class PacketWindSeedClientNotify extends BasePacket {
         return configured > 0 ? configured : PacketOpcodes.WindSeedType1Notify;
     }
 
-    /** `payload` on 7.0's _PlayerNormalLuaShellNotify. 6.7 had it at 11, 6.6 at 8. */
     private static final int DEFAULT_PAYLOAD_FIELD =
             emu.grasscutter.net.proto.WindSeedType1NotifyOuterClass.WindSeedType1Notify.getDescriptor()
                     .findFieldByName("_payload")
@@ -29,7 +28,6 @@ public class PacketWindSeedClientNotify extends BasePacket {
         return Configuration.GAME_OPTIONS.watermark.cmdId < 0;
     }
 
-    /** Encodes a payload at the configured field number. Shared by the other wind seed packets. */
     static byte[] encode(byte[] luac) {
         return encode(luac, Configuration.GAME_OPTIONS.watermark.payloadField);
     }

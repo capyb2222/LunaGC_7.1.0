@@ -16,7 +16,6 @@ public class HandlerAvatarFetterLevelRewardReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         AvatarFetterLevelRewardReq req = AvatarFetterLevelRewardReq.parseFrom(payload);
         if (req.getFetterLevel() < 10) {
-            // You don't have a full level of fetter level, why do you want to get a divorce certificate?
             session.send(new PacketAvatarFetterLevelRewardRsp(req.getAvatarGuid(), req.getFetterLevel()));
         } else {
             long avatarGuid = req.getAvatarGuid();
@@ -29,7 +28,6 @@ public class HandlerAvatarFetterLevelRewardReq extends PacketHandler {
             int cardId = card.getRewardItemList().get(0).getItemId();
 
             if (session.getPlayer().getNameCardList().contains(cardId)) {
-                // Already got divorce certificate.
                 session
                         .getPlayer()
                         .sendPacket(

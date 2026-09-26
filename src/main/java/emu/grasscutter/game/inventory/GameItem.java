@@ -33,10 +33,9 @@ public class GameItem {
     @Getter @Setter private int itemId;
     @Getter @Setter private int count;
 
-    @Transient @Getter private long guid; // Player unique id
+    @Transient @Getter private long guid;
     @Transient @Getter @Setter private ItemData itemData;
 
-    // Equips
     @Getter @Setter private int level;
     @Getter @Setter private int exp;
     @Getter @Setter private int totalExp;
@@ -44,11 +43,9 @@ public class GameItem {
     @Getter @Setter private boolean favourite;
     @Getter @Setter private boolean locked;
 
-    // Weapon
     @Getter private List<Integer> affixes;
     @Getter @Setter private int refinement = 0;
 
-    // Relic
     @Getter @Setter private int mainPropId;
     @Getter private List<Integer> appendPropIdList;
 
@@ -57,7 +54,6 @@ public class GameItem {
     @Transient @Getter private boolean newItem = false;
 
     public GameItem() {
-        // Morphia only
     }
 
     public GameItem(int itemId) {
@@ -86,7 +82,7 @@ public class GameItem {
                 break;
             case ITEM_WEAPON:
                 this.count = 1;
-                this.level = Math.max(this.count, 1); // ??????????????????
+                this.level = Math.max(this.count, 1);
                 this.affixes = new ArrayList<>(2);
                 if (data.getSkillAffix() != null) {
                     for (int skillAffix : data.getSkillAffix()) {
@@ -100,13 +96,11 @@ public class GameItem {
                 this.count = 1;
                 this.level = 1;
                 this.appendPropIdList = new ArrayList<>();
-                // Create main property
                 ReliquaryMainPropData mainPropData =
                         GameDepot.getRandomRelicMainProp(data.getMainPropDepotId());
                 if (mainPropData != null) {
                     this.mainPropId = mainPropData.getId();
                 }
-                // Create extra stats
                 this.addAppendProps(data.getAppendPropNum());
                 break;
             default:
@@ -124,7 +118,6 @@ public class GameItem {
     }
 
     public void checkIsNew(Inventory inventory) {
-        // display notification when player obtain new item
         if (inventory.getItemById(this.itemId) == null) {
             this.newItem = true;
         }
@@ -188,8 +181,6 @@ public class GameItem {
 
     private Set<FightProperty> getAppendFightProperties() {
         Set<FightProperty> props = new HashSet<>();
-        // Previously this would check no more than the first four affixes, however custom artifacts may
-        // not respect this order.
         for (int appendPropId : this.appendPropIdList) {
             ReliquaryAffixData affixData = GameData.getReliquaryAffixDataMap().get(appendPropId);
             if (affixData != null) {
@@ -207,7 +198,6 @@ public class GameItem {
             return;
         }
 
-        // Build blacklist - Dont add same stat as main/sub stat
         Set<FightProperty> blacklist = this.getAppendFightProperties();
         ReliquaryMainPropData mainPropData =
                 GameData.getReliquaryMainPropDataMap().get(this.mainPropId);
@@ -215,7 +205,6 @@ public class GameItem {
             blacklist.add(mainPropData.getFightProp());
         }
 
-        // Build random list
         WeightedList<ReliquaryAffixData> randomList = new WeightedList<>();
         for (ReliquaryAffixData affix : affixList) {
             if (!blacklist.contains(affix.getFightProp())) {
@@ -227,7 +216,6 @@ public class GameItem {
             return;
         }
 
-        // Add random stat
         ReliquaryAffixData affixData = randomList.next();
         this.appendPropIdList.add(affixData.getId());
     }
@@ -240,10 +228,8 @@ public class GameItem {
             return;
         }
 
-        // Build whitelist
         Set<FightProperty> whitelist = this.getAppendFightProperties();
 
-        // Build random list
         WeightedList<ReliquaryAffixData> randomList = new WeightedList<>();
         for (ReliquaryAffixData affix : affixList) {
             if (whitelist.contains(affix.getFightProp())) {
@@ -255,7 +241,6 @@ public class GameItem {
             return;
         }
 
-        // Add random stat
         ReliquaryAffixData affixData = randomList.next();
         this.appendPropIdList.add(affixData.getId());
     }

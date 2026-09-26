@@ -30,10 +30,8 @@ public final class PlayerMoveEvent extends PlayerEvent {
     }
 
     public enum MoveType {
-        /** The player has sent a combat invocation to move. */
         PLAYER,
 
-        /** The server has requested that the player moves. */
         SERVER
     }
 }

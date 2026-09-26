@@ -53,7 +53,6 @@ public final class GadgetWorktop extends GadgetContent {
             var worktop = WorktopInfo.newBuilder().addAllOptionList(options).build();
             gadgetInfo.setWorktop(worktop);
         } catch (NullPointerException ignored) {
-            // "this.wrapped" is null.
             gadgetInfo.setWorktop(
                     WorktopInfo.newBuilder().addAllOptionList(Collections.emptyList()).build());
             Grasscutter.getLogger().warn("GadgetWorktop.onBuildProto: this.wrapped is null");

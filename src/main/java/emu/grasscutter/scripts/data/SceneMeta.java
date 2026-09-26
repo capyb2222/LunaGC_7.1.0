@@ -25,7 +25,6 @@ public class SceneMeta {
     }
 
     public SceneMeta load(int sceneId) {
-        // Get compiled script if cached
         CompiledScript cs = ScriptLoader.getScript("Scene/" + sceneId + "/scene" + sceneId + ".lua");
 
         if (cs == null) {
@@ -33,10 +32,8 @@ public class SceneMeta {
             return null;
         }
 
-        // Create bindings
         this.context = ScriptLoader.getEngine().createBindings();
 
-        // Eval script
         try {
             ScriptLoader.eval(cs, this.context);
 
@@ -44,8 +41,6 @@ public class SceneMeta {
                     ScriptLoader.getSerializer()
                             .toObject(SceneConfig.class, this.context.get("scene_config"));
 
-            // TODO optimize later
-            // Create blocks
             List<Integer> blockIds =
                     ScriptLoader.getSerializer().toList(Integer.class, this.context.get("blocks"));
             List<SceneBlock> blocks =

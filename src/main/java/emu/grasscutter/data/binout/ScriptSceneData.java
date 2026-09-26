@@ -10,7 +10,6 @@ public class ScriptSceneData {
 
     @Data
     public static class ScriptObject {
-        // private SceneGroup groups;
         @SerializedName("dummy_points")
         private Map<String, List<Float>> dummyPoints;
     }

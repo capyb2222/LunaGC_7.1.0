@@ -11,7 +11,6 @@ public class HandlerDungeonDieOptionReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         DungeonDieOptionReq req = DungeonDieOptionReq.parseFrom(payload);
         var dieOption = req.getDieOption();
-        // TODO Handle other die options
         if (req.getIsQuitImmediately()) {
             session.getPlayer().getServer().getDungeonSystem().exitDungeon(session.getPlayer());
         }

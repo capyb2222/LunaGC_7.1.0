@@ -38,7 +38,7 @@ public class GameMainQuest {
     @Getter int[] suggestTrackMainQuestList;
     @Getter private Map<Integer, TalkData> talks;
 
-    @Deprecated // Morphia only. Do not use.
+    @Deprecated
     public GameMainQuest() {}
 
     public GameMainQuest(Player player, int parentQuestId) {
@@ -48,10 +48,9 @@ public class GameMainQuest {
         this.parentQuestId = parentQuestId;
         this.childQuests = new HashMap<>();
         this.talks = new HashMap<>();
-        // official server always has a list of 5 questVars, with default value 0
         this.questVars = new int[] {0, 0, 0, 0, 0};
         this.timeVar =
-                new long[] {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}; // theoretically max is 10 here
+                new long[] {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         this.state = ParentQuestState.PARENT_QUEST_STATE_NONE;
         this.questGroupSuites = new ArrayList<>();
         addAllChildQuests();
@@ -154,8 +153,6 @@ public class GameMainQuest {
     }
 
     public void finish() {
-        // Avoid recursion from child finish() in GameQuest
-        // when auto finishing all child quests with QUEST_STATE_UNFINISHED (below)
         synchronized (this) {
             if (this.isFinished || this.state == ParentQuestState.PARENT_QUEST_STATE_FINISHED) {
                 Grasscutter.getLogger()
@@ -174,7 +171,6 @@ public class GameMainQuest {
 
         this.save();
 
-        // Add rewards
         MainQuestData mainQuestData = GameData.getMainQuestDataMap().get(this.getParentQuestId());
         if (mainQuestData.getRewardIdList() != null) {
             for (int rewardId : mainQuestData.getRewardIdList()) {
@@ -189,7 +185,6 @@ public class GameMainQuest {
             }
         }
     }
-    // TODO
     public void fail() {}
 
     public void cancel() {}
@@ -223,8 +218,6 @@ public class GameMainQuest {
         return null;
     }
 
-    // Rewinds to the last finished/unfinished rewind quest, and returns the avatar rewind position
-    // (if it exists)
     public List<Position> rewind() {
         if (this.questManager == null) {
             this.questManager = getOwner().getQuestManager();
@@ -245,13 +238,9 @@ public class GameMainQuest {
                                                     && q.getState().getValue() != QuestState.FINISHED.getValue())
                             .min(Comparator.comparingInt(a -> a.getQuestData().getOrder()));
             if (firstUnstarted.isEmpty()) {
-                // all quests are probably finished, do don't rewind and maybe also set the mainquest to
-                // finished?
                 return null;
             }
             highestActiveQuest = firstUnstarted.get();
-            // todo maybe try to accept quests if there is no active quest and no rewind target?
-            // tryAcceptSubQuests(QuestTrigger.QUEST_COND_NONE, "", 0);
         }
 
         var highestOrder = highestActiveQuest.getQuestData().getOrder();
@@ -293,9 +282,9 @@ public class GameMainQuest {
         if (avatarPosPos == null) return false;
 
         posAndRot.add(
-                0, new Position(avatarPosPos.get(0), avatarPosPos.get(1), avatarPosPos.get(2))); // position
+                0, new Position(avatarPosPos.get(0), avatarPosPos.get(1), avatarPosPos.get(2)));
         posAndRot.add(
-                1, new Position(avatarPosRot.get(0), avatarPosRot.get(1), avatarPosRot.get(2))); // rotation
+                1, new Position(avatarPosRot.get(0), avatarPosRot.get(1), avatarPosRot.get(2)));
         Grasscutter.getLogger().debug("Successfully loaded rewind data for quest {}.", subId);
         return true;
     }
@@ -330,11 +319,11 @@ public class GameMainQuest {
         posAndRot.add(
                 0,
                 new Position(
-                        transmitPosPos.get(0), transmitPosPos.get(1), transmitPosPos.get(2))); // position
+                        transmitPosPos.get(0), transmitPosPos.get(1), transmitPosPos.get(2)));
         posAndRot.add(
                 1,
                 new Position(
-                        transmitPosRot.get(0), transmitPosRot.get(1), transmitPosRot.get(2))); // rotation
+                        transmitPosRot.get(0), transmitPosRot.get(1), transmitPosRot.get(2)));
         Grasscutter.getLogger().debug("Successfully loaded teleport data for sub-quest {}.", subId);
         return true;
     }
@@ -393,7 +382,6 @@ public class GameMainQuest {
         try {
             List<GameQuest> subQuestsWithCond =
                     getChildQuests().values().stream()
-                            // There are subQuests with no acceptCond, but can be finished (example: 35104)
                             .filter(
                                     p ->
                                             p.getState() == QuestState.QUEST_STATE_UNFINISHED
@@ -486,7 +474,6 @@ public class GameMainQuest {
         return proto.build();
     }
 
-    // TimeVar handling TODO check if in-game or irl time
     public boolean initTimeVar(int index) {
         if (index >= this.timeVar.length) {
             Grasscutter.getLogger()

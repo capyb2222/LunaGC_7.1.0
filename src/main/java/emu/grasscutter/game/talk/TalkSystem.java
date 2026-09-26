@@ -51,7 +51,6 @@ public final class TalkSystem extends BaseGameSystem {
             return;
         }
 
-        // Execute the handler.
         handler.execute(player, talkData, execParam);
     }
 }

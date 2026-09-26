@@ -6,13 +6,11 @@ import emu.grasscutter.server.packet.send.PacketChallengeDataNotify;
 public class InTimeTrigger extends ChallengeTrigger {
     @Override
     public void onBegin(WorldChallenge challenge) {
-        // Show time remaining UI
         var scene = challenge.getScene();
         scene.broadcastPacket(
                 new PacketChallengeDataNotify(
                         challenge,
                         2,
-                        // Compensate for time passed so far in scene.
                         challenge.getTimeLimit() + scene.getSceneTimeSeconds()));
     }
 

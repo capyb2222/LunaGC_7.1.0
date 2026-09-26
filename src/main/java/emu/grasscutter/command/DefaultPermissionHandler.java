@@ -17,7 +17,7 @@ public class DefaultPermissionHandler implements PermissionHandler {
         }
 
         Account account = player.getAccount();
-        if (player != targetPlayer) { // Additional permission required for targeting another player
+        if (player != targetPlayer) {
             if (!permissionNodeTargeted.isEmpty() && !account.hasPermission(permissionNodeTargeted)) {
                 CommandHandler.sendTranslatedMessage(player, "commands.generic.permission_error");
                 return false;

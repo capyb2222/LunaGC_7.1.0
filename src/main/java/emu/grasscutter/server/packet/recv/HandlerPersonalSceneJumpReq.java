@@ -17,13 +17,12 @@ public class HandlerPersonalSceneJumpReq extends PacketHandler {
         var player = session.getPlayer();
         var prevSceneId = player.getSceneId();
 
-        // get the scene point
         ScenePointEntry scenePointEntry =
                 GameData.getScenePointEntryById(prevSceneId, req.getPointId());
 
         if (scenePointEntry != null) {
             Position pos =
-                    scenePointEntry.getPointData().getTranPos().clone(); // This might not need cloning
+                    scenePointEntry.getPointData().getTranPos().clone();
             int sceneId = scenePointEntry.getPointData().getTranSceneId();
 
             player.getWorld().transferPlayerToScene(player, sceneId, pos);

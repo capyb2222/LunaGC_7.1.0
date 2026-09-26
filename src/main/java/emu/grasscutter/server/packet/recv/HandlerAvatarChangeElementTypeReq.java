@@ -8,7 +8,6 @@ import emu.grasscutter.server.game.GameSession;
 import emu.grasscutter.server.packet.send.PacketAvatarChangeElementTypeRsp;
 import lombok.val;
 
-/** Changes the currently active avatars Element if possible */
 @Opcodes(PacketOpcodes.AvatarChangeElementTypeReq)
 public class HandlerAvatarChangeElementTypeReq extends PacketHandler {
 
@@ -30,7 +29,6 @@ public class HandlerAvatarChangeElementTypeReq extends PacketHandler {
             return;
         }
 
-        // Success
         session.send(new PacketAvatarChangeElementTypeRsp());
     }
 }

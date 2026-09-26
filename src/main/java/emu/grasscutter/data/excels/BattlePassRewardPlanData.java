@@ -13,7 +13,6 @@ public class BattlePassRewardPlanData extends GameResource {
         return this.levelRewardIndexId;
     }
 
-    // the plan the client falls back to when the player has not picked one
     public static int defaultPlan() {
         int lowest = 0;
         for (int id : GameData.getBattlePassRewardPlanDataMap().keySet()) {

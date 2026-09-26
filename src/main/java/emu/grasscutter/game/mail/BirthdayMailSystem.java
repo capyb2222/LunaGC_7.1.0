@@ -30,7 +30,6 @@ public final class BirthdayMailSystem {
         if (birthday.getMonth() != today.getMonthValue() || birthday.getDay() != today.getDayOfMonth())
             return;
 
-        // Don't send the mail more than once per year (e.g. multiple logins on the same day).
         if (player.getLastBirthdayMailYear() >= today.getYear()) return;
 
         List<MailItem> gifts = new ArrayList<>();

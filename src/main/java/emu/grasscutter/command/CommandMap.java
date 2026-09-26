@@ -39,8 +39,6 @@ public final class CommandMap {
             if (account == null) return INVALID_UID;
             var player = DatabaseHelper.getPlayerByAccount(account, Player.class);
             if (player == null) return INVALID_UID;
-            // We will be immediately fetching the player again after this,
-            // but offline vs online Player safety is more important than saving a lookup
             return player.getUid();
         }
     }
@@ -49,12 +47,10 @@ public final class CommandMap {
         Grasscutter.getLogger().trace("Registered command: " + label);
         label = label.toLowerCase();
 
-        // Get command data.
         Command annotation = command.getClass().getAnnotation(Command.class);
         this.annotations.put(label, annotation);
         this.commands.put(label, command);
 
-        // Register aliases.
         for (String alias : annotation.aliases()) {
             this.aliases.put(alias, command);
             this.annotations.put(alias, annotation);
@@ -72,7 +68,6 @@ public final class CommandMap {
         this.annotations.remove(label);
         this.commands.remove(label);
 
-        // Unregister aliases.
         for (String alias : annotation.aliases()) {
             this.aliases.remove(alias);
             this.annotations.remove(alias);
@@ -100,7 +95,6 @@ public final class CommandMap {
     public CommandHandler getHandler(String label) {
         CommandHandler handler = this.commands.get(label);
         if (handler == null) {
-            // Try getting by alias
             handler = this.aliases.get(label);
         }
         return handler;
@@ -108,7 +102,6 @@ public final class CommandMap {
 
     private Player getTargetPlayer(
             String playerId, Player player, Player targetPlayer, List<String> args) {
-        // Top priority: If any @UID argument is present, override targetPlayer with it.
         for (int i = 0; i < args.size(); i++) {
             String arg = args.get(i);
             if (arg.startsWith("@")) {
@@ -130,17 +123,13 @@ public final class CommandMap {
             }
         }
 
-        // Next priority: If we invoked with a target, use that.
-        // By default, this only happens when you message another player in-game with a command.
         if (targetPlayer != null) {
             return targetPlayer;
         }
 
-        // Next priority: Use previously-set target. (see /target [[@]UID])
         if (targetPlayerIds.containsKey(playerId)) {
             targetPlayer =
                     Grasscutter.getGameServer().getPlayerByUid(targetPlayerIds.getInt(playerId), true);
-            // We check every time in case the target is deleted after being targeted
             if (targetPlayer == null) {
                 CommandHandler.sendTranslatedMessage(player, "commands.execution.player_exist_error");
                 throw new IllegalArgumentException();
@@ -148,19 +137,16 @@ public final class CommandMap {
             return targetPlayer;
         }
 
-        // Lowest priority: Target the player invoking the command. In the case of the console, this
-        // will return null.
         return player;
     }
 
     private boolean setPlayerTarget(String playerId, Player player, String targetUid) {
-        if (targetUid.isEmpty()) { // Clears the default targetPlayer.
+        if (targetUid.isEmpty()) {
             targetPlayerIds.removeInt(playerId);
             CommandHandler.sendTranslatedMessage(player, "commands.execution.clear_target");
             return true;
         }
 
-        // Sets default targetPlayer to the UID provided.
         int uid = getUidFromString(targetUid);
         if (uid == INVALID_UID) {
             CommandHandler.sendTranslatedMessage(player, "commands.generic.invalid.uid");
@@ -185,7 +171,6 @@ public final class CommandMap {
     }
 
     public void invoke(Player player, Player targetPlayer, String rawMessage) {
-        // Invoke the ExecuteCommandEvent.
         var event = new ExecuteCommandEvent(player, targetPlayer, rawMessage);
         if (!event.call()) return;
 
@@ -193,7 +178,6 @@ public final class CommandMap {
         targetPlayer = event.getTarget();
         rawMessage = event.getCommand();
 
-        // The console outputs in-game command. [{Account Username} (Player UID: {Player Uid})]
         if (SERVER.logCommands) {
             if (player != null) {
                 Grasscutter.getLogger()
@@ -215,17 +199,15 @@ public final class CommandMap {
             return;
         }
 
-        // Parse message.
         String[] split = rawMessage.split(" ");
         String label = split[0].toLowerCase();
         List<String> args = new ArrayList<>(Arrays.asList(split).subList(1, split.length));
         String playerId = (player == null) ? consoleId : player.getAccount().getId();
 
-        // Check for special cases - currently only target command.
-        if (label.startsWith("@")) { // @[UID]
+        if (label.startsWith("@")) {
             this.setPlayerTarget(playerId, player, label.substring(1));
             return;
-        } else if (label.equalsIgnoreCase("target")) { // target [[@]UID]
+        } else if (label.equalsIgnoreCase("target")) {
             if (!args.isEmpty()) {
                 String targetUidStr = args.get(0);
                 if (targetUidStr.startsWith("@")) {
@@ -238,26 +220,21 @@ public final class CommandMap {
             return;
         }
 
-        // Get command handler.
         CommandHandler handler = this.getHandler(label);
 
-        // Check if the handler is null.
         if (handler == null) {
             CommandHandler.sendTranslatedMessage(player, "commands.generic.unknown_command", label);
             return;
         }
 
-        // Get the command's annotation.
         Command annotation = this.annotations.get(label);
 
-        // Resolve 'targetPlayer'.
         try {
             targetPlayer = getTargetPlayer(playerId, player, targetPlayer, args);
         } catch (IllegalArgumentException e) {
             return;
         }
 
-        // Check for permissions.
         if (!Grasscutter.getPermissionHandler()
                 .checkPermission(
                         player,
@@ -267,7 +244,6 @@ public final class CommandMap {
             return;
         }
 
-        // Check if command has unfulfilled constraints on targetPlayer
         Command.TargetRequirement targetRequirement = annotation.targetRequirement();
         if (targetRequirement != Command.TargetRequirement.NONE) {
             if (targetPlayer == null) {
@@ -289,12 +265,10 @@ public final class CommandMap {
             }
         }
 
-        // Copy player and handler to final properties.
         final var playerF = player;
         final var targetPlayerF = targetPlayer;
         final var handlerF = handler;
 
-        // Invoke execute method for handler.
         Runnable runnable = () -> handlerF.execute(playerF, targetPlayerF, args);
         if (annotation.threading()) {
             new Thread(runnable).start();
@@ -303,7 +277,6 @@ public final class CommandMap {
         }
     }
 
-    /** Scans for all classes annotated with {@link Command} and registers them. */
     private void scan() {
         Reflections reflector = Grasscutter.reflector;
         Set<Class<?>> classes = reflector.getTypesAnnotatedWith(Command.class);

@@ -11,7 +11,6 @@ import emu.grasscutter.game.world.Position;
 public final class ExecTransSceneDummyPoint extends TalkExecHandler {
     @Override
     public void execute(Player player, TalkConfigData talkData, TalkExecParam execParam) {
-        // param[0] == sceneid, param[1] == position
         if (execParam.getParam().length < 2) return;
 
         var fullGlobals =
@@ -29,8 +28,6 @@ public final class ExecTransSceneDummyPoint extends TalkExecHandler {
         if (dummyPointMap == null) return;
 
         var transmitPosPos = dummyPointMap.get(execParam.getParam()[1] + ".pos");
-        // List<Float> transmitPosRot = dummyPointMap.get(e.getParam()[1] + ".rot"); would be useful
-        // when transportation consider rotation
         if (transmitPosPos == null || transmitPosPos.isEmpty()) return;
 
         player

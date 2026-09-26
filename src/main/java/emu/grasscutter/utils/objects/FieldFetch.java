@@ -8,12 +8,10 @@ import java.util.HashMap;
 
 public interface FieldFetch {
     default JsonObject fetchFields(String... fields) {
-        // Prepare field properties.
         var fieldValues = new JsonObject();
         var fieldMap = new HashMap<String, Field>();
         Utils.getAllFields(this.getClass()).forEach(field -> fieldMap.put(field.getName(), field));
 
-        // Find the values of all requested fields.
         for (var fieldName : fields) {
             try {
                 var field = fieldMap.get(fieldName);

@@ -17,7 +17,6 @@ public final class WorldRegions {
     private static Set<Integer> areaIds;
     private static Int2ObjectMap<List<Integer>> regionsByScene;
 
-    // parent area ids not the composite WorldAreaData id
     public static synchronized Set<Integer> allAreaIds() {
         if (areaIds != null) return areaIds;
 
@@ -28,7 +27,6 @@ public final class WorldRegions {
         return ids;
     }
 
-    // regions a scene gates behind progress
     public static synchronized List<Integer> openRegionIds(int sceneId) {
         if (regionsByScene == null) {
             regionsByScene = new Int2ObjectOpenHashMap<>();

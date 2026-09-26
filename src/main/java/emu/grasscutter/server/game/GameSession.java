@@ -28,10 +28,8 @@ public class GameSession implements GameSessionManager.KcpChannel {
 
     @Setter private boolean useSecretKey;
 
-    /** Whether this session has already reported a frame that would not decrypt. */
     private boolean reportedBadMagic;
 
-    /** Packet classes already reported as having no 7.0 CmdId, so each is said once. */
     private static final java.util.Set<String> missingCmdIdReported =
             java.util.concurrent.ConcurrentHashMap.newKeySet();
     @Getter @Setter private SessionState state;
@@ -191,12 +189,10 @@ public class GameSession implements GameSessionManager.KcpChannel {
         Crypto.xor(bytes, primary);
         if (bytes.length >= 2 && readMagic(bytes) == 17767) return;
 
-        // The session key only exists once a seed has been negotiated, so before that there is
-        // nothing to fall back to and the frame really is undecryptable.
         var fallback = useSecretKey() ? Crypto.DISPATCH_KEY : this.encryptKey;
         if (fallback == null || fallback == primary) return;
 
-        Crypto.xor(bytes, primary); // undo
+        Crypto.xor(bytes, primary);
         Crypto.xor(bytes, fallback);
         if (bytes.length >= 2 && readMagic(bytes) == 17767) {
             this.setUseSecretKey(!useSecretKey());
@@ -207,7 +203,6 @@ public class GameSession implements GameSessionManager.KcpChannel {
                             useSecretKey() ? "session" : "dispatch");
             return;
         }
-        // Neither key works, so hand the caller the primary decode and let it report the bad magic.
         Crypto.xor(bytes, fallback);
         Crypto.xor(bytes, primary);
     }
@@ -252,7 +247,7 @@ public class GameSession implements GameSessionManager.KcpChannel {
                         Grasscutter.getLogger()
                                 .error("RAW FRAME HEX: {}", Utils.bytesToHex(bytes));
                     }
-                    return; // Bad packet
+                    return;
                 }
                 int opcode = packet.readShort();
                 int headerLength = packet.readShort();
@@ -268,7 +263,7 @@ public class GameSession implements GameSessionManager.KcpChannel {
                         Grasscutter.getLogger()
                                 .error("Bad Data Package Received: got {} ,expect -30293", const2);
                     }
-                    return; // Bad packet
+                    return;
                 }
 
                 prevOpcode = opcode;
@@ -301,8 +296,6 @@ public class GameSession implements GameSessionManager.KcpChannel {
                 getServer().getPacketHandler().handle(this, opcode, header, payload);
             }
         } catch (Throwable e) {
-            // The rest of this datagram is lost either way, but printed to the console it never
-            // reached the log, so a dropped packet left the player's action unexplained.
             Grasscutter.getLogger()
                     .error(
                             "Dropped an inbound packet from {}.",

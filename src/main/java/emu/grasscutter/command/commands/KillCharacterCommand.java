@@ -20,7 +20,6 @@ public final class KillCharacterCommand implements CommandHandler {
     public void execute(Player sender, Player targetPlayer, List<String> args) {
         EntityAvatar entity = targetPlayer.getTeamManager().getCurrentAvatarEntity();
         entity.setFightProperty(FightProperty.FIGHT_PROP_CUR_HP, 0f);
-        // Packets
         entity
                 .getWorld()
                 .broadcastPacket(
@@ -28,7 +27,6 @@ public final class KillCharacterCommand implements CommandHandler {
         entity
                 .getWorld()
                 .broadcastPacket(new PacketLifeStateChangeNotify(0, entity, LifeState.LIFE_DEAD));
-        // remove
         targetPlayer.getScene().removeEntity(entity);
         entity.onDeath(0);
 

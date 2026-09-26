@@ -88,8 +88,6 @@ public final class GiveCommand implements CommandHandler {
         avatar.save();
         player.sendPacket(new PacketAvatarPropNotify(avatar));
 
-        // Constellations that were taken away stay on screen until the scene is rebuilt, because
-        // PacketAvatarPropNotify only carries props. Same workaround SetConstCommand uses.
         if (loweredConstellation) {
             World world = player.getWorld();
             Scene scene = player.getScene();
@@ -105,21 +103,18 @@ public final class GiveCommand implements CommandHandler {
         int promoteLevel = Avatar.getMinPromoteLevel(param.lvl);
         if (param.constellation < 0 || param.constellation > 6)
             param.constellation =
-                    6; // constellation's default is -1 so if no parameters set for constellations it'll
-        // automatically be 6
+                    6;
         for (AvatarData avatarData : GameData.getAvatarDataMap().values()) {
             int id = avatarData.getId();
             if (id < 10000002 || id >= 10000990) continue;
             if (!"AVATAR_FORMAL".equals(avatarData.getUseType())) continue;
             try {
-                // owned ones are refused by addAvatar, so update them the way a single /give does
                 Avatar owned = player.getAvatars().getAvatarById(id);
                 if (owned != null) {
                     updateAvatar(player, owned, param);
                     updated++;
                     continue;
                 }
-                // Don't try to add each avatar to the current team
                 player.addAvatar(
                         makeAvatar(avatarData, param.lvl, promoteLevel, param.constellation, param.skillLevel),
                         false);
@@ -148,7 +143,7 @@ public final class GiveCommand implements CommandHandler {
             if (item.getItemType() == ItemType.ITEM_WEAPON) {
                 item.setPromoteLevel(promoteLevel);
                 item.setTotalExp(totalExp);
-                item.setRefinement(param.refinement - 1); // Actual refinement data is 0..4 not 1..5
+                item.setRefinement(param.refinement - 1);
             }
             items.add(item);
         }
@@ -163,18 +158,16 @@ public final class GiveCommand implements CommandHandler {
 
         List<GameItem> items = new ArrayList<>(param.amount);
         for (int i = 0; i < param.amount; i++) {
-            // Create item for the artifact.
             GameItem item = new GameItem(param.data);
             item.setLevel(param.lvl);
             item.setTotalExp(totalExp);
             int numAffixes = param.data.getAppendPropNum() + (param.lvl - 1) / 4;
-            if (param.mainPropId > 0) // Keep random mainProp if we didn't specify one
+            if (param.mainPropId > 0)
             item.setMainPropId(param.mainPropId);
             if (param.appendPropIdList != null) {
                 item.getAppendPropIdList().clear();
                 item.getAppendPropIdList().addAll(param.appendPropIdList);
             }
-            // If we didn't include enough substats, top them up to the appropriate level at random
             item.addAppendProps(numAffixes - item.getAppendPropIdList().size());
             items.add(item);
         }
@@ -206,7 +199,6 @@ public final class GiveCommand implements CommandHandler {
 
     private static int getAppendPropId(String substatText, ItemData itemData)
             throws IllegalArgumentException {
-        // If the given substat text is an integer, we just use that as the append prop ID.
         try {
             return Integer.parseInt(substatText);
         } catch (NumberFormatException ignored) {
@@ -225,7 +217,7 @@ public final class GiveCommand implements CommandHandler {
                 throw new IllegalArgumentException();
             }
 
-            substatTier -= 1; // 1-indexed to 0-indexed
+            substatTier -= 1;
             substatTier = Math.min(Math.max(0, substatTier), substats.size() - 1);
             return substats.get(substatTier);
         }
@@ -238,17 +230,12 @@ public final class GiveCommand implements CommandHandler {
         try {
             param.mainPropId = Integer.parseInt(mainPropIdString);
         } catch (NumberFormatException ignored) {
-            // This can in turn throw an exception which we don't want to catch here.
             param.mainPropId =
                     getArtifactMainProp(param.data, FightProperty.getPropByShortName(mainPropIdString));
         }
 
-        // Get substats.
         param.appendPropIdList = new ArrayList<>();
-        // Every remaining argument is a substat.
         for (String prop : args) {
-            // The substat syntax permits specifying a number of rolls for the given
-            // substat. Split the string into stat and number if that is the case here.
             String[] arr = prop.split(",");
             prop = arr[0];
             int n = 1;
@@ -256,10 +243,8 @@ public final class GiveCommand implements CommandHandler {
                 n = Math.min(Integer.parseInt(arr[1]), 200);
             }
 
-            // Determine the substat ID.
             int appendPropId = getAppendPropId(prop, param.data);
 
-            // Add the current substat.
             for (int i = 0; i < n; i++) {
                 param.appendPropIdList.add(appendPropId);
             }
@@ -267,7 +252,6 @@ public final class GiveCommand implements CommandHandler {
     }
 
     private static void addItemsChunked(Player player, List<GameItem> items, int packetSize) {
-        // Send the items in multiple packets
         int lastIdx = items.size() - 1;
         for (int i = 0; i <= lastIdx; i += packetSize) {
             player.getInventory().addItems(items.subList(i, Math.min(i + packetSize, items.size())));
@@ -278,7 +262,7 @@ public final class GiveCommand implements CommandHandler {
         List<GameItem> itemList = new ArrayList<>();
         for (ItemData itemdata : GameData.getItemDataMap().values()) {
             int id = itemdata.getId();
-            if (id < 100_000) continue; // Nothing meaningful below this
+            if (id < 100_000) continue;
             if (ILLEGAL_ITEMS.contains(id)) continue;
             if (itemdata.isEquip()) continue;
 
@@ -298,7 +282,7 @@ public final class GiveCommand implements CommandHandler {
         List<GameItem> itemList = new ArrayList<>();
         for (ItemData itemdata : GameData.getItemDataMap().values()) {
             int id = itemdata.getId();
-            if (id < 11100 || id > 16000) continue; // All extant weapons are within this range
+            if (id < 11100 || id > 16000) continue;
             if (ILLEGAL_WEAPONS.contains(id)) continue;
             if (!itemdata.isEquip()) continue;
             if (itemdata.getItemType() != ItemType.ITEM_WEAPON) continue;
@@ -325,12 +309,10 @@ public final class GiveCommand implements CommandHandler {
             throws IllegalArgumentException {
         GiveItemParameters param = new GiveItemParameters();
 
-        // Extract any tagged arguments (e.g. "lv90", "x100", "r5")
         parseIntParameters(args, param, intCommandHandlers);
 
-        // At this point, first remaining argument MUST be itemId/avatarId
         if (args.size() < 1) {
-            sendUsageMessage(sender); // Reachable if someone does `/give lv90` or similar
+            sendUsageMessage(sender);
             throw new IllegalArgumentException();
         }
         String id = args.remove(0);
@@ -371,7 +353,7 @@ public final class GiveCommand implements CommandHandler {
 
                 if (!isRelic
                         && !args.isEmpty()
-                        && (param.amount == 1)) { // A concession for the people that truly hate [x<amount>].
+                        && (param.amount == 1)) {
                     try {
                         param.amount = Integer.parseInt(args.remove(0));
                     } catch (NumberFormatException e) {
@@ -385,14 +367,12 @@ public final class GiveCommand implements CommandHandler {
         if (param.refinement < 1) param.refinement = 1;
         if (param.refinement > 5) param.refinement = 5;
         if (isRelic) {
-            // Input 0-20 to match game, instead of 1-21 which is the real level
             if (param.lvl < 0) param.lvl = 0;
             if (param.lvl > 20) param.lvl = 20;
             param.lvl += 1;
             if (ILLEGAL_RELICS.contains(param.id))
                 CommandHandler.sendTranslatedMessage(sender, "commands.give.illegal_relic");
         } else {
-            // Suitable for Avatars and Weapons
             if (param.lvl < 1) param.lvl = 1;
             if (param.lvl > 90) param.lvl = 90;
         }
@@ -417,7 +397,7 @@ public final class GiveCommand implements CommandHandler {
 
     @Override
     public void execute(Player sender, Player targetPlayer, List<String> args) {
-        if (args.size() < 1) { // *No args*
+        if (args.size() < 1) {
             sendUsageMessage(sender);
             return;
         }
@@ -445,10 +425,7 @@ public final class GiveCommand implements CommandHandler {
                     break;
             }
 
-            // Check if this is an avatar
             if (param.avatarData != null) {
-                // param.id may be the short form (1133), so the lookup has to go through the
-                // resolved data rather than what was typed.
                 Avatar owned = targetPlayer.getAvatars().getAvatarById(param.avatarData.getId());
                 if (owned != null) {
                     updateAvatar(targetPlayer, owned, param);
@@ -463,7 +440,6 @@ public final class GiveCommand implements CommandHandler {
                         targetPlayer.getUid());
                 return;
             }
-            // If it's not an avatar, it needs to be a valid item
             if (param.data == null) {
                 CommandHandler.sendTranslatedMessage(sender, "commands.generic.invalid.itemId");
                 return;
@@ -522,8 +498,6 @@ public final class GiveCommand implements CommandHandler {
     }
 
     private static void giveWholeSet(Player sender, Player targetPlayer, GiveItemParameters param) {
-        // Whatever stats were typed were read against the first piece's depot, and a flower cannot
-        // carry a circlet's main stat. Let all five roll rather than force one slot's answer on the rest.
         param.mainPropId = -1;
         param.appendPropIdList = null;
 
@@ -552,7 +526,6 @@ public final class GiveCommand implements CommandHandler {
         public int mainPropId = -1;
         public List<Integer> appendPropIdList;
 
-        /** One piece per slot, when a whole set was asked for rather than a single artifact. */
         public List<Integer> setPieces = List.of();
         public ItemData data;
         public AvatarData avatarData;

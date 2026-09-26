@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 
 @ResourceType(name = "PersonalLineExcelConfigData.json")
 @Getter
-@Setter // TODO: remove setters next API break
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PersonalLineData extends GameResource {
     @Getter(onMethod_ = @Override)

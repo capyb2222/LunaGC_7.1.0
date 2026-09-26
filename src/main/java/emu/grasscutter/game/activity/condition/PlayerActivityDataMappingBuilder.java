@@ -7,7 +7,6 @@ import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.ints.AbstractInt2ObjectMap.BasicEntry;
 import java.util.Map;
 
-/** This class is used for building mapping for PlayerActivityData */
 public class PlayerActivityDataMappingBuilder {
 
     private final Map<Integer, PlayerActivityData> playerActivityDataMap;

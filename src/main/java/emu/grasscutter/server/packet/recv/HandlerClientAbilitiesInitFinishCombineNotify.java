@@ -17,7 +17,6 @@ public class HandlerClientAbilitiesInitFinishCombineNotify extends PacketHandler
 
         Player player = session.getPlayer();
 
-        // Call skill end in the player's ability manager.
         player.getAbilityManager().onSkillEnd(player);
 
         for (EntityAbilityInvokeEntry entry : notif.getEntityInvokeListList()) {

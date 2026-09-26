@@ -29,7 +29,7 @@ public final class TeleportCommand implements CommandHandler {
                 } catch (NumberFormatException ignored) {
                     CommandHandler.sendMessage(
                             sender, translate(sender, "commands.execution.argument_error"));
-                } // Fallthrough
+                }
             case 3:
                 try {
                     pos = CommandHelpers.parsePosition(args.get(0), args.get(1), args.get(2), pos, rot);

@@ -16,7 +16,6 @@ public class TrialAvatarPlayerData {
     List<RewardInfoItem> rewardInfoList;
 
     private static BaseTrialActivityData getActivityData(int scheduleId) {
-        // prefer custom data over official data
         return GameData.getTrialAvatarActivityCustomData().isEmpty()
                 ? GameData.getTrialAvatarActivityDataMap().get(scheduleId)
                 : GameData.getTrialAvatarActivityCustomData().get(scheduleId);

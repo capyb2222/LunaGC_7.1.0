@@ -12,7 +12,6 @@ public class PacketFurnitureCurModuleArrangeCountNotify extends BasePacket {
                 FurnitureCurModuleArrangeCountNotifyOuterClass.FurnitureCurModuleArrangeCountNotify
                         .newBuilder();
 
-        // TODO
 
         this.setData(proto);
     }

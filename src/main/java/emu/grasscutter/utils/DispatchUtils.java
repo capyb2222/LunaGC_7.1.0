@@ -23,7 +23,6 @@ public interface DispatchUtils {
     @Nullable static Account authenticate(String accountId, String token) {
         return switch (Grasscutter.getRunMode()) {
             case GAME_ONLY ->
-            // Use the authentication system to validate the token.
             Grasscutter.getAuthenticationSystem()
                     .getSessionTokenValidator()
                     .authenticate(
@@ -31,11 +30,9 @@ public interface DispatchUtils {
                                     .tokenRequest(LoginTokenRequestJson.builder().uid(accountId).token(token).build())
                                     .build());
             case HYBRID, DISPATCH_ONLY -> {
-                // Fetch the account from the database.
                 var account = DatabaseHelper.getAccountById(accountId);
                 if (account == null) yield null;
 
-                // Check if the token is valid.
                 yield account.getToken().equals(token) ? account : null;
             }
         };
@@ -44,39 +41,29 @@ public interface DispatchUtils {
     @Nullable static String fetchSessionKey(int playerId) {
         return switch (Grasscutter.getRunMode()) {
             case GAME_ONLY -> {
-                // Fetch the player from the game server.
                 var player = DatabaseHelper.getPlayerByUid(playerId);
                 if (player == null) yield null;
 
-                // Fetch the account from the dispatch server.
                 var accountId = player.getAccountId();
                 var account = DispatchUtils.getAccountById(accountId);
 
-                // Return the session key.
                 yield account == null ? null : account.getSessionKey();
             }
             case DISPATCH_ONLY -> {
-                // Fetch the player's account ID from the game server.
                 var playerFields = DispatchUtils.getPlayerFields(playerId, "accountId");
                 if (playerFields == null) yield null;
 
-                // Get the account ID.
                 var accountId = playerFields.get("accountId").getAsString();
                 if (accountId == null) yield null;
 
-                // Fetch the account from the dispatch server.
                 var account = DatabaseHelper.getAccountById(accountId);
-                // Return the session key.
                 yield account == null ? null : account.getSessionKey();
             }
             case HYBRID -> {
-                // Fetch the player from the game server.
                 var player = DatabaseHelper.getPlayerByUid(playerId);
                 if (player == null) yield null;
 
-                // Fetch the account from the database.
                 var account = player.getAccount();
-                // Return the session key.
                 yield account == null ? null : account.getSessionKey();
             }
         };
@@ -85,11 +72,9 @@ public interface DispatchUtils {
     @Nullable static Account getAccountById(String accountId) {
         return switch (Grasscutter.getRunMode()) {
             case GAME_ONLY -> {
-                // Create a request for account information.
                 var request = new JsonObject();
                 request.addProperty("accountId", accountId);
 
-                // Wait for the request to complete.
                 yield Grasscutter.getGameServer()
                         .getDispatchClient()
                         .await(
@@ -105,12 +90,10 @@ public interface DispatchUtils {
     @Nullable static JsonObject getPlayerFields(int playerId, String... fields) {
         return switch (Grasscutter.getRunMode()) {
             case DISPATCH_ONLY -> {
-                // Create a request for player fields.
                 var request = new JsonObject();
                 request.addProperty("playerId", playerId);
                 request.add("fields", IDispatcher.JSON.toJsonTree(fields));
 
-                // Wait for the request to complete.
                 yield Grasscutter.getDispatchServer()
                         .await(
                                 request,
@@ -119,11 +102,9 @@ public interface DispatchUtils {
                                 IDispatcher.DEFAULT_PARSER);
             }
             case HYBRID, GAME_ONLY -> {
-                // Get the player by ID.
                 var player = Grasscutter.getGameServer().getPlayerByUid(playerId, true);
                 if (player == null) yield null;
 
-                // Return the values.
                 yield player.fetchFields(fields);
             }
         };
@@ -132,10 +113,8 @@ public interface DispatchUtils {
     @Nullable static JsonObject getPlayerByAccount(String accountId, String... fields) {
         return switch (Grasscutter.getRunMode()) {
             case DISPATCH_ONLY -> {
-                // Create a request for player fields.
                 var request = JObject.c().add("accountId", accountId).add("fields", fields);
 
-                // Wait for the request to complete.
                 yield Grasscutter.getDispatchServer()
                         .await(
                                 request.gson(),
@@ -144,11 +123,9 @@ public interface DispatchUtils {
                                 IDispatcher.DEFAULT_PARSER);
             }
             case HYBRID, GAME_ONLY -> {
-                // Get the player by the account.
                 var player = Grasscutter.getGameServer().getPlayerByAccountId(accountId);
                 if (player == null) yield null;
 
-                // Return the values.
                 yield player.fetchFields(fields);
             }
         };
@@ -157,42 +134,34 @@ public interface DispatchUtils {
     static JsonObject fetchGachaRecords(String accountId, int page, int gachaType) {
         return switch (Grasscutter.getRunMode()) {
             case DISPATCH_ONLY -> {
-                // Create a request for gacha records.
                 var request = new JsonObject();
                 request.addProperty("accountId", accountId);
                 request.addProperty("page", page);
                 request.addProperty("gachaType", gachaType);
 
-                // Create a future for the response.
                 var future = new CompletableFuture<JsonObject>();
-                // Listen for the response.
                 var server = Grasscutter.getDispatchServer();
                 server.registerCallback(
                         PacketIds.GachaHistoryRsp,
                         packet -> future.complete(IDispatcher.decode(packet, JsonObject.class)));
 
-                // Broadcast the request.
                 server.sendMessage(PacketIds.GachaHistoryReq, request);
 
                 try {
-                    // Wait for the response.
                     yield future.get(5L, TimeUnit.SECONDS);
                 } catch (Exception ignored) {
                     yield null;
                 }
             }
             case HYBRID, GAME_ONLY -> {
-                // Create a response object.
                 var response = new JsonObject();
 
-                // Get the player's ID from the account.
                 var player = Grasscutter.getGameServer().getPlayerByAccountId(accountId);
                 if (player == null) {
                     response.addProperty("retcode", 1);
                     yield response;
                 }
 
-                // Fetch the gacha records.
                 GachaHandler.fetchGachaRecords(player, response, page, gachaType);
 
                 yield response;
@@ -203,24 +172,19 @@ public interface DispatchUtils {
     static Response performHandbookAction(HandbookBody.Action action, Object data) {
         return switch (Grasscutter.getRunMode()) {
             case DISPATCH_ONLY -> {
-                // Create a request for the 'GM Talk' action.
                 var request = new JsonObject();
                 request.addProperty("action", action.name());
                 request.add("data", JsonUtils.toJson(data));
 
-                // Create a future for the response.
                 var future = new CompletableFuture<Response>();
-                // Listen for the response.
                 var server = Grasscutter.getDispatchServer();
                 server.registerCallback(
                         PacketIds.GmTalkRsp,
                         packet -> future.complete(IDispatcher.decode(packet, Response.class)));
 
-                // Broadcast the request.
                 server.sendMessage(PacketIds.GmTalkReq, request);
 
                 try {
-                    // Wait for the response.
                     yield future.get(5L, TimeUnit.SECONDS);
                 } catch (Exception ignored) {
                     yield Response.builder()

@@ -46,7 +46,6 @@ public final class BlossomActivity {
                         goal,
                         challengeTriggers);
         challengeTriggers.add(new KillMonsterCountTrigger());
-        // this.challengeTriggers.add(new InTimeTrigger());
     }
 
     public WorldChallenge getChallenge() {

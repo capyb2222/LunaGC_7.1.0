@@ -51,14 +51,13 @@ public class Position implements Serializable {
 
     public Position(List<Float> xyz) {
         switch (xyz.size()) {
-            default: // Might want to error on excess elements, but maybe we want to extend to 3+3
-                // representation later.
+            default:
             case 3:
-                this.z = xyz.get(2); // Fall-through
+                this.z = xyz.get(2);
             case 2:
-                this.y = xyz.get(1); // Fall-through
+                this.y = xyz.get(1);
             case 1:
-                this.x = xyz.get(0); // Fall-through
+                this.x = xyz.get(0);
             case 0:
                 break;
         }
@@ -89,7 +88,6 @@ public class Position implements Serializable {
         return this;
     }
 
-    // Deep copy
     public Position set(Position pos) {
         return this.set(pos.getX(), pos.getY(), pos.getZ());
     }
@@ -141,7 +139,6 @@ public class Position implements Serializable {
         return this;
     }
 
-    /** In radians */
     public Position translate(float dist, float angle) {
         this.x += dist * Math.sin(angle);
         this.y += dist * Math.cos(angle);
@@ -149,7 +146,6 @@ public class Position implements Serializable {
     }
 
     public boolean equal2d(Position other) {
-        // Y is height
         return getX() == other.getX() && getZ() == other.getZ();
     }
 
@@ -196,12 +192,10 @@ public class Position implements Serializable {
         return Point.create(x, y, z);
     }
 
-    /** To XYZ array for Spatial Index */
     public double[] toDoubleArray() {
         return new double[] {x, y, z};
     }
 
-    /** To XZ array for Spatial Index (Blocks) */
     public double[] toXZDoubleArray() {
         return new double[] {x, z};
     }

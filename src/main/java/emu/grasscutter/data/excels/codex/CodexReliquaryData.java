@@ -34,7 +34,6 @@ public class CodexReliquaryData extends GameResource {
 
     @Override
     public void onLoad() {
-        // Normalize all itemIds to the 0-substat form
         cupId = (cupId / 10) * 10;
         leatherId = (leatherId / 10) * 10;
         capId = (capId / 10) * 10;

@@ -11,7 +11,6 @@ public class HandlerAvatarWearFlycloakReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         AvatarWearFlycloakReq req = AvatarWearFlycloakReq.parseFrom(payload);
 
-        // 7.0 carries a list of avatars rather than a single guid.
         boolean success = !req.getAvatarGuidListList().isEmpty();
         for (long guid : req.getAvatarGuidListList()) {
             if (!session.getPlayer().getAvatars().wearFlycloak(guid, req.getFlycloakId())) {

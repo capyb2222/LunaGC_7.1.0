@@ -27,8 +27,6 @@ public final class PacketGetAllMailResultNotify extends BasePacket {
                             .map(mail -> mail.toProto(player))
                             .toList());
         } else {
-            // Empty mailbox.
-            // TODO: Implement the gift mailbox.
             packet.addAllMailList(List.of());
         }
 

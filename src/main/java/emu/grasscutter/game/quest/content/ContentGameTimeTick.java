@@ -15,13 +15,11 @@ public class ContentGameTimeTick extends BaseContent {
                 quest.getOwner().getWorld().getTotalGameTimeDays() - quest.getStartGameDay();
         val currentHour = quest.getOwner().getWorld().getGameTimeHours();
 
-        // params[0] is days since start, str is hours of day
         val range = condition.getParamStr().split(",");
         val from = Integer.parseInt(range[0]);
         val to = Integer.parseInt(range[1]);
 
         val daysToPass = condition.getParam()[0];
-        // if to is at the beginning of the day, we need to pass it one more time
         val daysMod = to < from && daysToPass > 0 && currentHour < to ? 1 : 0;
 
         val isTimeMet =

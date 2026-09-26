@@ -48,7 +48,7 @@ public class PlayerCollectionRecords {
         private int configId;
         private long expiredTime;
 
-        @Deprecated // Morphia
+        @Deprecated
         public CollectionRecord() {}
 
         public CollectionRecord(int configId, long expiredTime) {

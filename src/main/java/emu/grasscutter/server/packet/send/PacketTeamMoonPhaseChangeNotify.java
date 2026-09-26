@@ -5,7 +5,6 @@ import emu.grasscutter.net.proto.TeamMoonPhaseChangeNotifyOuterClass.TeamMoonPha
 
 public final class PacketTeamMoonPhaseChangeNotify extends BasePacket {
 
-    /** MOON_PHASE_CONST_VALUE_MOON_PHASE_TEAM_ID: the party's own Moonsign, not an event's. */
     private static final int MOON_PHASE_TYPE = 10000;
 
     public PacketTeamMoonPhaseChangeNotify(int moonsignLevel) {

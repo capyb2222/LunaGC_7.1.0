@@ -22,7 +22,6 @@ public final class ActionKillGadget extends AbilityActionHandler {
         var owner = ability != null ? ability.getOwner() : null;
         if (scene == null || owner == null) return false;
 
-        // Collected before removing: killEntity edits the same map this walks.
         var doomed =
                 scene.getEntities().values().stream()
                         .filter(

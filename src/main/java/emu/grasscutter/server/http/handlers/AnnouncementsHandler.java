@@ -12,7 +12,6 @@ import io.javalin.http.*;
 import java.io.*;
 import java.util.*;
 
-/** Handles requests related to the announcements page. */
 public final class AnnouncementsHandler implements Router {
     private static void getAnnouncement(Context ctx) {
         String data = "";
@@ -58,12 +57,9 @@ public final class AnnouncementsHandler implements Router {
     }
 
     private static void getPageResources(Context ctx) {
-        // Re-process the path - remove the first slash and prevent directory traversal
-        // (the first slash will act as root path when resolving local path)
         String[] path = ctx.path().split("/");
         StringJoiner stringJoiner = new StringJoiner("/");
         for (String pathName : path) {
-            // Filter the illegal payload to prevent directory traversal
             if (!pathName.isEmpty() && !pathName.equals("..") && !pathName.contains("\\")) {
                 stringJoiner.add(pathName);
             }
@@ -84,29 +80,24 @@ public final class AnnouncementsHandler implements Router {
 
     @Override
     public void applyRoutes(Javalin javalin) {
-        // hk4e-api-os.hoyoverse.com
         this.allRoutes(
                 javalin,
                 "/common/hk4e_global/announcement/api/getAlertPic",
                 new HttpJsonResponse(
                         "{\"retcode\":0,\"message\":\"OK\",\"data\":{\"total\":0,\"list\":[]}}"));
-        // hk4e-api-os.hoyoverse.com
         this.allRoutes(
                 javalin,
                 "/common/hk4e_global/announcement/api/getAlertAnn",
                 new HttpJsonResponse(
                         "{\"retcode\":0,\"message\":\"OK\",\"data\":{\"alert\":false,\"alert_id\":0,\"remind\":true}}"));
-        // hk4e-api-os.hoyoverse.com
         this.allRoutes(
                 javalin,
                 "/common/hk4e_global/announcement/api/getAnnList",
                 AnnouncementsHandler::getAnnouncement);
-        // hk4e-api-os-static.hoyoverse.com
         this.allRoutes(
                 javalin,
                 "/common/hk4e_global/announcement/api/getAnnContent",
                 AnnouncementsHandler::getAnnouncement);
-        // hk4e-sdk-os.hoyoverse.com
         this.allRoutes(
                 javalin,
                 "/hk4e_global/mdk/shopwindow/shopwindow/listPriceTier",

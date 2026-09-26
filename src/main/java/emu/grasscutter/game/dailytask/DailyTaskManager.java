@@ -972,12 +972,10 @@ public class DailyTaskManager {
 		return true;
 	}
 
-	/** Whether the four-commission bonus has already been handed over today. */
 	public boolean isScoreRewardTaken() {
 		return this.scoreRewardTaken;
 	}
 
-	/** How many commissions a day is, so callers do not restate it. */
 	public static int getDailyTaskCount() {
 		return DAILY_TASK_COUNT;
 	}

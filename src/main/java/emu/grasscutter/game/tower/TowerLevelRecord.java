@@ -5,9 +5,7 @@ import java.util.*;
 
 @Entity
 public class TowerLevelRecord {
-    /** floorId in config */
     private int floorId;
-    /** LevelId - Stars */
     private Map<Integer, Integer> passedLevelMap;
 
     private int floorStarRewardProgress;

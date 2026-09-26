@@ -13,6 +13,8 @@ public class PacketBattlePassCurScheduleUpdateNotify extends BasePacket {
 
         proto
                 .setHaveCurSchedule(true)
+                .setIsViewed(player.getBattlePassManager().isViewed())
+                .setBattlePassPlan(player.getBattlePassManager().getRewardPlan())
                 .setCurSchedule(player.getBattlePassManager().getScheduleProto())
                 .build();
 

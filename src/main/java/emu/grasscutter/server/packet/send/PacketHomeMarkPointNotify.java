@@ -25,7 +25,6 @@ public class PacketHomeMarkPointNotify extends BasePacket {
             return;
         }
 
-        // send current home mark points.
         var moduleId = owner.getCurrentRealmId();
         var scene = world.getSceneById(moduleId + 2000);
         if (scene == null) {

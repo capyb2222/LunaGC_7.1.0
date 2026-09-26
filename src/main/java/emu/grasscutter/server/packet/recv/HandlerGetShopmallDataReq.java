@@ -9,7 +9,6 @@ public class HandlerGetShopmallDataReq extends PacketHandler {
 
     @Override
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
-        // TODO add the correct shops
         session.send(new PacketGetShopmallDataRsp());
     }
 }

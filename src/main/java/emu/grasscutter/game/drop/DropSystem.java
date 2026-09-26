@@ -20,7 +20,6 @@ public final class DropSystem extends BaseGameSystem {
     private final Map<String, List<BaseDropData>> monsterDrop;
     private final Random rand;
 
-    // TODO: don't know how to determine boss level.Have to hard-code the data from wiki.
     private final int[] bossLevel = {36, 37, 41, 50, 62, 72, 83, 91, 93, 103};
 
     public DropSystem(GameServer server) {
@@ -141,8 +140,6 @@ public final class DropSystem extends BaseGameSystem {
     }
 
     private void processDrop(DropTableData dropData, int count, List<GameItem> items) {
-        // TODO:Not clear on the meaning of some fields,like "dropLevel".Will ignore them.
-        // TODO:solve drop limits,like everydayLimit.
         if (count > 1) {
             for (int i = 0; i < count; i++) processDrop(dropData, 1, items);
             return;
@@ -162,7 +159,6 @@ public final class DropSystem extends BaseGameSystem {
                 if (id == 0) continue;
                 sum += i.getWeight();
                 if (weight < sum) {
-                    // win the item
                     int amount = calculateDropAmount(i) * count;
                     if (amount <= 0) break;
                     if (dropTable.containsKey(id)) {
@@ -230,7 +226,6 @@ public final class DropSystem extends BaseGameSystem {
                         && item.getItemData().getGadgetId() == 0)) {
             giveItem(item, reason, player, share);
         } else {
-            // TODO:solve share problem
             player.getScene().addDropEntity(item, bornFrom, player, share);
         }
     }
@@ -259,7 +254,6 @@ public final class DropSystem extends BaseGameSystem {
     }
 
     private void giveItems(List<GameItem> items, ActionReason reason, Player player, boolean share) {
-        // don't know whether we need PacketDropHintNotify.
         if (share) {
             for (var p : player.getScene().getPlayers()) {
                 p.getInventory().addItems(items, reason);

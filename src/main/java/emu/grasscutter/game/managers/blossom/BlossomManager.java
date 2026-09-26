@@ -88,13 +88,13 @@ public class BlossomManager {
                                 break;
                             }
                             var rand = Utils.randomRange(1, 100);
-                            if (rand > 85 && remain >= 50) { // 15% ,generate strong monster
+                            if (rand > 85 && remain >= 50) {
                                 monsters.addAll(getRandomMonstersID(2, 1));
                                 volume += 50;
-                            } else if (rand > 50 && remain >= 20) { // 35% ,generate normal monster
+                            } else if (rand > 50 && remain >= 20) {
                                 monsters.addAll(getRandomMonstersID(1, 1));
                                 volume += 20;
-                            } else { // 50% ,generate weak monster
+                            } else {
                                 monsters.addAll(getRandomMonstersID(0, 1));
                                 volume += 10;
                             }
@@ -141,8 +141,7 @@ public class BlossomManager {
                                                                 .setRewardId(previewReward)
                                                                 .setCircleCampId(type.getCircleCampId())
                                                                 .setRefreshId(
-                                                                        type.getBlossomChestId()) // TODO: replace when using actual
-                                                                // leylines
+                                                                        type.getBlossomChestId())
                                                                 .build());
                                             });
                         });
@@ -154,7 +153,6 @@ public class BlossomManager {
     }
 
     private static Integer getPreviewReward(BlossomType type, int worldLevel) {
-        // TODO: blossoms should be based on their city
         if (type == null) {
             Grasscutter.getLogger().error("Illegal blossom type {}", type);
             return null;
@@ -206,7 +204,7 @@ public class BlossomManager {
                         for (ItemParamData blossomReward : rewards) {
                             int rewardCount = blossomReward.getCount();
                             if (useCondensedResin) {
-                                rewardCount += blossomReward.getCount(); // Double!
+                                rewardCount += blossomReward.getCount();
                             }
                             items.add(new GameItem(blossomReward.getItemId(), rewardCount));
                         }

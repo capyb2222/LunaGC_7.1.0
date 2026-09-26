@@ -12,8 +12,6 @@ import java.util.*;
 public class BattlePassSystem extends BaseGameSystem {
     private final Map<WatcherTriggerType, List<BattlePassMissionData>> cachedTriggers;
 
-    // BP Mission manager for the server, contains cached triggers so we dont have to load it for each
-    // player
     public BattlePassSystem(GameServer server) {
         super(server);
 
@@ -47,19 +45,16 @@ public class BattlePassSystem extends BaseGameSystem {
         if (triggerList == null || triggerList.isEmpty()) return;
 
         for (BattlePassMissionData data : triggerList) {
-            // Skip params check if param == 0
             if (param != 0) {
                 if (!data.getMainParams().contains(param)) {
                     continue;
                 }
             }
 
-            // Get mission from player, if it doesnt exist, then we make one
             BattlePassMission mission = player.getBattlePassManager().loadMissionById(data.getId());
 
             if (mission.isFinshed()) continue;
 
-            // Add progress
             mission.addProgress(progress, data.getProgress());
 
             if (mission.getProgress() >= data.getProgress()) {
@@ -68,10 +63,8 @@ public class BattlePassSystem extends BaseGameSystem {
                 new PlayerFinishBattlePassMission(player, mission).call();
             }
 
-            // Save to db
             player.getBattlePassManager().save();
 
-            // Packet
             player.sendPacket(new PacketBattlePassMissionUpdateNotify(mission));
         }
     }

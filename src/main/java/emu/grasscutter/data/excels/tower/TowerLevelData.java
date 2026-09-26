@@ -26,8 +26,6 @@ public class TowerLevelData extends GameResource {
         TOWER_COND_LEFT_HP_GREATER_THAN
     }
 
-    // Not actual data in TowerLevelExcelConfigData.
-    // Just packaging condition parameters for convenience.
     @Getter
     public class TowerCondTimeParams {
         private int param1;

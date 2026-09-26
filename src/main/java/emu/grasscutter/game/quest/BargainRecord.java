@@ -29,15 +29,11 @@ public final class BargainRecord {
     private boolean finished;
     private BargainResultType result;
 
-    /** Determines the price of the bargain. */
     public BargainRecord determineBase(BargainData data) {
-        // Set the expected price.
         var price = data.getExpectedValue();
         this.setExpectedPrice(Utils.randomRange(price.get(0), price.get(1)));
-        // Set the lowest price.
         this.setLowestPrice(price.get(0));
 
-        // Set the base mood.
         var mood = data.getRandomMood();
         this.setCurrentMood(Utils.randomRange(mood.get(0), mood.get(1)));
 
@@ -46,32 +42,22 @@ public final class BargainRecord {
 
     public BargainResultType applyOffer(int offer) {
         if (offer < this.getLowestPrice()) {
-            // Decrease the mood.
             this.currentMood -= Utils.randomRange(1, 3);
-            // Return a failure.
             return this.result = BargainResultType.BARGAIN_SINGLE_FAIL;
         }
 
         if (offer > this.getExpectedPrice()) {
-            // Complete the bargain.
             this.setFinished(true);
-            // Return a success.
             return this.result = BargainResultType.BARGAIN_COMPLETE_SUCC;
         }
 
-        // Compare the offer against the mood and expected price.
-        // The mood is out of 100; 1 mood should decrease the price by 100.
         var moodAdjustment = (int) Math.floor(this.getCurrentMood() / 100.0);
         var expectedPrice = this.getExpectedPrice() - moodAdjustment;
         if (offer < expectedPrice) {
-            // Decrease the mood.
             this.currentMood -= Utils.randomRange(1, 3);
-            // Return a failure.
             return this.result = BargainResultType.BARGAIN_SINGLE_FAIL;
         } else {
-            // Complete the bargain.
             this.setFinished(true);
-            // Return a success.
             return this.result = BargainResultType.BARGAIN_COMPLETE_SUCC;
         }
     }

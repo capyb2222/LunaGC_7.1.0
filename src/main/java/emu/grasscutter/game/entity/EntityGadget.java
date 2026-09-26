@@ -59,8 +59,8 @@ public class EntityGadget extends EntityBaseGadget {
     @Nullable @Getter ConfigEntityGadget configGadget;
     @Getter @Setter private BaseRoute routeConfig;
 
-    @Getter @Setter private int stopValue = 0; // Controller related, inited to zero
-    @Getter @Setter private int startValue = 0; // Controller related, inited to zero
+    @Getter @Setter private int stopValue = 0;
+    @Getter @Setter private int startValue = 0;
     @Getter @Setter private int ticksSinceChange;
 
     @Getter private boolean interactEnabled = true;
@@ -129,7 +129,7 @@ public class EntityGadget extends EntityBaseGadget {
             }
         }
 
-        this.initAbilities(); // TODO: move this
+        this.initAbilities();
     }
 
     private void addConfigAbility(ConfigAbilityData abilityData) {
@@ -140,7 +140,6 @@ public class EntityGadget extends EntityBaseGadget {
 
     @Override
     public void initAbilities() {
-        // TODO: handle pre-dynamic, static and dynamic here
         if (this.configGadget != null && this.configGadget.getAbilities() != null) {
             for (var ability : this.configGadget.getAbilities()) {
                 this.addConfigAbility(ability);
@@ -151,12 +150,11 @@ public class EntityGadget extends EntityBaseGadget {
     public void setInteractEnabled(boolean enable) {
         this.interactEnabled = enable;
         this.getScene()
-                .broadcastPacket(new PacketGadgetStateNotify(this, this.getState())); // Update the interact
+                .broadcastPacket(new PacketGadgetStateNotify(this, this.getState()));
     }
 
     public void setState(int state) {
         this.state = state;
-        // Cache the gadget state
         if (metaGadget != null && metaGadget.group != null) {
             var instance = getScene().getScriptManager().getGroupInstanceById(metaGadget.group.id);
             if (instance != null) instance.cacheGadgetState(metaGadget, state);
@@ -164,7 +162,7 @@ public class EntityGadget extends EntityBaseGadget {
     }
 
     public void updateState(int state) {
-        if (state == this.getState()) return; // Don't triggers events
+        if (state == this.getState()) return;
 
         var oldState = this.getState();
         this.setState(state);
@@ -181,12 +179,11 @@ public class EntityGadget extends EntityBaseGadget {
                                 .setParam3(oldState));
     }
 
-    @Deprecated(forRemoval = true) // Dont use!
+    @Deprecated(forRemoval = true)
     public void setContent(GadgetContent content) {
         this.content = this.content == null ? content : this.content;
     }
 
-    // TODO refactor
     public void buildContent() {
         if (this.getContent() != null
                 || this.getGadgetData() == null
@@ -223,7 +220,6 @@ public class EntityGadget extends EntityBaseGadget {
 
     @Override
     public void onCreate() {
-        // Lua event
         getScene()
                 .getScriptManager()
                 .callEvent(
@@ -241,7 +237,7 @@ public class EntityGadget extends EntityBaseGadget {
 
     @Override
     public void onDeath(int killerId) {
-        super.onDeath(killerId); // Invoke super class's onDeath() method.
+        super.onDeath(killerId);
 
         if (this.getSpawnEntry() != null) {
             this.getScene().getDeadSpawnedEntities().add(getSpawnEntry());
@@ -391,8 +387,6 @@ public class EntityGadget extends EntityBaseGadget {
                         .build();
         entityInfo.addPropList(pair);
 
-        // We do not use the getter to null check because the getter will create a fight prop map if it
-        // is null
         if (this.fightProperties != null) {
             addAllFightPropsToEntityInfo(entityInfo);
         }

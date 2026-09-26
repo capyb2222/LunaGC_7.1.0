@@ -6,7 +6,6 @@ import lombok.*;
 @ToString
 @Setter
 public class SceneSuite {
-    // make it refer the default empty list to avoid NPE caused by some group
     public List<Integer> monsters = List.of();
     public List<Integer> gadgets = List.of();
     public List<String> triggers = List.of();

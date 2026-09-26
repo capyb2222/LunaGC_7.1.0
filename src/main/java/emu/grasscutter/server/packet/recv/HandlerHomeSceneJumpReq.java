@@ -26,10 +26,8 @@ public class HandlerHomeSceneJumpReq extends PacketHandler {
         var pos = scene.getScriptManager().getConfig().born_pos;
         var rot = home.getHomeSceneItem(scene.getId()).getBornRot();
 
-        // Make player face correct direction when entering or exiting
         session.getPlayer().getRotation().set(rot);
 
-        // Make player exit to front of main house
         if (!req.getIsEnterRoomScene()) {
             pos = home.getSceneMap().get(realmId).getBornPos();
         }

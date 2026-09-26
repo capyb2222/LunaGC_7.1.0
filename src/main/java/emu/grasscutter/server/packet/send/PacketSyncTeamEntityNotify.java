@@ -28,12 +28,10 @@ public class PacketSyncTeamEntityNotify extends BasePacket {
 
         if (player.getWorld().isMultiplayer()) {
             for (var p : player.getWorld()) {
-                // Skip if same player
                 if (player == p) {
                     continue;
                 }
 
-                // Set info
                 TeamEntityInfo info =
                         TeamEntityInfo.newBuilder()
                                 .setTeamEntityId(p.getTeamManager().getEntity().getId())

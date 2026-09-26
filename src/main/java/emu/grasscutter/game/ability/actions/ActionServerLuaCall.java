@@ -20,12 +20,10 @@ public final class ActionServerLuaCall extends AbilityActionHandler {
 
         var functionName = action.funcName;
 
-        // Set the script library's manager.
         var scriptLib = ScriptLoader.getScriptLib();
         scriptLib.setCurrentEntity(target);
         scriptLib.setSceneScriptManager(scriptManager);
 
-        // Attempt to call the function.
         return switch (action.luaCallType) {
             default -> false;
             case FromGroup -> {
@@ -33,7 +31,6 @@ public final class ActionServerLuaCall extends AbilityActionHandler {
                 var group = scriptManager.getGroupById(groupId);
                 var script = group.getBindings();
 
-                // Set the script library's group.
                 scriptLib.setCurrentGroup(group);
 
                 yield ActionServerLuaCall.callFunction(script, functionName, ability, action);
@@ -43,7 +40,6 @@ public final class ActionServerLuaCall extends AbilityActionHandler {
                 var group = scriptManager.getGroupById(groupId);
                 var script = group.getBindings();
 
-                // Set the script library's group.
                 scriptLib.setCurrentGroup(group);
 
                 yield ActionServerLuaCall.callFunction(script, functionName, ability, action);
@@ -52,8 +48,6 @@ public final class ActionServerLuaCall extends AbilityActionHandler {
                 var controller = target.getEntityController();
                 if (controller == null || functionName.isBlank()) yield false;
 
-                // Hand off the function handling to the controller.
-            //    controller.callControllerScriptFunc(target, functionName, ability, action);
 
                 yield true;
             }
@@ -65,17 +59,14 @@ public final class ActionServerLuaCall extends AbilityActionHandler {
         Ability ability, AbilityModifierAction action
     ) {
         try {
-            // Resolve the function from the script.
             var function = bindings.get(functionName);
             if (!(function instanceof LuaFunction luaFunction))
                 throw new Exception("Function is not a LuaFunction.");
 
-            // Convert parameters to Lua values.
             var lParam1 = LuaValue.valueOf(action.param1.getInt(ability));
             var lParam2 = LuaValue.valueOf(action.param2.getInt(ability));
             var lParam3 = LuaValue.valueOf(action.param3.getInt(ability));
 
-            // Invoke the function with the parameters.
             switch (action.paramNum) {
                 case 1 -> luaFunction.invoke(new LuaValue[] { lParam1 });
                 case 2 -> luaFunction.invoke(new LuaValue[] { lParam1, lParam2 });

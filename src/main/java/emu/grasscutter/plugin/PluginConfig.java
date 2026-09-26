@@ -1,6 +1,5 @@
 package emu.grasscutter.plugin;
 
-/** The data contained in the plugin's `plugin.json` file. */
 public final class PluginConfig {
     public String name, description, version;
     public String mainClass;

@@ -17,7 +17,6 @@ import lombok.val;
         permissionTargeted = "player.cutscene.others")
 public final class CutsceneCommand implements CommandHandler {
 
-    /** Enough to see what matched without flooding the chat box. */
     private static final int MAX_RESULTS = 30;
 
     @Override
@@ -46,7 +45,6 @@ public final class CutsceneCommand implements CommandHandler {
         targetPlayer.sendPacket(new PacketCutsceneBeginNotify(cutsceneId));
     }
 
-    /** Searches the asset paths, which are the only readable names cutscenes have. */
     private void list(Player sender, String search) {
         val needle = search.toLowerCase(Locale.ROOT);
         val matches = GameData.getCutsceneDataMap().values().stream()

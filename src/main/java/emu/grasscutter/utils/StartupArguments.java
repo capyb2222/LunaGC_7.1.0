@@ -10,9 +10,7 @@ import java.util.*;
 import java.util.function.Function;
 import org.slf4j.LoggerFactory;
 
-/** A parser for start-up arguments. */
 public interface StartupArguments {
-    /* A map of parameter -> argument handler. */
     Map<String, Function<String, Boolean>> argumentHandlers =
             new HashMap<>() {
                 {
@@ -49,16 +47,13 @@ public interface StartupArguments {
                                     },
                                     "-test",
                                     parameter -> {
-                                        // Disable the console.
                                         SERVER.game.enableConsole = false;
-                                        // Disable HTTP encryption.
                                         SERVER.http.encryption.useEncryption = false;
                                         return false;
                                     },
                                     "-dump",
                                     StartupArguments::dump,
 
-                                    // Aliases.
                                     "-v",
                                     StartupArguments::printVersion));
                     putAll(
@@ -74,7 +69,6 @@ public interface StartupArguments {
     static boolean parse(String[] args) {
         boolean exitEarly = false;
 
-        // Parse the arguments.
         for (var input : args) {
             var containsParameter = input.contains("=");
 
@@ -96,15 +90,12 @@ public interface StartupArguments {
 
     private static boolean enableDebug(String parameter) {
         if (parameter != null && parameter.equals("all")) {
-            // Override default debug configs
             GAME_INFO.isShowLoopPackets = DEBUG_MODE_INFO.isShowLoopPackets;
             GAME_INFO.isShowPacketPayload = DEBUG_MODE_INFO.isShowPacketPayload;
             GAME_INFO.logPackets = DEBUG_MODE_INFO.logPackets;
             DISPATCH_INFO.logRequests = DEBUG_MODE_INFO.logRequests;
 
-            // Log level to other third-party services
             Level loggerLevel = DEBUG_MODE_INFO.servicesLoggersLevel;
-            // Change loggers to debug.
             ((Logger) LoggerFactory.getLogger("io.javalin")).setLevel(loggerLevel);
             ((Logger) LoggerFactory.getLogger("org.quartz")).setLevel(loggerLevel);
             ((Logger) LoggerFactory.getLogger("org.reflections")).setLevel(loggerLevel);
@@ -112,16 +103,13 @@ public interface StartupArguments {
             ((Logger) LoggerFactory.getLogger("org.mongodb.driver")).setLevel(loggerLevel);
         }
 
-        // Set the main logger to debug.
         Grasscutter.getLogger().setLevel(DEBUG_MODE_INFO.serverLoggerLevel);
         Grasscutter.getLogger().debug("The logger is now running in debug mode.");
-        // Set the server to debug.
         GameConstants.DEBUG = true;
         return false;
     }
 
     private static boolean dump(String parameter) {
-        // Parse the parameter.
         if (!parameter.contains(",")) {
             Grasscutter.getLogger().error("Dumper usage: -dump=<content>,<language>");
             return true;

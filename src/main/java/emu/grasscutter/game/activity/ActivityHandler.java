@@ -19,7 +19,6 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class ActivityHandler {
-    /** Must set before initWatchers */
     @Getter ActivityConfigItem activityConfigItem;
 
     @Getter ActivityData activityData;
@@ -34,7 +33,6 @@ public abstract class ActivityHandler {
     public void initWatchers(Map<WatcherTriggerType, ConstructorAccess<?>> activityWatcherTypeMap) {
         activityData = GameData.getActivityDataMap().get(activityConfigItem.getActivityId());
 
-        // add watcher to map by id
         activityData
                 .getWatcherDataList()
                 .forEach(
@@ -91,7 +89,6 @@ public abstract class ActivityHandler {
                 .toList();
     }
 
-    // TODO handle possible overwrites
     private List<Integer> getMeetConditions(ActivityConditionExecutor conditionExecutor) {
         return conditionExecutor.getMeetActivitiesConditions(getActivityConditions());
     }

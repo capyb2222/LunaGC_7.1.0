@@ -4,7 +4,6 @@ import emu.grasscutter.game.activity.ActivityWatcher;
 import emu.grasscutter.game.activity.ActivityWatcherType;
 import emu.grasscutter.game.props.WatcherTriggerType;
 
-/** Fires when the tracked material id is obtained; progress advances by the amount obtained. */
 @ActivityWatcherType(WatcherTriggerType.TRIGGER_OBTAIN_MATERIAL_NUM)
 public class ObtainMaterialWatcher extends ActivityWatcher {
     @Override

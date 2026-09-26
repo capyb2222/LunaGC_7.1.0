@@ -39,7 +39,6 @@ public class AvatarSkillDepotData extends GameResource {
     private String talentStarName;
     private String skillDepotAbilityGroup;
 
-    // Transient
     private AvatarSkillData energySkillData;
     private ElementType elementType;
     private IntList abilities;
@@ -55,14 +54,12 @@ public class AvatarSkillDepotData extends GameResource {
 
     @Override
     public void onLoad() {
-        // Set energy skill data
         this.energySkillData = GameData.getAvatarSkillDataMap().get(this.energySkill);
         if (this.energySkillData != null) {
             this.elementType = this.energySkillData.getCostElemType();
         } else {
             this.elementType = ElementType.None;
         }
-        // Set embryo abilities (if player skill depot)
         if (getSkillDepotAbilityGroup() != null && getSkillDepotAbilityGroup().length() > 0) {
             AvatarConfig config = GameDepot.getPlayerAbilities().get(getSkillDepotAbilityGroup());
 
@@ -74,8 +71,6 @@ public class AvatarSkillDepotData extends GameResource {
             }
         }
 
-        // A resource set whose obfuscated key we do not know leaves these null; callers iterate them
-        // unconditionally, so normalise here instead of NPEing on the first avatar handed out.
         if (this.inherentProudSkillOpens == null) {
             this.inherentProudSkillOpens = List.of();
         }
@@ -87,7 +82,6 @@ public class AvatarSkillDepotData extends GameResource {
                     .filter(id -> id > 0)
                     .toArray());
 
-        // Get constellation item from GameData
         Optional.ofNullable(this.talents)
                 .map(talents -> talents.get(0))
                 .map(i -> GameData.getAvatarTalentDataMap().get((int) i))

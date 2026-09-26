@@ -10,14 +10,12 @@ public class PacketAvatarTeamAllDataNotify extends BasePacket {
 
         AvatarTeamAllDataNotify.Builder proto = AvatarTeamAllDataNotify.newBuilder();
 
-        // Add the id list for custom teams.
         for (int id : player.getTeamManager().getTeams().keySet()) {
             if (id > 4) {
                 proto.addBackupAvatarTeamOrderList(id);
             }
         }
 
-        // Add the avatar lists for all the teams the player has.
         player
                 .getTeamManager()
                 .getTeams()

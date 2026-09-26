@@ -28,7 +28,6 @@ public class CombineData extends GameResource {
     @Override
     public void onLoad() {
         super.onLoad();
-        // clean data
         randomItems =
                 randomItems.stream().filter(item -> item.getId() > 0).collect(Collectors.toList());
         materialItems =

@@ -24,7 +24,6 @@ public class CityData extends GameResource {
         if (this.sceneId != 0 || this.areaIdVec == null) return this.sceneId;
 
         for (var areaId : this.areaIdVec) {
-            // Areas are keyed child first, and a city names top level areas, whose child id is zero.
             WorldAreaData area = GameData.getWorldAreaDataMap().get(areaId.intValue());
             if (area != null && area.getSceneId() != 0) {
                 this.sceneId = area.getSceneId();

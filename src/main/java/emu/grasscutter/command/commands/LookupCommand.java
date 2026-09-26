@@ -5,7 +5,6 @@ import emu.grasscutter.data.NameIndex;
 import emu.grasscutter.game.player.Player;
 import java.util.List;
 
-/** Finds the id of anything by part of its name, without leaving the game. */
 @Command(
         label = "lookup",
         aliases = {"find", "search"},

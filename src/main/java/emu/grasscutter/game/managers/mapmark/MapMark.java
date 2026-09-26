@@ -16,7 +16,7 @@ public class MapMark {
     private MapMarkFromType mapMarkFromType;
     private int questId;
 
-    @Deprecated // Morhpia
+    @Deprecated
     public MapMark() {
         this.mapMarkPointType = MapMarkPointType.MapMarkPointType_MONSTER;
         this.mapMarkFromType = MapMarkFromType.MapMarkFromType_MONSTER;

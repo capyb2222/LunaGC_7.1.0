@@ -9,9 +9,9 @@ public class CityInfoData {
     @Getter @Setter private int cityId;
 
     @Getter @Setter
-    private int level = 1; // level of the city (include level SotS, level Frostbearing Trees, etc.)
+    private int level = 1;
 
-    @Getter @Setter private int numCrystal = 0; // number of crystals in the city
+    @Getter @Setter private int numCrystal = 0;
 
     public CityInfoData(int cityId) {
         this.cityId = cityId;

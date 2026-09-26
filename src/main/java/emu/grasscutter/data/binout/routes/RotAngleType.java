@@ -1,9 +1,8 @@
 package emu.grasscutter.data.binout.routes;
 
-// import emu.grasscutter.scripts.constants.IntValueEnum;
 import lombok.Getter;
 
-public enum RotAngleType /*implements IntValueEnum */ {
+public enum RotAngleType  {
     ROT_NONE(-1),
     ROT_ANGLE_X(0),
     ROT_ANGLE_Y(1),
@@ -15,7 +14,6 @@ public enum RotAngleType /*implements IntValueEnum */ {
         this.id = id;
     }
 
-    // @Override
     public int getValue() {
         return id;
     }

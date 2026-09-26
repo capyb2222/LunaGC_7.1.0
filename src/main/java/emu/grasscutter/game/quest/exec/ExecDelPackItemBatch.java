@@ -9,7 +9,6 @@ import emu.grasscutter.game.quest.handlers.QuestExecHandler;
 public class ExecDelPackItemBatch extends QuestExecHandler {
     @Override
     public boolean execute(GameQuest quest, QuestData.QuestExecParam condition, String... paramStr) {
-        // input is like this: "100497:999,100498:999,100499:999"
         var items = paramStr[0].split(",");
         boolean success = true;
         for (var itemString : items) {

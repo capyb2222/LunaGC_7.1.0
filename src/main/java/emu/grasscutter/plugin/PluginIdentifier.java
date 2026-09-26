@@ -1,6 +1,5 @@
 package emu.grasscutter.plugin;
 
-// TODO: Potentially replace with Lombok?
 public final class PluginIdentifier {
     public final String name, description, version;
     public final String[] authors;
@@ -12,7 +11,6 @@ public final class PluginIdentifier {
         this.authors = authors;
     }
 
-    /** Converts a {@link PluginConfig} into a {@link PluginIdentifier}. */
     public static PluginIdentifier fromPluginConfig(PluginConfig config) {
         if (!config.validate())
             throw new IllegalArgumentException(

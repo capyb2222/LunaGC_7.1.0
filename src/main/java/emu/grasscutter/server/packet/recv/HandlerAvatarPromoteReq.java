@@ -11,7 +11,6 @@ public class HandlerAvatarPromoteReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         AvatarPromoteReq req = AvatarPromoteReq.parseFrom(payload);
 
-        // Ascend avatar
         session.getServer().getInventorySystem().promoteAvatar(session.getPlayer(), req.getGuid());
     }
 }

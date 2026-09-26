@@ -31,7 +31,6 @@ public class HandlerMusicGameSettleReq extends PacketHandler {
         val handler = (MusicGameActivityHandler) playerData.getActivityHandler();
         boolean isNewRecord = false;
 
-        // check if custom beatmap
         if (req.getUgcGuid() == 0) {
             session
                     .getPlayer()
@@ -50,7 +49,6 @@ public class HandlerMusicGameSettleReq extends PacketHandler {
                                     .maxScore(req.getScore())
                                     .build());
 
-            // update activity info
             session.send(
                     new PacketActivityInfoNotify(
                             handler.toProto(playerData, activityManager.getConditionExecutor())));

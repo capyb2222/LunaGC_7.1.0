@@ -10,7 +10,6 @@ public class HandlerSetPlayerNameReq extends PacketHandler {
 
     @Override
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
-        // Auto template
         SetPlayerNameReq req = SetPlayerNameReq.parseFrom(payload);
 
         if (req.getNickName() != null && req.getNickName().length() > 0) {

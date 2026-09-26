@@ -25,7 +25,7 @@ public class PacketSceneTransToPointRsp extends BasePacket {
 
         SceneTransToPointRsp proto =
                 SceneTransToPointRsp.newBuilder()
-                        .setRetcode(RetcodeOuterClass.Retcode.RET_SVR_ERROR_VALUE) // Internal server error
+                        .setRetcode(RetcodeOuterClass.Retcode.RET_SVR_ERROR_VALUE)
                         .build();
 
         this.setData(proto);

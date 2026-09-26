@@ -32,7 +32,7 @@ public final class Mail {
                 new MailContent(),
                 new ArrayList<MailItem>(),
                 (int) Instant.now().getEpochSecond()
-                        + 604800); // TODO: add expire time to send mail command
+                        + 604800);
     }
 
     public Mail(MailContent mailContent, List<MailItem> itemList, long expireTime) {
@@ -53,10 +53,10 @@ public final class Mail {
         this.itemList = itemList;
         this.sendTime = (int) Instant.now().getEpochSecond();
         this.expireTime = expireTime;
-        this.importance = importance; // Starred mail, 0 = No star, 1 = Star.
+        this.importance = importance;
         this.isRead = false;
         this.isAttachmentGot = false;
-        this.stateValue = state; // Different mailboxes, 1 = Default, 3 = Gift-box.
+        this.stateValue = state;
     }
 
     public ObjectId getId() {
@@ -153,7 +153,7 @@ public final class Mail {
                                     .setItemId(this.itemId)
                                     .setItemNum(this.itemCount)
                                     .setItemLevel(this.itemLevel)
-                                    .setPromoteLevel(0) // mock
+                                    .setPromoteLevel(0)
                                     .build())
                     .build();
         }

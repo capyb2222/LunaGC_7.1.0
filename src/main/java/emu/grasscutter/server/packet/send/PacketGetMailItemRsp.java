@@ -24,7 +24,7 @@ public class PacketGetMailItemRsp extends BasePacket {
             boolean modified = false;
             for (int mailId : mailList) {
                 Mail message = player.getMail(mailId);
-                if (!message.isAttachmentGot) { // No duplicated item
+                if (!message.isAttachmentGot) {
                     for (Mail.MailItem mailItem : message.itemList) {
                         EquipParamOuterClass.EquipParam.Builder item =
                                 EquipParamOuterClass.EquipParam.newBuilder();
@@ -64,7 +64,6 @@ public class PacketGetMailItemRsp extends BasePacket {
                 .send(
                         new PacketMailChangeNotify(
                                 player,
-                                claimedMessages)); // For some reason you have to also send the MailChangeNotify
-        // packet
+                                claimedMessages));
     }
 }

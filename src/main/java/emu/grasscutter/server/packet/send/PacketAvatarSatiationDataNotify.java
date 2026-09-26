@@ -13,7 +13,6 @@ public class PacketAvatarSatiationDataNotify extends BasePacket {
         AvatarSatiationData.Builder avatarSatiation =
                 AvatarSatiationData.newBuilder().setAvatarGuid(avatar.getGuid()).setFinishTime(finishTime);
 
-        // Penalty for overeating
         if (penaltyTime > 0) {
             avatarSatiation.setPenaltyFinishTime(penaltyTime);
         }
@@ -33,7 +32,6 @@ public class PacketAvatarSatiationDataNotify extends BasePacket {
                 AvatarSatiationData.newBuilder()
                         .setAvatarGuid(avatar.getGuid())
                         .setFinishTime(time + (avatar.getSatiation() / 30f))
-                        // Penalty time always ends before finish time
                         .setPenaltyFinishTime(time + (avatar.getSatiationPenalty() / 100f))
                         .build();
 

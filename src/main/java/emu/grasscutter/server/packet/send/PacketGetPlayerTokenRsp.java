@@ -9,21 +9,18 @@ import emu.grasscutter.utils.Crypto;
 
 public class PacketGetPlayerTokenRsp extends BasePacket {
 
-    /** No key exchange: the seed travels in the clear, the old pre-RSA way. */
     public PacketGetPlayerTokenRsp(GameSession session, int keyId) {
         super(PacketOpcodes.GetPlayerTokenRsp, true);
         this.setUseDispatchKey(true);
         this.setData(build(session, 0, "", 0, null, null, keyId));
     }
 
-    /** Refusal - the client shows retcode and msg, plus black_uid_end_time when it is a ban. */
     public PacketGetPlayerTokenRsp(GameSession session, int retcode, String msg, int blackEndTime) {
         super(PacketOpcodes.GetPlayerTokenRsp, true);
         this.setUseDispatchKey(true);
         this.setData(build(session, retcode, msg, blackEndTime, null, null, 0));
     }
 
-    /** RSA key exchange: the seed is encrypted under the client's public key and signed. */
     public PacketGetPlayerTokenRsp(
             GameSession session, String encryptedSeed, String encryptedSeedSign, int keyId) {
         super(PacketOpcodes.GetPlayerTokenRsp, true);
@@ -68,8 +65,6 @@ public class PacketGetPlayerTokenRsp extends BasePacket {
                 .setClientVersion("OSRELWin" + GameConstants.VERSION);
 
         if (serverRandKey != null && !serverRandKey.isEmpty()) {
-            // The negotiated path: the client decrypts the seed with its own private key, so the
-            // plaintext seed must NOT also be present.
             p.setKeyId(keyId).setServerRandKey(serverRandKey);
             if (sign != null && !sign.isEmpty()) p.setSign(sign);
         } else if (retcode == 0) {

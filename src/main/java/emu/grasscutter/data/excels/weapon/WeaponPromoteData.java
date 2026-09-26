@@ -50,7 +50,6 @@ public class WeaponPromoteData extends GameResource {
 
     @Override
     public void onLoad() {
-        // Trim item params
         ArrayList<ItemParamData> trim = new ArrayList<>(getAddProps().length);
         for (ItemParamData itemParam : getCostItems()) {
             if (itemParam.getId() == 0) {
@@ -59,7 +58,6 @@ public class WeaponPromoteData extends GameResource {
             trim.add(itemParam);
         }
         this.costItems = trim.toArray(new ItemParamData[trim.size()]);
-        // Trim fight prop data
         ArrayList<FightPropData> parsed = new ArrayList<>(getAddProps().length);
         for (FightPropData prop : getAddProps()) {
             if (prop.getPropType() != null && prop.getValue() != 0f) {

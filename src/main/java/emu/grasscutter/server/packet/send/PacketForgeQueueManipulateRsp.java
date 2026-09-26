@@ -23,7 +23,6 @@ public class PacketForgeQueueManipulateRsp extends BasePacket {
                         .setRetcode(retcode.getNumber())
                         .setManipulateType(type);
 
-        // ToDo: Add extra items when once we have handling for it.
 
         this.setData(builder.build());
     }

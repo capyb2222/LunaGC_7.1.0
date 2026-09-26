@@ -28,7 +28,6 @@ public class PacketHomeBasicInfoNotify extends BasePacket {
                         .setExp(home.getExp())
                         .setLevel(home.getLevel())
                         .setOwnerNickName(owner.getNickname())
-                        // TODO limit shop
                         .build());
 
         this.setData(proto);

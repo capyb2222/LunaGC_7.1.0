@@ -28,12 +28,11 @@ public class DataLoader {
         Path path =
                 useFallback ? FileUtils.getDataPath(resourcePath) : FileUtils.getDataUserPath(resourcePath);
         if (Files.exists(path)) {
-            // Data is in the resource directory
             try {
                 return Files.newInputStream(path);
             } catch (IOException e) {
                 throw new FileNotFoundException(
-                        e.getMessage()); // This is evil but so is changing the function signature at this point
+                        e.getMessage());
             }
         }
         return null;
@@ -76,18 +75,14 @@ public class DataLoader {
 
             if (filenames == null) {
                 Grasscutter.getLogger().error("We were unable to locate your default data files.");
-            } // else for (Path file : filenames) {
-            //     String relativePath = String.valueOf(file).split("defaults[\\\\\\/]data[\\\\\\/]")[1];
+            }
 
-            //     checkAndCopyData(relativePath);
-            // }
         } catch (Exception e) {
             Grasscutter.getLogger().error("An error occurred while trying to check the data folder.", e);
         }
     }
 
     private static void checkAndCopyData(String name) {
-        // TODO: Revisit this if default dumping is ever reintroduced
         Path filePath = FileUtils.getDataPath(name);
 
         if (!Files.exists(filePath)) {

@@ -14,7 +14,6 @@ public class BattlePassScheduleData extends GameResource {
     private List<Integer> cycleList;
     private int cyclePointUpperLimit;
 
-    // schedules are keyed by version, so 7.0 is 7000
     public static int currentId() {
         int wanted = GameConstants.VERSION_PARTS[0] * 1000 + GameConstants.VERSION_PARTS[1] * 100;
         int best = 0;

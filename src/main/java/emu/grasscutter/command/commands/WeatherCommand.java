@@ -18,8 +18,7 @@ public final class WeatherCommand implements CommandHandler {
         int weatherId = targetPlayer.getWeatherId();
         ClimateType climate =
                 ClimateType
-                        .CLIMATE_NONE; // Sending ClimateType.CLIMATE_NONE to Scene.setWeather will use the
-        // default climate for that weather
+                        .CLIMATE_NONE;
 
         if (args.isEmpty()) {
             climate = targetPlayer.getClimate();
@@ -44,7 +43,7 @@ public final class WeatherCommand implements CommandHandler {
         }
 
         targetPlayer.setWeather(weatherId, climate);
-        climate = targetPlayer.getClimate(); // Might be different to what we set
+        climate = targetPlayer.getClimate();
         CommandHandler.sendTranslatedMessage(
                 sender, "commands.weather.success", weatherId, climate.getShortName());
     }

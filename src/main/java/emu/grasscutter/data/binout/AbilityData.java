@@ -35,7 +35,6 @@ public class AbilityData {
     public AbilityModifierAction[] onVehicleIn;
     public AbilityModifierAction[] onVehicleOut;
 
-    // abilityMixins
     public AbilityMixinData[] abilityMixins;
 
     public final Map<Integer, AbilityModifierAction> localIdToAction = new HashMap<>();

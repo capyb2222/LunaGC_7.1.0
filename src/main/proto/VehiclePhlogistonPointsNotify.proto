@@ -3,7 +3,6 @@ syntax = "proto3";
 option java_package = "emu.grasscutter.net.proto";
 option java_outer_classname = "VehiclePhlogistonPointsNotifyOuterClass";
 
-// 7.0 calls this _VehiclePhlogistonNotify (CmdID 4673) and moved both fields.
 message VehiclePhlogistonPointsNotify {
 	float cur_phlogiston = 3;
 	uint32 entity_id = 7;

@@ -21,7 +21,7 @@ public class ItemUseOpenRandomChest extends ItemUseInt {
     }
 
     @Override
-    public boolean useItem(UseItemParams params) { // cash shop material bundles
+    public boolean useItem(UseItemParams params) {
         var data = params.player.getServer().getShopSystem().getShopChestData(this.i);
         if (data == null) return false;
         var rewardItems = new ArrayList<GameItem>();

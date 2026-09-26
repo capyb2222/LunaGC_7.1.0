@@ -28,7 +28,6 @@ public class PacketPlayerLoginRsp extends BasePacket {
         if (Grasscutter.getRunMode() == ServerRunMode.GAME_ONLY) {
             if (regionCache == null) {
                 try {
-                    // todo: we might want to push custom config to client
                     RegionInfo serverRegion =
                             RegionInfo.newBuilder()
                                     .setGateserverIp(lr(GAME_INFO.accessAddress, GAME_INFO.bindAddress))

@@ -24,7 +24,6 @@ public class CombineManger extends BaseGameSystem {
     }
 
     public static void initialize() {
-        // Read the data we need for strongbox.
         try {
             DataLoader.loadList("ReliquaryDecompose.json", ReliquaryDecomposeEntry.class)
                     .forEach(
@@ -40,22 +39,18 @@ public class CombineManger extends BaseGameSystem {
 
     public boolean unlockCombineDiagram(Player player, int combineId) {
         if (!player.getUnlockedCombines().add(combineId)) {
-            return false; // Already unlocked
+            return false;
         }
-        // Tell the client that this diagram is now unlocked and add the unlocked item to the player.
         player.sendPacket(new PacketCombineFormulaDataNotify(combineId));
         return true;
     }
 
     public CombineResult combineItem(Player player, int cid, int count) {
-        // check config exist
         if (!GameData.getCombineDataMap().containsKey(cid)) {
             player.getWorld().getHost().sendPacket(new PacketCombineRsp());
             return null;
         }
 
-        // The count comes straight off the wire. A negative one inverts payItems, refunding the
-        // materials and the mora instead of charging for them.
         if (count <= 0) {
             player.sendPacket(new PacketCombineRsp());
             return null;
@@ -67,21 +62,17 @@ public class CombineManger extends BaseGameSystem {
             return null;
         }
 
-        // consume items
         List<ItemParamData> material = new ArrayList<>(combineData.getMaterialItems());
         material.add(new ItemParamData(202, combineData.getScoinCost()));
 
         boolean success = player.getInventory().payItems(material, count, ActionReason.Combine);
 
-        // abort if not enough material - this said "abort" but fell through to hand out the
-        // result anyway, so crafting worked with no materials at all
         if (!success) {
             player.sendPacket(
                     new PacketCombineRsp(RetcodeOuterClass.Retcode.RET_ITEM_COMBINE_COUNT_NOT_ENOUGH_VALUE));
             return null;
         }
 
-        // make the result
         player
                 .getInventory()
                 .addItem(combineData.getResultItemId(), combineData.getResultItemCount() * count);
@@ -92,7 +83,6 @@ public class CombineManger extends BaseGameSystem {
                 List.of(
                         new ItemParamData(
                                 combineData.getResultItemId(), combineData.getResultItemCount() * count)));
-        // TODO lucky characters
         result.setExtra(List.of());
         result.setBack(List.of());
 
@@ -101,7 +91,6 @@ public class CombineManger extends BaseGameSystem {
 
     public synchronized void decomposeReliquaries(
             Player player, int configId, int count, List<Long> input) {
-        // Check if the configId is legal.
         List<Integer> possibleDrops = reliquaryDecomposeData.get(configId);
         if (possibleDrops == null) {
             player.sendPacket(
@@ -109,14 +98,12 @@ public class CombineManger extends BaseGameSystem {
             return;
         }
 
-        // Check if the number of input items matches the output count.
         if (input.size() != count * 3) {
             player.sendPacket(
                     new PacketReliquaryDecomposeRsp(Retcode.RET_RELIQUARY_DECOMPOSE_PARAM_ERROR));
             return;
         }
 
-        // Check if all the input reliquaries actually are in the player's inventory.
         for (long guid : input) {
             if (player.getInventory().getItemByGuid(guid) == null) {
                 player.sendPacket(
@@ -125,12 +112,10 @@ public class CombineManger extends BaseGameSystem {
             }
         }
 
-        // Delete the input reliquaries.
         for (long guid : input) {
             player.getInventory().removeItem(guid);
         }
 
-        // Generate outoput reliquaries.
         List<Long> resultItems = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             int itemId = Utils.drawRandomListElement(possibleDrops);
@@ -140,7 +125,6 @@ public class CombineManger extends BaseGameSystem {
             resultItems.add(newReliquary.getGuid());
         }
 
-        // Send packet.
         player.sendPacket(new PacketReliquaryDecomposeRsp(resultItems));
     }
 }

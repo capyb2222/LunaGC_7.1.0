@@ -27,7 +27,6 @@ public class ShopInfo {
     @Getter @Setter private int shopRefreshParam;
 
     public ShopInfo() {
-        // Gson, and the goods the server builds itself
     }
 
     public ShopInfo(ShopGoodsData sgd) {

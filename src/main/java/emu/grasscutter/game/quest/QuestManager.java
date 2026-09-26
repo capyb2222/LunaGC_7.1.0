@@ -32,7 +32,6 @@ public final class QuestManager extends BasePlayerManager {
     private long lastHourCheck = 0;
     private long lastDayCheck = 0;
 
-    // One thread, not four: quest events mutate shared quest state and racing them corrupted it.
     public static final ExecutorService eventExecutor =
             new ThreadPoolExecutor(
                     1,
@@ -59,37 +58,29 @@ public final class QuestManager extends BasePlayerManager {
         if (DEBUG) {
             this.loggedQuests.addAll(
                     List.of(
-                            31101, // Quest which holds talks 30902 and 30904.
-                            35001, // Quest which unlocks world border and starts act 2.
-                            30901, // Quest which is completed upon finishing all 3 initial dungeons.
-                            30903, // Quest which is finished when re-entering scene 3. (home world)
-                            30904, // Quest which unlocks the Adventurers' Guild
-                            46904, // Quest which is required to be started, but not completed for 31101's talks
-                            // to begin.
-                            // This quest is related to obtaining your first Anemoculus.
+                            31101,
+                            35001,
+                            30901,
+                            30903,
+                            30904,
+                            46904,
 
-                            35104, // Quest which is required to be finished for 46904 to begin.
-                            // This quest requires 31101 not be finished.
-                            // This quest should be accepted when the account is created.
+                            35104,
 
-                            // These quests currently have bugged triggers.
-                            30700, // Quest which is responsible for unlocking Crash Course.
-                            30800, // Quest which is responsible for unlocking Sparks Amongst the Pages.
+                            30700,
+                            30800,
                             47001,
                             47002,
                             47003,
                             47004,
                             2010103,
-                            2010144, // Prologue Act 2: Chasing Shadows,
-                            2012 // This is the main quest ID for Chapter 2 Act 1.
-                            // Used for debugging giving items.
+                            2010144,
+                            2012
                             ));
         }
     }
 
-    /** Checks if questing can be enabled. */
     public boolean isQuestingEnabled() {
-        // Check if scripts are enabled.
         if (!SERVER.game.enableScriptInBigWorld) {
             Grasscutter.getLogger().warn("Questing is disabled without scripts enabled.");
             return false;
@@ -102,7 +93,6 @@ public final class QuestManager extends BasePlayerManager {
         var progress = this.player.getPlayerProgress();
         var givings = progress.getItemGivings();
 
-        // Check if the action is not present.
         if (!givings.containsKey(givingId)) {
             givings.put(givingId, ItemGiveRecord.resolve(givingId));
             player.save();
@@ -115,14 +105,11 @@ public final class QuestManager extends BasePlayerManager {
         var progress = this.player.getPlayerProgress();
         var givings = progress.getItemGivings();
 
-        // Check if the action is already present.
         if (!givings.containsKey(givingId)) {
             throw new IllegalStateException("Giving action " + givingId + " is not active.");
         }
 
-        // Mark the action as finished.
         givings.get(givingId).setFinished(true);
-        // Save the givings.
         player.save();
 
         this.sendGivingRecords();
@@ -132,14 +119,11 @@ public final class QuestManager extends BasePlayerManager {
         var progress = this.player.getPlayerProgress();
         var givings = progress.getItemGivings();
 
-        // Check if the action is already present.
         if (!givings.containsKey(givingId)) {
             throw new IllegalStateException("Giving action " + givingId + " is not active.");
         }
 
-        // Remove the action.
         givings.remove(givingId);
-        // Save the givings.
         player.save();
 
         this.sendGivingRecords();
@@ -155,18 +139,14 @@ public final class QuestManager extends BasePlayerManager {
         var progress = this.player.getPlayerProgress();
         var bargains = progress.getBargains();
 
-        // Check if the bargain is already present.
         if (bargains.containsKey(bargainId)) {
             throw new IllegalStateException("Bargain " + bargainId + " is already active.");
         }
 
-        // Add the action.
         var bargain = BargainRecord.resolve(bargainId);
         bargains.put(bargainId, bargain);
-        // Save the bargains.
         this.player.save();
 
-        // Send the player the start packet.
         this.player.sendPacket(new PacketBargainStartNotify(bargain));
     }
 
@@ -174,23 +154,17 @@ public final class QuestManager extends BasePlayerManager {
         var progress = this.player.getPlayerProgress();
         var bargains = progress.getBargains();
 
-        // Check if the bargain is already present.
         if (!bargains.containsKey(bargainId)) {
             throw new IllegalStateException("Bargain " + bargainId + " is not active.");
         }
 
-        // Remove the action.
         bargains.remove(bargainId);
-        // Save the bargains.
         this.player.save();
 
-        // Send the player the stop packet.
         this.player.sendPacket(new PacketBargainTerminateNotify(bargainId));
     }
 
-    /** Sends the giving records to the player. */
     public void sendGivingRecords() {
-        // Send the record to the player.
         this.player.sendPacket(new PacketGivingRecordNotify(this.getGivingRecords()));
     }
 
@@ -203,15 +177,13 @@ public final class QuestManager extends BasePlayerManager {
         List<GameMainQuest> activeQuests = getActiveMainQuests();
         List<GameQuest> activeSubs = new ArrayList<>(activeQuests.size());
         for (GameMainQuest quest : activeQuests) {
-            List<Position> rewindPos = quest.rewind(); // <pos, rotation>
+            List<Position> rewindPos = quest.rewind();
             var activeQuest = quest.getActiveQuests();
             if (rewindPos != null) {
                 getPlayer().getPosition().set(rewindPos.get(0));
                 getPlayer().getRotation().set(rewindPos.get(1));
             }
             if (activeQuest != null && rewindPos != null) {
-                // activeSubs.add(activeQuest);
-                // player.sendPacket(new PacketQuestProgressUpdateNotify(activeQuest));
             }
             quest.checkProgress();
         }
@@ -225,7 +197,6 @@ public final class QuestManager extends BasePlayerManager {
         if (world == null) return;
 
         this.checkTimeVars();
-        // trigger game time tick for quests
         this.queueEvent(QuestContent.QUEST_CONTENT_GAME_TIME_TICK);
     }
 
@@ -315,7 +286,6 @@ public final class QuestManager extends BasePlayerManager {
         this.triggerQuestGlobalVarAction(variable, newVal);
     }
 
-    // In MainQuest 998, dec is passed as a positive integer
     public void decQuestGlobalVarValue(int variable, int dec) {
         var prevVal = getQuestGlobalVarValue(variable);
         this.getPlayer().getQuestGlobalVariables().put(variable, prevVal - dec);
@@ -370,7 +340,6 @@ public final class QuestManager extends BasePlayerManager {
         }
     }
 
-    // TODO
     public void forEachActiveQuest(Consumer<GameQuest> callback) {
         for (var mainQuest : getMainQuests().values()) {
             for (var quest : mainQuest.getChildQuests().values()) {
@@ -399,19 +368,14 @@ public final class QuestManager extends BasePlayerManager {
     }
 
     public GameQuest addQuest(@Nonnull QuestData questConfig) {
-        // Main quest
         var mainQuest = this.getMainQuestById(questConfig.getMainId());
 
-        // Create main quest if it doesnt exist
         if (mainQuest == null) {
             mainQuest = addMainQuest(questConfig);
         }
 
-        // Sub quest
         var quest = mainQuest.getChildQuestById(questConfig.getSubId());
-        // Forcefully start
         quest.start();
-        // Check conditions.
         this.checkQuestAlreadyFulfilled(quest);
 
         return quest;
@@ -534,7 +498,6 @@ public final class QuestManager extends BasePlayerManager {
                             for (var condition : quest.getQuestData().getFinishCond()) {
                                 switch (condition.getType()) {
                                     case QUEST_CONTENT_OBTAIN_ITEM, QUEST_CONTENT_ITEM_LESS_THAN -> {
-                                        // check if we already own enough of the item
                                         var item = getPlayer().getInventory().getItemByGuid(condition.getParam()[0]);
                                         queueEvent(
                                                 condition.getType(),
@@ -606,27 +569,21 @@ public final class QuestManager extends BasePlayerManager {
 
     public List<Integer> questsForDungeon(ScenePointEntry point) {
         var pointId = point.getPointData().getId();
-        // Get the active quests.
         return this.getActiveMainQuests().stream()
-                // Get the sub-quests of the main quest.
                 .map(GameMainQuest::getChildQuests)
-                // Get the values of the sub-quests map.
                 .map(Map::values)
                 .map(
                         quests ->
                                 quests.stream()
-                                        // Get the dungeon IDs of each quest.
                                         .map(GameQuest::getDungeonIds)
                                         .map(
                                                 ids ->
                                                         ids.stream()
-                                                                // Find entry points which match this dungeon.
                                                                 .filter(id -> id.rightInt() == pointId)
                                                                 .toList())
                                         .map(
                                                 ids ->
                                                         ids.stream()
-                                                                // Of the remaining dungeons, find the ID of the quest dungeon.
                                                                 .map(IntIntImmutablePair::leftInt)
                                                                 .toList())
                                         .flatMap(Collection::stream)

@@ -18,7 +18,6 @@ public class ConditionIsDaytime extends BaseCondition {
             int... params) {
         val daytime = condition.getParam()[0] == 1;
         val currentTime = owner.getWorld().getGameTimeHours();
-        // TODO is this the real timeframe?
         return (currentTime >= 6 && currentTime <= 18) == daytime;
     }
 }

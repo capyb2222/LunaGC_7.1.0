@@ -28,7 +28,6 @@ public class MaPassportAuthenticator {
         }
         
         try {
-            // decrypt acc
             String username;
             try {
                 username = RSADecryptionUtil.decrypt(request.account);
@@ -37,7 +36,6 @@ public class MaPassportAuthenticator {
                 return createLoginErrorResponse(-10, "Unable to decrypt account");
             }
             
-            // decrypt password next
             String password;
             try {
                 password = RSADecryptionUtil.decrypt(request.password);
@@ -58,8 +56,6 @@ public class MaPassportAuthenticator {
                 return createLoginErrorResponse(-101, "Account or password error");
             }
             
-            // Lock the entered password as the account password on first login
-            // (covers both newly auto-created accounts and old accounts with an empty password).
             if ((account.getPassword() == null || account.getPassword().isEmpty())
                     && password != null && !password.isEmpty()) {
                 account.setPassword(hashPassword(password));
@@ -74,9 +70,7 @@ public class MaPassportAuthenticator {
             
             
             Grasscutter.getLogger().debug("Generating session key");
-            // Always generate a FRESH session key so the client never sees a reused/stale token.
             String sessionKey = account.generateV2SessionKey();
-            // Persist the session key SYNCHRONOUSLY before the client uses it.
             emu.grasscutter.database.DatabaseManager.getGameDatastore().save(account);
             
             Grasscutter.getLogger().info("User " + username + " has successfully logged in");
@@ -94,7 +88,6 @@ public class MaPassportAuthenticator {
         try {
             Grasscutter.getLogger().debug("Ma-passport token verification for mid: " + request.mid);
             
-            // get acc by id in db
             Account account = DatabaseHelper.getAccountById(request.mid);
             if (account == null) {
                 Grasscutter.getLogger().info("Account not found for mid: " + request.mid);
@@ -129,7 +122,7 @@ public class MaPassportAuthenticator {
         
         response.data.token = new LoginByPasswordResponseJson.TokenData();
         response.data.token.token_type = 1;
-        response.data.token.token = account.getSessionKey(); // the new v2_ or whatever
+        response.data.token.token = account.getSessionKey();
         
         response.data.user_info = new LoginByPasswordResponseJson.UserInfoData();
         response.data.user_info.aid = account.getId();

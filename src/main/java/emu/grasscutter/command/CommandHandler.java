@@ -10,14 +10,12 @@ import java.util.*;
 public interface CommandHandler {
 
     static void sendMessage(Player player, String message) {
-        // Call command feedback event.
         ReceiveCommandFeedbackEvent event = new ReceiveCommandFeedbackEvent(player, message);
         event.call();
-        if (event.isCanceled()) { // If event is not cancelled, continue.
+        if (event.isCanceled()) {
             return;
         }
 
-        // Send message to target.
         if (player == null) {
             Grasscutter.getLogger().info(event.getMessage());
         } else {
@@ -42,10 +40,10 @@ public interface CommandHandler {
         String target =
                 switch (annotation.targetRequirement()) {
                     case NONE -> "";
-                    case OFFLINE -> "@<UID> "; // TODO: make translation keys for offline and online players
+                    case OFFLINE -> "@<UID> ";
                     case ONLINE -> (player == null)
                             ? "@<UID> "
-                            : "[@<UID>] "; // TODO: make translation keys for offline and online players
+                            : "[@<UID>] ";
                     case PLAYER -> (player == null) ? "@<UID> " : "[@<UID>] ";
                 };
         String[] usages = annotation.usage();

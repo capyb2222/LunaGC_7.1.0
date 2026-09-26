@@ -60,8 +60,6 @@ public abstract class BaseRoute {
     private MathQuaternion.Builder rotAsMathQuaternion() {
         val result = MathQuaternion.newBuilder();
         if (startRot != null) {
-            // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
-            // "MY BRAIN!" - Nazrin
             val roll = Math.toRadians(startRot.getX());
             val pitch = Math.toRadians(startRot.getY());
             val yaw = Math.toRadians(startRot.getZ());

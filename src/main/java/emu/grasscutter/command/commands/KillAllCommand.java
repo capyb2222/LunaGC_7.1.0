@@ -20,9 +20,9 @@ public final class KillAllCommand implements CommandHandler {
         Scene scene = targetPlayer.getScene();
         try {
             switch (args.size()) {
-                case 0: // *No args*
+                case 0:
                     break;
-                case 1: // [sceneId]
+                case 1:
                     scene = targetPlayer.getWorld().getSceneById(Integer.parseInt(args.get(0)));
                     break;
                 default:
@@ -38,7 +38,6 @@ public final class KillAllCommand implements CommandHandler {
             return;
         }
 
-        // Separate into list to avoid concurrency issue
         final Scene sceneF = scene;
         List<GameEntity> toKill =
                 sceneF.getEntities().values().stream()

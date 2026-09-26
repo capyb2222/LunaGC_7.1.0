@@ -26,7 +26,6 @@ public class ActivityManager extends BasePlayerManager {
     }
 
     public static void loadActivityConfigData() {
-        // scan activity type handler and watcher type
         var activityHandlerTypeMap = new HashMap<ActivityType, ConstructorAccess<?>>();
         var activityWatcherTypeMap = new HashMap<WatcherTriggerType, ConstructorAccess<?>>();
         Grasscutter.reflector
@@ -82,7 +81,6 @@ public class ActivityManager extends BasePlayerManager {
         super(player);
 
         playerActivityDataMap = new ConcurrentHashMap<>();
-        // load data for player
         activityConfigItemMap
                 .values()
                 .forEach(
@@ -108,7 +106,6 @@ public class ActivityManager extends BasePlayerManager {
                         AllActivityConditionBuilder.buildActivityConditions());
     }
 
-    /** trigger activity watcher */
     public void triggerWatcher(WatcherTriggerType watcherTriggerType, String... params) {
         var watchers =
                 activityConfigItemMap.values().stream()

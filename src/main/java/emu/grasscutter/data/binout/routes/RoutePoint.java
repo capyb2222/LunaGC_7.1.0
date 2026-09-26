@@ -9,12 +9,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoutePoint {
     private Position pos;
-    private int speedLevel; // optional
-    private float waitTime; // optional
-    private float targetVelocity; // optional
-    private boolean hasReachEvent; // optional
-    // rotRoundReachDir //optional Pos with optional values
-    // rotRoundLeaveDir //optional Pos with optional values
+    private int speedLevel;
+    private float waitTime;
+    private float targetVelocity;
+    private boolean hasReachEvent;
 
     public RoutePointOuterClass.RoutePoint.Builder toProto() {
         val builder = RoutePointOuterClass.RoutePoint.newBuilder().setPosition(pos.toProto());

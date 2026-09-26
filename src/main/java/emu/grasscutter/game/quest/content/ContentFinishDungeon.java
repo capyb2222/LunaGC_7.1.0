@@ -7,7 +7,6 @@ import emu.grasscutter.game.quest.*;
 
 @QuestValueContent(QUEST_CONTENT_FINISH_DUNGEON)
 public class ContentFinishDungeon extends BaseContent {
-    // params[0] dungeon ID, params[1] unknown
 
     @Override
     public boolean execute(

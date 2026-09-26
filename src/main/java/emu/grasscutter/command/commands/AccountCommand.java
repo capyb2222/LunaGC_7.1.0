@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 @Command(
         label = "account",
         usage = {
-            "create <username> [<UID>]", // Only with EXPERIMENTAL_RealPassword == false
+            "create <username> [<UID>]",
             "delete <username>",
-            "create <username> <password> [<UID>]", // Only with EXPERIMENTAL_RealPassword == true
+            "create <username> <password> [<UID>]",
             "resetpass <username> <password>"
-        }, // Only with EXPERIMENTAL_RealPassword == true
+        },
         targetRequirement = Command.TargetRequirement.NONE)
 public final class AccountCommand implements CommandHandler {
     @Override
@@ -85,7 +85,7 @@ public final class AccountCommand implements CommandHandler {
                         account.setPassword(BCrypt.withDefaults().hashToString(12, password.toCharArray()));
                     }
                     account.addPermission("*");
-                    account.save(); // Save account to database.
+                    account.save();
 
                     CommandHandler.sendMessage(
                             sender, translate(sender, "commands.account.create", account.getReservedPlayerUid()));
@@ -98,7 +98,6 @@ public final class AccountCommand implements CommandHandler {
                 }
                 var username = args.get(1);
 
-                // Get the account we want to delete.
                 Account toDelete = DatabaseHelper.getAccountByName(username);
                 if (toDelete == null) {
                     CommandHandler.sendMessage(sender, translate(sender, "commands.account.no_account"));
@@ -130,7 +129,6 @@ public final class AccountCommand implements CommandHandler {
                     return;
                 }
 
-                // Make sure player can't stay logged in with old password.
                 kickAccount(toUpdate);
                 toUpdate.setPassword(BCrypt.withDefaults().hashToString(12, args.get(2).toCharArray()));
                 toUpdate.save();

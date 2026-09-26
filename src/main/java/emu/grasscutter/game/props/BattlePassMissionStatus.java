@@ -13,7 +13,7 @@ public enum BattlePassMissionStatus {
 
     BattlePassMissionStatus(int value, MissionStatus missionStatus) {
         this.value = value;
-        this.missionStatus = missionStatus; // In case proto enum values change later
+        this.missionStatus = missionStatus;
     }
 
     public int getValue() {

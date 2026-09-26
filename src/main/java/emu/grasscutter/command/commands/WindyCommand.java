@@ -20,7 +20,6 @@ public class WindyCommand implements CommandHandler
         }
 
         final String script = args.get(0);
-        // Reject path separators so a script name cannot walk out of the Windy directory.
         if (script.contains("/") || script.contains("\\") || script.contains("..")) {
             CommandHandler.sendMessage(sender, "Invalid script name.");
             return;
@@ -28,8 +27,6 @@ public class WindyCommand implements CommandHandler
 
         final String path = "C:/Windy/" + script + ".luac";
         if (!Files.isRegularFile(Paths.get(path))) {
-            // PacketWindSeedClientNotify silently falls back to the stock UID watermark when the
-            // file is missing, which looks like success while doing something else entirely.
             CommandHandler.sendMessage(sender, "No such script: " + path);
             return;
         }

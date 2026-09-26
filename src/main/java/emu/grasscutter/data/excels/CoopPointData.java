@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 @ResourceType(name = "CoopPointExcelConfigData.json")
 @Getter
-@Setter // TODO: remove setters next API break
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CoopPointData extends GameResource {
     @Getter(onMethod_ = @Override)
@@ -16,9 +16,5 @@ public class CoopPointData extends GameResource {
     String type;
     int acceptQuest;
     int[] postPointList;
-    //    int pointNameTextMapHash;
-    //    int pointDecTextMapHash;
     int pointPosId;
-    //    long photoMaleHash;
-    //    long photoFemaleHash;
 }

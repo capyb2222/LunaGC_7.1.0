@@ -13,7 +13,6 @@ public class HandlerSetPlayerBirthdayReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         SetPlayerBirthdayReq req = SetPlayerBirthdayReq.parseFrom(payload);
 
-        // RET_BIRTHDAY_CANNOT_BE_SET_TWICE = 7009
         if (session.getPlayer().hasBirthday()) {
             session.send(new PacketSetPlayerBirthdayRsp(7009));
             return;
@@ -22,18 +21,15 @@ public class HandlerSetPlayerBirthdayReq extends PacketHandler {
         int month = req.getBirthday().getMonth();
         int day = req.getBirthday().getDay();
 
-        // RET_BIRTHDAY_FORMAT_ERROR = 7022
         if (!isValidBirthday(month, day)) {
             session.send(new PacketSetPlayerBirthdayRsp(7022));
             return;
         }
 
-        // Update birthday value
 		var player = session.getPlayer();
 
 		player.setBirthday(day, month);
 
-		// Save birthday month and day.
 		player.save();
 
 		SocialDetail.Builder detail = player.getSocialDetail();

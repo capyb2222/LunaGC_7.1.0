@@ -24,7 +24,6 @@ public class HomeBlockItem {
     List<HomeSuiteItem> suiteList;
 
     public static HomeBlockItem parseFrom(HomeworldDefaultSaveData.HomeBlock homeBlock) {
-        // create from default setting
         return HomeBlockItem.of()
                 .blockId(homeBlock.getBlockId())
                 .unlocked(homeBlock.getFurnitures() != null)
@@ -95,7 +94,6 @@ public class HomeBlockItem {
         return proto.build();
     }
 
-    // TODO implement farm field.
     public List<? extends HomeMarkPointProtoFactory> getMarkPointProtoFactories() {
         this.reassignIfNull();
 

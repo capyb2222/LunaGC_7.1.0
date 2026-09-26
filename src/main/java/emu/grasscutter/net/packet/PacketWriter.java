@@ -3,7 +3,6 @@ package emu.grasscutter.net.packet;
 import java.io.*;
 
 public class PacketWriter {
-    // Little endian
     private final ByteArrayOutputStream baos;
 
     public PacketWriter() {
@@ -14,7 +13,6 @@ public class PacketWriter {
         return baos.toByteArray();
     }
 
-    // Writers
 
     public void writeEmpty(int i) {
         while (i > 0) {
@@ -43,7 +41,6 @@ public class PacketWriter {
     }
 
     public void writeUint8(byte b) {
-        // Unsigned byte
         baos.write(b & 0xFF);
     }
 
@@ -53,26 +50,22 @@ public class PacketWriter {
     }
 
     public void writeUint16(int i) {
-        // Unsigned short
         baos.write((byte) (i & 0xFF));
         baos.write((byte) ((i >>> 8) & 0xFF));
     }
 
     public void writeUint24(int i) {
-        // 24 bit integer
         baos.write((byte) (i & 0xFF));
         baos.write((byte) ((i >>> 8) & 0xFF));
         baos.write((byte) ((i >>> 16) & 0xFF));
     }
 
     public void writeInt16(int i) {
-        // Signed short
         baos.write((byte) i);
         baos.write((byte) (i >>> 8));
     }
 
     public void writeUint32(int i) {
-        // Unsigned int
         baos.write((byte) (i & 0xFF));
         baos.write((byte) ((i >>> 8) & 0xFF));
         baos.write((byte) ((i >>> 16) & 0xFF));
@@ -80,7 +73,6 @@ public class PacketWriter {
     }
 
     public void writeInt32(int i) {
-        // Signed int
         baos.write((byte) i);
         baos.write((byte) (i >>> 8));
         baos.write((byte) (i >>> 16));
@@ -88,7 +80,6 @@ public class PacketWriter {
     }
 
     public void writeUint32(long i) {
-        // Unsigned int (long)
         baos.write((byte) (i & 0xFF));
         baos.write((byte) ((i >>> 8) & 0xFF));
         baos.write((byte) ((i >>> 16) & 0xFF));
@@ -156,7 +147,6 @@ public class PacketWriter {
         try {
             baos.write(bytes);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -168,7 +158,6 @@ public class PacketWriter {
         try {
             baos.write(b);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

@@ -17,11 +17,9 @@ import java.util.*;
         targetRequirement = Command.TargetRequirement.NONE)
 public final class SendMailCommand implements CommandHandler {
 
-    // Key = User that is constructing the mail.
     private static final HashMap<Integer, MailBuilder> mailBeingConstructed =
             new HashMap<Integer, MailBuilder>();
 
-    // Yes this is awful and I hate it.
     @Override
     public void execute(Player sender, Player targetPlayer, List<String> args) {
         int senderId;
@@ -137,42 +135,40 @@ public final class SendMailCommand implements CommandHandler {
                                 int amount = 1;
                                 int refinement = 0;
                                 switch (args.size()) {
-                                    case 4: // <itemId|itemName> [amount] [level] [refinement] // TODO: this requires
-                                        // Mail support but there's no harm leaving it here for now
+                                    case 4:
                                         try {
                                             refinement = Integer.parseInt(args.get(3));
                                         } catch (NumberFormatException ignored) {
                                             CommandHandler.sendMessage(
                                                     sender, translate(sender, "commands.generic.invalid.itemRefinement"));
                                             return;
-                                        } // Fallthrough
-                                    case 3: // <itemId|itemName> [amount] [level]
+                                        }
+                                    case 3:
                                         try {
                                             lvl = Integer.parseInt(args.get(2));
                                         } catch (NumberFormatException ignored) {
                                             CommandHandler.sendMessage(
                                                     sender, translate(sender, "commands.generic.invalid.itemLevel"));
                                             return;
-                                        } // Fallthrough
-                                    case 2: // <itemId|itemName> [amount]
+                                        }
+                                    case 2:
                                         try {
                                             amount = Integer.parseInt(args.get(1));
                                         } catch (NumberFormatException ignored) {
                                             CommandHandler.sendMessage(
                                                     sender, translate(sender, "commands.generic.invalid.amount"));
                                             return;
-                                        } // Fallthrough
-                                    case 1: // <itemId|itemName>
+                                        }
+                                    case 1:
                                         try {
                                             item = Integer.parseInt(args.get(0));
                                         } catch (NumberFormatException ignored) {
-                                            // TODO: Parse from item name using GM Handbook.
                                             CommandHandler.sendMessage(
                                                     sender, translate(sender, "commands.generic.invalid.itemId"));
                                             return;
                                         }
                                         break;
-                                    default: // *No args*
+                                    default:
                                         CommandHandler.sendTranslatedMessage(sender, "commands.sendMail.give_usage");
                                         return;
                                 }

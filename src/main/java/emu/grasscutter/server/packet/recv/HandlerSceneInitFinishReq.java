@@ -46,8 +46,6 @@ public class HandlerSceneInitFinishReq extends PacketHandler {
 
         session.send(new PacketSceneInitFinishRsp(player));
 
-        // The wind seed CmdId is unconfirmed for 6.7; a wrong one can hang the client here, so
-        // cmdId=0 suppresses the packet entirely rather than falling back to the UID watermark.
         if (PacketWindSeedClientNotify.disabled()) {
             Grasscutter.getLogger().info("[watermark] suppressed (cmdId=0)");
         } else {
@@ -76,8 +74,6 @@ public class HandlerSceneInitFinishReq extends PacketHandler {
                 return new PacketWindSeedClientNotify(WatermarkUtils.buildLuac(payload));
             }
 
-            // Colour markup can push a perfectly good text over the cap, so retry bare before
-            // giving up entirely - the right text in the wrong colour beats the wrong text.
             Grasscutter.getLogger()
                     .warn(
                             "Watermark is too long once coloured ({} bytes, max {}); falling back to plain text.",
@@ -95,7 +91,6 @@ public class HandlerSceneInitFinishReq extends PacketHandler {
         return new PacketWindSeedUID();
     }
 
-    /** Wraps the configured text in colour markup, or returns it unchanged if none is configured. */
     private static String applyColor(Configuration.GameOptions.WatermarkOptions options) {
         int from = RichTextUtils.parseColor(options.color);
         if (from < 0) {

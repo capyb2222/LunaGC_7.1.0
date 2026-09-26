@@ -11,6 +11,5 @@ public final class ExecuteCommandEvent extends Event implements Cancellable {
     @Nullable private final Player sender;
     @Nullable @Setter private Player target;
 
-    /** This does not include the '/' prefix. */
     @Setter private String command;
 }

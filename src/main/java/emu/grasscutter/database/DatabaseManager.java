@@ -30,18 +30,14 @@ public final class DatabaseManager {
     }
 
     public static void initialize() {
-        // Initialize
         MongoClient gameMongoClient = MongoClients.create(DATABASE.game.connectionUri);
 
-        // Set mapper options.
         MapperOptions mapperOptions =
                 MapperOptions.builder().storeEmpties(true).storeNulls(false).build();
 
-        // Create data store.
         gameDatastore =
                 Morphia.createDatastore(gameMongoClient, DATABASE.game.collection, mapperOptions);
 
-        // Map classes.
         var entities =
                 Grasscutter.reflector.getTypesAnnotatedWith(Entity.class).stream()
                         .filter(
@@ -53,7 +49,6 @@ public final class DatabaseManager {
 
         gameDatastore.getMapper().map(entities);
 
-        // Ensure indexes for the game datastore
         ensureIndexes(gameDatastore);
 
         if (Grasscutter.getRunMode() != ServerRunMode.HYBRID) {
@@ -63,7 +58,6 @@ public final class DatabaseManager {
                     Morphia.createDatastore(dispatchMongoClient, DATABASE.server.collection, mapperOptions);
             dispatchDatastore.getMapper().map(new Class<?>[] {DatabaseCounter.class, Account.class});
 
-            // Ensure indexes for dispatch datastore
             ensureIndexes(dispatchDatastore);
         }
     }
@@ -73,14 +67,11 @@ public final class DatabaseManager {
             datastore.ensureIndexes();
         } catch (MongoCommandException e) {
             Grasscutter.getLogger().info("Mongo index error: ", e);
-            // Duplicate index error
             if (e.getCode() == 85) {
-                // Drop all indexes and re add them
                 MongoIterable<String> collections = datastore.getDatabase().listCollectionNames();
                 for (String name : collections) {
                     datastore.getDatabase().getCollection(name).dropIndexes();
                 }
-                // Add back indexes
                 datastore.ensureIndexes();
             }
         }

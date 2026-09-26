@@ -4,7 +4,6 @@ import emu.grasscutter.game.activity.ActivityWatcher;
 import emu.grasscutter.game.activity.ActivityWatcherType;
 import emu.grasscutter.game.props.WatcherTriggerType;
 
-/** Fires when a monster tracked by the watcher's param list dies. */
 @ActivityWatcherType(WatcherTriggerType.TRIGGER_BATTLE_FOR_MONSTER_DIE_OR)
 public class MonsterDieWatcher extends ActivityWatcher {
     @Override
@@ -14,7 +13,6 @@ public class MonsterDieWatcher extends ActivityWatcher {
         var paramList = getActivityWatcherData().getTriggerConfig().getParamList();
         if (paramList.isEmpty()) return false;
 
-        // param[0] is the died monster id; a param entry may be a comma-separated list.
         for (String entry : paramList) {
             for (String monsterId : entry.split(",")) {
                 if (monsterId.trim().equals(param[0])) return true;

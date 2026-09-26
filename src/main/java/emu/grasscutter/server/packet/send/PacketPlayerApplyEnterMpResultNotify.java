@@ -37,7 +37,6 @@ public class PacketPlayerApplyEnterMpResultNotify extends BasePacket {
                         .setTargetUid(targetId)
                         .setTargetNickname(targetName)
                         .setIsAgreed(isAgreed)
-                        // 7.0 nests its own Reason enum; the numbers line up, so pass the value.
                         .setReasonValue(reason.getNumber())
                         .build();
 

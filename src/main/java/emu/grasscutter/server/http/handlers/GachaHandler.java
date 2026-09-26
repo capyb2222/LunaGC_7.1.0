@@ -16,7 +16,6 @@ import java.nio.file.*;
 import java.util.*;
 import lombok.Getter;
 
-/** Handles all gacha-related HTTP requests. */
 public final class GachaHandler implements Router {
     @Getter
     private static final Path gachaMappingsPath = FileUtils.getDataUserPath("gacha/mappings.js");
@@ -37,7 +36,6 @@ public final class GachaHandler implements Router {
             return;
         }
 
-        // Get page and gacha type.
         int page = 0, gachaType = 0;
 
         var pageStr = ctx.queryParam("p");
@@ -46,7 +44,6 @@ public final class GachaHandler implements Router {
         var gachaTypeStr = ctx.queryParam("gachaType");
         if (gachaTypeStr != null) gachaType = Integer.parseInt(gachaTypeStr);
 
-        // Make request to dispatch server.
         var data = DispatchUtils.fetchGachaRecords(account.getId(), page, gachaType);
         var records = data.get("records").getAsString();
         var maxPage = data.get("maxPage").getAsLong();
@@ -88,7 +85,6 @@ public final class GachaHandler implements Router {
             return;
         }
 
-        // Add translated title etc. to the page.
         var locale = account.getLocale();
         template =
                 template
@@ -102,7 +98,6 @@ public final class GachaHandler implements Router {
                                 translate(locale, "gacha.details.available_three_stars"))
                         .replace("{{LANGUAGE}}", Utils.getLanguageCode(account.getLocale()));
 
-        // Get the banner info for the banner we want.
         var scheduleIdStr = ctx.queryParam("scheduleId");
         if (scheduleIdStr == null) {
             ctx.status(400).result("Missing scheduleId parameter");
@@ -117,7 +112,6 @@ public final class GachaHandler implements Router {
             return;
         }
 
-        // Add 5-star items.
         var fiveStarItems = new LinkedHashSet<String>();
 
         Arrays.stream(banner.getRateUpItems5()).forEach(i -> fiveStarItems.add(Integer.toString(i)));
@@ -128,7 +122,6 @@ public final class GachaHandler implements Router {
 
         template = template.replace("{{FIVE_STARS}}", "[" + String.join(",", fiveStarItems) + "]");
 
-        // Add 4-star items.
         var fourStarItems = new LinkedHashSet<String>();
 
         Arrays.stream(banner.getRateUpItems4()).forEach(i -> fourStarItems.add(Integer.toString(i)));
@@ -139,12 +132,10 @@ public final class GachaHandler implements Router {
 
         template = template.replace("{{FOUR_STARS}}", "[" + String.join(",", fourStarItems) + "]");
 
-        // Add 3-star items.
         var threeStarItems = new LinkedHashSet<String>();
         Arrays.stream(banner.getFallbackItems3()).forEach(i -> threeStarItems.add(Integer.toString(i)));
         template = template.replace("{{THREE_STARS}}", "[" + String.join(",", threeStarItems) + "]");
 
-        // Done.
         ctx.contentType(ContentType.TEXT_HTML);
         ctx.result(template);
     }
@@ -154,7 +145,6 @@ public final class GachaHandler implements Router {
         var records = DatabaseHelper.getGachaRecords(playerId, page, type).toString();
         var maxPage = DatabaseHelper.getGachaRecordsMaxPage(playerId, page, type);
 
-        // Finish the response.
         response.addProperty("retcode", 0);
         response.addProperty("records", records);
         response.addProperty("maxPage", maxPage);

@@ -16,10 +16,8 @@ public class HandlerSceneKickPlayerReq extends PacketHandler {
                 .getServer()
                 .getMultiplayerSystem()
                 .kickPlayer(session.getPlayer(), req.getTargetUid())) {
-            // Success
             session.send(new PacketSceneKickPlayerRsp(req.getTargetUid()));
         } else {
-            // Fail
             session.send(new PacketSceneKickPlayerRsp());
         }
     }

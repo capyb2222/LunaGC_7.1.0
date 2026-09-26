@@ -9,7 +9,7 @@ public class MonsterAffixData extends GameResource {
     private int id;
     @Getter private String affix;
     @Getter private String comment;
-    @Getter private String[] abilityName; // Declared as list but used as single element
+    @Getter private String[] abilityName;
     @Getter private boolean isCommon;
     @Getter private boolean preAdd;
     @Getter public String isLegal;

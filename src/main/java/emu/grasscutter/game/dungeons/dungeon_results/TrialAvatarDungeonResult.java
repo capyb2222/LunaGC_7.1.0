@@ -17,7 +17,7 @@ public class TrialAvatarDungeonResult extends BaseDungeonResult {
     @Override
     protected void onProto(DungeonSettleNotifyOuterClass.DungeonSettleNotify.Builder builder) {
         if (dungeonStats.getDungeonResult()
-                == DungeonEndReason.COMPLETED) { // TODO check if its the first pass(?)
+                == DungeonEndReason.COMPLETED) {
             builder.setTrialAvatarFirstPassDungeonNotify(
                     TrialAvatarFirstPassDungeonNotify.newBuilder()
                             .setTrialAvatarIndexId(trialCharacterIndexId));

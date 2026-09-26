@@ -57,9 +57,7 @@ public class MainQuestData {
         if (this.subQuests == null) this.subQuests = new SubQuestData[0];
 
         this.talks = this.talks.stream().filter(Objects::nonNull).toList();
-        // Apply talk data to the quest talk map.
         this.talks.forEach(talkData -> GameData.getQuestTalkMap().put(talkData.getId(), this.getId()));
-        // Apply additional sub-quest data to sub-quests.
         Arrays.stream(this.subQuests)
                 .forEach(
                         quest -> {

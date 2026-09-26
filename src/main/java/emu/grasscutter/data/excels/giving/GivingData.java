@@ -32,10 +32,8 @@ public final class GivingData extends GameResource {
 
     public enum GiveMethod {
         GIVING_METHOD_NONE,
-        /** All items are required to succeed. */
         GIVING_METHOD_EXACT,
         GIVING_METHOD_GROUP,
-        /** One in the group is required to succeed. */
         GIVING_METHOD_VAGUE_GROUP,
         GIVING_METHOD_ANY_NO_FINISH
     }

@@ -121,7 +121,6 @@ public interface JsonAdapters {
             return steps;
         }
 
-        /** Pull the name out of the object form, preferring the known key. */
         private String readNamedStep(JsonReader reader) throws IOException {
             reader.beginObject();
             String name = null, firstString = null;

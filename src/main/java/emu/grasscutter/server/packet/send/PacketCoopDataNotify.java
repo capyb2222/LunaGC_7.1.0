@@ -14,8 +14,6 @@ public class PacketCoopDataNotify extends BasePacket {
         var proto = CoopDataNotifyOuterClass.CoopDataNotify.newBuilder();
         proto.setIsHaveProgress(false);
 
-        // TODO: implement: determine the actual current progress point.
-        // Add every chapter and add the start point to each chapter regardless of actual progress.
         GameData.getCoopChapterDataMap()
                 .values()
                 .forEach(
@@ -23,7 +21,7 @@ public class PacketCoopDataNotify extends BasePacket {
                             var chapter = CoopChapterOuterClass.CoopChapter.newBuilder();
                             chapter.setId(i.getId());
 
-                            chapter.setStateValue(3); // 3 == STATE_ACCEPT
+                            chapter.setStateValue(3);
 
                             var point = CoopPointOuterClass.CoopPoint.newBuilder();
                             var pointList =

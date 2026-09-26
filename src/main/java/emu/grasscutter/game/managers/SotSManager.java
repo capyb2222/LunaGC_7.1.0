@@ -15,10 +15,8 @@ import emu.grasscutter.server.event.player.PlayerLevelStatueEvent;
 import emu.grasscutter.server.packet.send.*;
 import java.util.*;
 
-// Statue of the Seven Manager
 public class SotSManager extends BasePlayerManager {
 
-    // NOTE: Spring volume balance *1  = fight prop HP *100
 
     public static final int GlobalMaximumSpringVolume =
             PlayerProperty.PROP_MAX_SPRING_VOLUME.getMax();
@@ -93,7 +91,6 @@ public class SotSManager extends BasePlayerManager {
         }
     }
 
-    // autoRevive automatically revives all team members.
     public void autoRevive() {
         player
                 .getTeamManager()
@@ -122,10 +119,8 @@ public class SotSManager extends BasePlayerManager {
             int needHP = targetHP - currentHP;
             int currentVolume = getCurrentVolume();
             if (currentVolume >= needHP) {
-                // sufficient
                 setCurrentVolume(currentVolume - needHP);
             } else {
-                // insufficient balance
                 needHP = currentVolume;
                 setCurrentVolume(0);
             }
@@ -152,8 +147,6 @@ public class SotSManager extends BasePlayerManager {
 
     public void refillSpringVolume() {
         setMaxVolume(8500000);
-        // Temporary: Auto enable 100% statue recovery until we can adjust statue settings in game
-        // TODO: remove
         setAutoRecoveryPercentage(100);
         setIsAutoRecoveryEnabled(true);
 
@@ -162,7 +155,6 @@ public class SotSManager extends BasePlayerManager {
         if (currentVolume < maxVolume) {
             long now = System.currentTimeMillis() / 1000;
             int secondsSinceLastUsed = (int) (now - getLastUsed());
-            // 15s = 1% max volume
             int volumeRefilled = secondsSinceLastUsed * maxVolume / 15 / 100;
             logger.trace("Statue has refilled HP volume: " + volumeRefilled);
             currentVolume = Math.min(currentVolume + volumeRefilled, maxVolume);
@@ -172,8 +164,6 @@ public class SotSManager extends BasePlayerManager {
     }
 
     private class AutoRecoverTimerTick extends TimerTask {
-        // autoRecover checks player setting to see if auto recover is enabled, and refill HP to the
-        // predefined level.
         public void run() {
             refillSpringVolume();
 
@@ -225,43 +215,35 @@ public class SotSManager extends BasePlayerManager {
     public void levelUpSotS(int areaId, int sceneId, int itemNum) {
         if (itemNum <= 0) return;
 
-        // search city by areaId
         var city = this.getCityByAreaId(areaId);
         if (city == null) return;
         var cityId = city.getCityId();
 
-        // check data level up
         var cityInfo = this.getCityInfo(cityId);
         var nextStatuePromoteData = GameData.getStatuePromoteData(cityId, cityInfo.getLevel() + 1);
         if (nextStatuePromoteData == null) return;
         var nextLevelCrystal = nextStatuePromoteData.getCostItems()[0].getCount();
 
-        // delete item from inventory
         var itemNumrequired = Math.min(itemNum, nextLevelCrystal - cityInfo.getNumCrystal());
         player
                 .getInventory()
                 .removeItemById(nextStatuePromoteData.getCostItems()[0].getId(), itemNumrequired);
 
-        // update number oculi
         cityInfo.setNumCrystal(cityInfo.getNumCrystal() + itemNumrequired);
 
-        // hanble quest
         if (itemNumrequired >= 1)
             player.getQuestManager().queueEvent(QuestContent.QUEST_CONTENT_CITY_LEVEL_UP, cityId, areaId);
 
-        // handle oculi overflow
         if (cityInfo.getNumCrystal() >= nextLevelCrystal) {
             cityInfo.setNumCrystal(cityInfo.getNumCrystal() - nextLevelCrystal);
             cityInfo.setLevel(cityInfo.getLevel() + 1);
 
-            // update max stamina and notify client
             player.setProperty(
                     PlayerProperty.PROP_MAX_STAMINA,
                     player.getProperty(PlayerProperty.PROP_MAX_STAMINA)
                             + nextStatuePromoteData.getStamina() * 100,
                     true);
 
-            // Add items to inventory
             if (nextStatuePromoteData.getRewardIdList() != null) {
                 for (var rewardId : nextStatuePromoteData.getRewardIdList()) {
                     RewardData rewardData = GameData.getRewardDataMap().get(rewardId);
@@ -273,19 +255,15 @@ public class SotSManager extends BasePlayerManager {
                 }
             }
 
-            // unlock forcescene
             player.sendPacket(new PacketSceneForceUnlockNotify(1, true));
         }
 
-        // update data
         this.addCityInfo(cityInfo);
 
-        // Packets
         player.sendPacket(
                 new PacketLevelupCityRsp(
                         sceneId, cityInfo.getLevel(), cityId, cityInfo.getNumCrystal(), areaId, 0));
 
-        // Call PlayerLevelStatueEvent.
         new PlayerLevelStatueEvent(this.getPlayer(), cityInfo, sceneId, areaId);
     }
 }

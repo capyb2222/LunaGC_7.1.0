@@ -18,7 +18,7 @@ public class ConditionActivityCond extends BaseCondition {
             String paramStr,
             int... params) {
         val activityCondId = condition.getParam()[0];
-        val targetState = condition.getParam()[1]; // only 1 for now
+        val targetState = condition.getParam()[1];
         return owner.getActivityManager().meetsCondition(activityCondId) == (targetState == 1);
     }
 }

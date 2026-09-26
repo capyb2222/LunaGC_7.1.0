@@ -13,8 +13,8 @@ import java.util.*;
 import lombok.Getter;
 
 public class ShopSystem extends BaseGameSystem {
-    private static final int REFRESH_HOUR = 4; // In GMT+8 server
-    private static final String TIME_ZONE = "Asia/Shanghai"; // GMT+8 Timezone
+    private static final int REFRESH_HOUR = 4;
+    private static final String TIME_ZONE = "Asia/Shanghai";
     private final Int2ObjectMap<List<ShopInfo>> shopData;
     private final Int2ObjectMap<List<ItemParamData>> shopChestData;
 

@@ -6,10 +6,10 @@ import emu.grasscutter.command.CommandHandler;
 import emu.grasscutter.game.player.Player;
 import emu.grasscutter.game.world.Scene;
 import emu.grasscutter.server.event.player.PlayerTeleportEvent.TeleportType;
-import emu.grasscutter.scripts.data.SceneConfig; //i think its needed for getting the born_pos to work right...
+import emu.grasscutter.scripts.data.SceneConfig;
 import emu.grasscutter.game.world.Position;
 
-import emu.grasscutter.command.Command.TargetRequirement; //needed in order to remove the annoying @<UID> when trying to get the usage info for the command
+import emu.grasscutter.command.Command.TargetRequirement;
 
 import java.util.List;
 
@@ -20,10 +20,9 @@ import java.util.List;
     usage = "/scene /sceneteleport /sceneteleporter [SceneID] \n\ndescription: teleports you to the scene you want \n\nto leave domains use only this command (do not exit via the prompt)", 
     permission = "player.teleport", 
     permissionTargeted = "player.teleport.others",
-    targetRequirement = TargetRequirement.NONE) //using "emu.grasscutter.command.Command.TargetRequirement" as mentioned above
+    targetRequirement = TargetRequirement.NONE)
 public final class SceneTeleporterCommand implements CommandHandler {
 
-// yeah i know, i copied the teleportcommand.java, but it works well so...
 
     @Override
     public void execute(Player sender, Player targetPlayer, List<String> args) {
@@ -37,7 +36,7 @@ public final class SceneTeleporterCommand implements CommandHandler {
                 }catch (NumberFormatException ignored) {
                     CommandHandler.sendMessage(sender,"teleportation failed! bad sceneID number");
                     return;
-                }  // Fallthrough
+                }
                 break;
             default:
                 this.sendUsageMessage(sender);
@@ -63,10 +62,9 @@ public final class SceneTeleporterCommand implements CommandHandler {
         if (!result) {
             CommandHandler.sendMessage(sender,"teleportation failed! wrong or non-existent sceneID");
         } else {
-            Position teleportedpos = targetPlayer.getPosition(); //get player position after teleportation
+            Position teleportedpos = targetPlayer.getPosition();
             Position teleportedrot = targetPlayer.getRotation();
             
-            //CommandHandler.sendMessage(sender,targetPlayer.getNickname(),target_pos,sceneId);
             CommandHandler.sendMessage(sender, "teleportation was successful!" );
             CommandHandler.sendTranslatedMessage(sender, "commands.position.success",
             teleportedpos.getX(), teleportedpos.getY(), teleportedpos.getZ(), teleportedrot.getX(), teleportedrot.getY(), teleportedrot.getZ(), targetPlayer.getSceneId());

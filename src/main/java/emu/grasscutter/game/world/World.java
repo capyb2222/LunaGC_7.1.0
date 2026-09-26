@@ -84,7 +84,6 @@ public class World implements Iterable<Player> {
         this.players = Collections.synchronizedList(new ArrayList<>());
         this.scenes = Int2ObjectMaps.synchronize(new Int2ObjectOpenHashMap<>());
 
-        // this.levelEntityId = this.getNextEntityId(EntityIdType.MPLEVEL);
         this.entity = new EntityWorld(this);
         this.worldLevel = player.getWorldLevel();
         this.isMultiplayer = isMultiplayer;
@@ -132,13 +131,11 @@ public class World implements Iterable<Player> {
     }
 
     @Nullable public Scene getSceneById(int sceneId) {
-        // Get scene normally
         var scene = this.getScenes().get(sceneId);
         if (scene != null) {
             return scene;
         }
 
-        // Create scene from scene data if it doesn't exist
         var sceneData = GameData.getSceneDataMap().get(sceneId);
         if (sceneData != null) {
             scene = new Scene(this, sceneData);
@@ -158,26 +155,20 @@ public class World implements Iterable<Player> {
     }
 
     public synchronized void addPlayer(Player player) {
-        // Check if player already in
         if (this.getPlayers().contains(player)) {
             return;
         }
 
-        // Remove player from prev world
         if (player.getWorld() != null) {
             player.getWorld().removePlayer(player);
         }
 
-        // Register
         player.setWorld(this);
         this.getPlayers().add(player);
 
-        // Set player variables
         player.setPeerId(this.getNextPeerId());
         player.getTeamManager().setEntity(new EntityTeam(player));
-        // player.getTeamManager().setEntityId(this.getNextEntityId(EntityIdType.TEAM));
 
-        // Copy main team to multiplayer team
         if (this.isMultiplayer()) {
             player
                     .getTeamManager()
@@ -188,37 +179,29 @@ public class World implements Iterable<Player> {
             player.getTeamManager().setCurrentCharacterIndex(0);
         }
 
-        // Add to scene
         Scene scene = this.getSceneById(player.getSceneId());
         scene.addPlayer(player);
 
-        // Info packet for other players
         if (this.getPlayers().size() > 1) {
             this.updatePlayerInfos(player);
         }
     }
 
     public synchronized void addPlayer(Player player, int newSceneId) {
-        // Check if player already in
         if (this.getPlayers().contains(player)) {
             return;
         }
 
-        // Remove player from prev world
         if (player.getWorld() != null) {
             player.getWorld().removePlayer(player);
         }
 
-        // Register
         player.setWorld(this);
         this.getPlayers().add(player);
 
-        // Set player variables
         player.setPeerId(this.getNextPeerId());
         player.getTeamManager().setEntity(new EntityTeam(player));
-        // player.getTeamManager().setEntityId(this.getNextEntityId(EntityIdType.TEAM));
 
-        // Copy main team to multiplayer team
         if (this.isMultiplayer()) {
             player
                     .getTeamManager()
@@ -239,19 +222,16 @@ public class World implements Iterable<Player> {
             }
         }
 
-        // Add to scene
         player.setSceneId(newSceneId);
         Scene scene = this.getSceneById(player.getSceneId());
         scene.addPlayer(player);
 
-        // Info packet for other players
         if (this.getPlayers().size() > 1) {
             this.updatePlayerInfos(player);
         }
     }
 
     public synchronized void removePlayer(Player player) {
-        // Remove team entities
         player.sendPacket(
                 new PacketDelTeamEntityNotify(
                         player.getSceneId(),
@@ -263,20 +243,16 @@ public class World implements Iterable<Player> {
                                                         : p.getTeamManager().getEntity().getId())
                                 .toList()));
 
-        // Deregister
         this.getPlayers().remove(player);
         player.setWorld(null);
 
-        // Remove from scene
         Scene scene = this.getSceneById(player.getSceneId());
         scene.removePlayer(player);
 
-        // Info packet for other players
         if (this.getPlayers().size() > 0) {
             this.updatePlayerInfos(player);
         }
 
-        // Disband world if host leaves
         if (this.getHost() == player) {
             List<Player> kicked = new ArrayList<>(this.getPlayers());
             for (Player victim : kicked) {
@@ -327,8 +303,6 @@ public class World implements Iterable<Player> {
                                         .trace(
                                                 "queueTransferPlayerToScene: teleport to scene {} is interrupted", sceneId);
                             } catch (Throwable e) {
-                                // submit() parks anything thrown in a Future nobody reads, so a failed
-                                // teleport just left the player standing there with nothing logged
                                 Grasscutter.getLogger()
                                         .error("Queued teleport to scene {} failed.", sceneId, e);
                             }
@@ -356,8 +330,6 @@ public class World implements Iterable<Player> {
             Position teleportTo) {
         EnterReason enterReason =
                 switch (teleportType) {
-                        // shouldn't affect the teleportation, but its clearer when inspecting the packets
-                        // TODO add more conditions for different reason.
                     case INTERNAL -> EnterReason.TransPoint;
                     case WAYPOINT -> EnterReason.TransPoint;
                     case MAP -> EnterReason.TransPoint;
@@ -378,7 +350,6 @@ public class World implements Iterable<Player> {
             EnterReason enterReason,
             DungeonData dungeonData,
             Position teleportTo) {
-        // Get enter types
         val teleportProps =
                 TeleportProperties.builder()
                         .sceneId(sceneId)
@@ -397,7 +368,6 @@ public class World implements Iterable<Player> {
         } else if (player.getSceneId() == sceneId) {
             teleportProps.enterType(EnterType.EnterType_ENTER_GOTO);
         } else if (sceneData != null && sceneData.getSceneType() == SceneType.SCENE_HOME_WORLD) {
-            // Home
             teleportProps.enterType(EnterType.EnterType_ENTER_SELF_HOME).enterReason(EnterReason.EnterHome);
         }
 
@@ -405,8 +375,6 @@ public class World implements Iterable<Player> {
     }
 
     public boolean transferPlayerToScene(Player player, TeleportProperties teleportProperties) {
-        // If a queued teleport already exists, cancel it. This prevents the player from
-        // becoming stranded in a dungeon due to quitting it by teleporting to a map waypoint.
         synchronized (player) {
             var queuedTeleport = player.getQueuedTeleport();
             if (queuedTeleport != null) {
@@ -415,17 +383,14 @@ public class World implements Iterable<Player> {
             }
         }
 
-        // Check if the teleport properties are valid.
         if (teleportProperties.getTeleportTo() == null)
             teleportProperties.setTeleportTo(player.getPosition());
 
-        // Call player teleport event.
         PlayerTeleportEvent event =
                 new PlayerTeleportEvent(player, teleportProperties, player.getPosition());
-        // Call event and check if it was canceled.
         event.call();
         if (event.isCanceled()) {
-            return false; // Teleport was canceled.
+            return false;
         }
 
         if (GameData.getSceneDataMap().get(teleportProperties.getSceneId()) == null) {
@@ -435,9 +400,7 @@ public class World implements Iterable<Player> {
         Scene oldScene = player.getScene();
         var newScene = this.getSceneById(teleportProperties.getSceneId());
 
-        // Move directly in the same scene.
         if (newScene == oldScene && teleportProperties.getTeleportType() == TeleportType.COMMAND) {
-            // Set player position and rotation
             if (teleportProperties.getTeleportTo() != null) {
                 player.getPosition().set(teleportProperties.getTeleportTo());
             }
@@ -449,7 +412,6 @@ public class World implements Iterable<Player> {
         }
 
         if (oldScene != null) {
-            // Don't deregister scenes if the player is going to tp back into them
             if (oldScene == newScene) {
                 oldScene.setDontDestroyWhenEmpty(true);
             }
@@ -472,7 +434,6 @@ public class World implements Iterable<Player> {
             }
         }
 
-        // Set player position and rotation
         if (teleportProperties.getTeleportTo() != null) {
             player.getPosition().set(teleportProperties.getTeleportTo());
         }
@@ -485,7 +446,6 @@ public class World implements Iterable<Player> {
             oldScene.setDontDestroyWhenEmpty(false);
         }
 
-        // Teleport packet
         player.sendPacket(new PacketPlayerEnterSceneNotify(player, teleportProperties));
 
         if (teleportProperties.getTeleportType() != TeleportType.INTERNAL
@@ -498,13 +458,10 @@ public class World implements Iterable<Player> {
 
     protected void updatePlayerInfos(Player paramPlayer) {
         for (Player player : this.getPlayers()) {
-            // Dont send packets if player is logging in and filter out joining player
             if (!player.hasSentLoginPackets() || player == paramPlayer) {
                 continue;
             }
 
-            // Update team of all players since max players has been changed - Probably not the best way
-            // to do it
             if (this.isMultiplayer()) {
                 player
                         .getTeamManager()
@@ -514,14 +471,11 @@ public class World implements Iterable<Player> {
                 player.getTeamManager().updateTeamEntities(null);
             }
 
-            // Dont send packets if player is loading into the scene
             if (player.getSceneLoadState().getValue() >= SceneLoadState.INIT.getValue()) {
-                // World player info packets
                 player.getSession().send(new PacketWorldPlayerInfoNotify(this));
                 player.getSession().send(new PacketScenePlayerInfoNotify(this));
                 player.getSession().send(new PacketWorldPlayerRTTNotify(this));
 
-                // Team packets
                 player.getSession().send(new PacketSyncTeamEntityNotify(player));
                 player.getSession().send(new PacketSyncScenePlayTeamEntityNotify(player));
             }
@@ -529,16 +483,13 @@ public class World implements Iterable<Player> {
     }
 
     public void broadcastPacket(BasePacket packet) {
-        // Send to all players - might have to check if player has been sent data packets
         for (Player player : this.getPlayers()) {
             player.getSession().send(packet);
         }
     }
 
     public boolean onTick() {
-        // Check if there are players in this world.
         if (this.getPlayerCount() == 0) return true;
-        // Tick all associated scenes.
         this.getScenes()
                 .forEach(
                         (k, scene) -> {
@@ -547,22 +498,17 @@ public class World implements Iterable<Player> {
                             try {
                                 scene.onTick();
                             } catch (Throwable e) {
-                                // One scene's trouble is not the next one's, nor the world's clock below.
                                 Grasscutter.getLogger().error("Scene {} threw while ticking.", k, e);
                             }
                         });
 
-        // These are wall-clock cadences, not tick counts: the tick rate is configurable, so
-        // counting ticks would sync the clock 5x too often at 200ms and not at all at 5000ms.
         var now = System.currentTimeMillis();
 
-        // sync time every 10 seconds
         if (now - this.lastTimeSync >= 10_000L) {
             this.lastTimeSync = now;
             this.getPlayers().forEach(p -> p.sendPacket(new PacketPlayerGameTimeNotify(p)));
         }
 
-        // store updated world time every 60 seconds. (in-game hour)
         if (now - this.lastTimeStore >= 60_000L && !this.timeLocked) {
             this.lastTimeStore = now;
             this.getHost().updatePlayerGameTime(this.currentWorldTime);
@@ -574,7 +520,6 @@ public class World implements Iterable<Player> {
 
     public void close() {}
 
-    /** Returns the in-game world time in real milliseconds. */
     public long getWorldTime() {
         if (!this.isPaused && !this.timeLocked) {
             var newUpdateTime = System.currentTimeMillis();
@@ -585,17 +530,14 @@ public class World implements Iterable<Player> {
         return this.currentWorldTime;
     }
 
-    /** Returns the current in game days world time in in-game minutes (0-1439) */
     public int getGameTime() {
         return (int) (getTotalGameTimeMinutes() % 1440);
     }
 
-    /** Returns the current in game days world time in ingame hours (0-23) */
     public int getGameTimeHours() {
         return this.getGameTime() / 60;
     }
 
-    /** Returns the total number of in game days that got completed since the beginning of the game */
     public long getTotalGameTimeDays() {
         return ConversionUtils.gameTimeToDays(getTotalGameTimeMinutes());
     }
@@ -604,20 +546,16 @@ public class World implements Iterable<Player> {
         return ConversionUtils.gameTimeToHours(getTotalGameTimeMinutes());
     }
 
-    /** Returns the elapsed in-game minutes since the creation of the world. */
     public long getTotalGameTimeMinutes() {
         return this.getWorldTime() / 1000;
     }
 
     public void setPaused(boolean paused) {
-        // Check if this world is a multiplayer world.
         if (this.isMultiplayer) return;
 
-        // Update the world time.
         this.getWorldTime();
         this.updateTime();
 
-        // If the world is being un-paused, update the last update time.
         if (this.isPaused != paused && !paused) {
             this.lastUpdateTime = System.currentTimeMillis();
         }
@@ -633,24 +571,19 @@ public class World implements Iterable<Player> {
     }
 
     public void changeTime(int time, int days) {
-        // Check if the time is locked.
         if (this.timeLocked) return;
 
-        // Calculate time differences.
         var currentTime = this.getGameTime();
         var diff = time - currentTime;
         if (diff < 0) diff = 1440 + diff;
 
-        // Update the world time.
         this.currentWorldTime += days * 1440 * 1000L + diff * 1000L;
 
-        // Update all players.
         this.host.updatePlayerGameTime(currentWorldTime);
         this.players.forEach(
                 player -> player.getQuestManager().queueEvent(QuestContent.QUEST_CONTENT_GAME_TIME_TICK));
     }
 
-    /** Notifies all players of the current world time. */
     public void updateTime() {
         this.getPlayers().forEach(p -> p.sendPacket(new PacketPlayerGameTimeNotify(p)));
         this.getPlayers().forEach(p -> p.sendPacket(new PacketSceneTimeNotify(p)));
@@ -659,7 +592,6 @@ public class World implements Iterable<Player> {
     public void lockTime(boolean locked) {
         this.timeLocked = locked;
 
-        // Notify players of the locking.
         this.updateTime();
         this.getPlayers()
                 .forEach(player -> player.setProperty(PlayerProperty.PROP_IS_GAME_TIME_LOCKED, locked));

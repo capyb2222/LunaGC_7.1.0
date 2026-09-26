@@ -13,7 +13,6 @@ import lombok.*;
 public class PlayerCodex {
     @Transient private Player player;
 
-    // itemId is not codexId!
     @Getter private Set<Integer> unlockedWeapon;
     @Getter private Map<Integer, Integer> unlockedAnimal;
     @Getter private Set<Integer> unlockedMaterial;
@@ -60,7 +59,6 @@ public class PlayerCodex {
             }
             case ITEM_MATERIAL -> {
                 switch (itemData.getMaterialType()) {
-                        // Is this check even needed?
                     case MATERIAL_FOOD,
                             MATERIAL_WIDGET,
                             MATERIAL_EXCHANGE,
@@ -80,7 +78,7 @@ public class PlayerCodex {
                 }
             }
             case ITEM_RELIQUARY -> {
-                val reliquaryId = (itemId / 10) * 10; // Normalize to 0-substat form
+                val reliquaryId = (itemId / 10) * 10;
                 if (this.getUnlockedReliquary().add(reliquaryId)) checkUnlockedSuits(reliquaryId);
             }
             default -> {}
@@ -117,9 +115,8 @@ public class PlayerCodex {
                         });
     }
 
-    @Deprecated // Maybe remove this if we ever stop caring about older dbs
+    @Deprecated
     private void fixReliquaries() {
-        // Migrate older database entries which were using non-canonical forms of itemIds
         val newReliquaries = new HashSet<Integer>();
         this.unlockedReliquary.forEach(i -> newReliquaries.add((i / 10) * 10));
         this.unlockedReliquary = newReliquaries;

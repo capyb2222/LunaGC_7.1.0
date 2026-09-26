@@ -35,8 +35,6 @@ public class TowerResult extends BaseDungeonResult {
     @Override
     protected void onProto(DungeonSettleNotifyOuterClass.DungeonSettleNotify.Builder builder) {
         var continueStatus = CONTINUE_STATE_CAN_NOT_CONTINUE;
-        // getCurLevelStars already treats a missing scene challenge as possible, and this result is
-        // built on COMPLETED, so the two can meet.
         if (challenge != null && challenge.isSuccess()) {
             if (hasNextLevel) {
                 continueStatus = CONTINUE_STATE_CAN_ENTER_NEXT_LEVEL;

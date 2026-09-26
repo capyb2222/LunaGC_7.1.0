@@ -11,7 +11,6 @@ public class PacketChangeAvatarRsp extends BasePacket {
 
         ChangeAvatarRsp p =
                 ChangeAvatarRsp.newBuilder()
-                        //.setRetcode(RetcodeOuterClass.Retcode.RET_SUCC_VALUE)
                         .setCurGuid(guid)
                         .build();
 

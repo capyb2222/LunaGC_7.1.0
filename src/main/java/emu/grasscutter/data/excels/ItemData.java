@@ -20,7 +20,6 @@ import lombok.Getter;
         })
 @Getter
 public class ItemData extends GameResource {
-    // Main
     @Getter(onMethod_ = @Override)
     private int id;
 
@@ -36,24 +35,20 @@ public class ItemData extends GameResource {
     private int[] destroyReturnMaterial;
     private int[] destroyReturnMaterialCount;
 
-    // Enums
     private ItemType itemType = ItemType.ITEM_NONE;
     private MaterialType materialType = MaterialType.MATERIAL_NONE;
     private EquipType equipType = EquipType.EQUIP_NONE;
     private String effectType;
     private String destroyRule;
 
-    // Food
     private String foodQuality;
     private int[] satiationParams;
 
-    // Usable item
     private ItemUseTarget useTarget = ItemUseTarget.ITEM_USE_TARGET_NONE;
     private List<ItemUseData> itemUse;
     private List<ItemUseAction> itemUseActions;
     private boolean useOnGain = false;
 
-    // Relic
     private int mainPropDepotId;
     private int appendPropDepotId;
     private int appendPropNum;
@@ -63,7 +58,6 @@ public class ItemData extends GameResource {
     private int baseConvExp;
     private int maxLevel;
 
-    // Weapon
     private int weaponPromoteId;
     private int weaponBaseExp;
     @SerializedName(value = "storyId", alternate = {"LAJDDBLOPIO"})
@@ -74,10 +68,8 @@ public class ItemData extends GameResource {
     private int[] skillAffix;
     private WeaponProperty[] weaponProp;
 
-    // Hash
     private long nameTextMapHash;
 
-    // Furniture
     private int comfort;
     private List<Integer> furnType;
     private List<Integer> furnitureGadgetID;
@@ -95,7 +87,6 @@ public class ItemData extends GameResource {
             })
     private int roomSceneId;
 
-    // Custom
     private transient IntSet addPropLevelSet;
 
     public WeaponProperty[] getWeaponProperties() {
@@ -136,7 +127,6 @@ public class ItemData extends GameResource {
             this.furnitureGadgetID = this.furnitureGadgetID.stream().filter(x -> x > 0).toList();
         }
 
-        // Prevent material type from being null
         this.materialType = this.materialType == null ? MaterialType.MATERIAL_NONE : this.materialType;
 
         if (this.itemUse != null && !this.itemUse.isEmpty()) {

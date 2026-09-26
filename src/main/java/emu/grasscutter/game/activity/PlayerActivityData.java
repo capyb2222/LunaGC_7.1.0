@@ -24,7 +24,6 @@ public class PlayerActivityData {
     int uid;
     int activityId;
     Map<Integer, WatcherInfo> watcherInfoMap;
-    /** the detail data of each type of activity (Json format) */
     String detail;
 
     @Transient Player player;

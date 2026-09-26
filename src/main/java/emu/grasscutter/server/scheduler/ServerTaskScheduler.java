@@ -3,44 +3,30 @@ package emu.grasscutter.server.scheduler;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class ServerTaskScheduler {
-    /* A map to contain all running tasks. */
     private final ConcurrentHashMap<Integer, ServerTask> tasks = new ConcurrentHashMap<>();
-    /* A map to contain all async tasks. */
     private final ConcurrentHashMap<Integer, AsyncServerTask> asyncTasks = new ConcurrentHashMap<>();
 
-    /* The ID assigned to the next runnable. */
     private int nextTaskId = 0;
 
     public void runTasks() {
-        // Skip if there are no tasks.
         if (this.tasks.size() == 0) return;
 
-        // Run all tasks.
         for (ServerTask task : this.tasks.values()) {
-            // Check if the task should run.
             if (task.shouldRun()) {
-                // Run the task.
                 task.run();
             }
 
-            // Check if the task should be canceled.
             if (task.shouldCancel()) {
-                // Cancel the task.
                 this.cancelTask(task.getTaskId());
             }
         }
 
-        // Run all async tasks.
         for (AsyncServerTask task : this.asyncTasks.values()) {
             if (!task.hasStarted()) {
-                // Create a thread for the task.
                 Thread thread = new Thread(task);
-                // Start the thread.
                 thread.start();
             } else if (task.isFinished()) {
-                // Cancel the task.
                 this.asyncTasks.remove(task.getTaskId());
-                // Run the task's callback.
                 task.complete();
             }
         }
@@ -59,11 +45,8 @@ public final class ServerTaskScheduler {
     }
 
     public int scheduleAsyncTask(Runnable runnable) {
-        // Get the next task ID.
         var taskId = this.nextTaskId++;
-        // Create a new task.
         this.asyncTasks.put(taskId, new AsyncServerTask(runnable, taskId));
-        // Return the task ID.
         return taskId;
     }
 
@@ -80,11 +63,8 @@ public final class ServerTaskScheduler {
     }
 
     public int scheduleDelayedRepeatingTask(Runnable runnable, int period, int delay) {
-        // Get the next task ID.
         var taskId = this.nextTaskId++;
-        // Create a new task.
         this.tasks.put(taskId, new ServerTask(runnable, taskId, period, delay));
-        // Return the task ID.
         return taskId;
     }
 }

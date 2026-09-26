@@ -17,7 +17,6 @@ public abstract class BasePlayerManager {
         return this.player;
     }
 
-    /** Saves the player to the database */
     public void save() {
         getPlayer().save();
     }

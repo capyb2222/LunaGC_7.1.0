@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 
 public class CommandHelpers {
     public static final Pattern lvlRegex =
-            Pattern.compile("(?<!\\w)l(?:vl?)?(\\d+)"); // Java doesn't have raw string literals :(
+            Pattern.compile("(?<!\\w)l(?:vl?)?(\\d+)");
     public static final Pattern amountRegex =
             Pattern.compile("((?<=(?<!\\w)x)\\d+|\\d+(?=x)(?!x\\d))");
     public static final Pattern refineRegex = Pattern.compile("(?<!\\w)r(\\d+)");
@@ -32,8 +32,7 @@ public class CommandHelpers {
         if (match.find()) {
             return Integer.parseInt(
                     match.group(
-                            1)); // This should be exception-safe as only \d+ can be passed to it (i.e. non-empty
-            // string of pure digits)
+                            1));
         }
         return -1;
     }
@@ -57,11 +56,11 @@ public class CommandHelpers {
     }
 
     public static float parseRelative(String input, Float current) {
-        if (input.contains("~")) { // Relative
-            if (!input.equals("~")) { // Relative with offset
+        if (input.contains("~")) {
+            if (!input.equals("~")) {
                 current += Float.parseFloat(input.replace("~", ""));
-            } // Else no offset, no modification
-        } else { // Absolute
+            }
+        } else {
             current = Float.parseFloat(input);
         }
         return current;
@@ -71,39 +70,39 @@ public class CommandHelpers {
             String inputX, String inputY, String inputZ, Position curPos, Position curRot) {
         Position offset = new Position();
         Position target = new Position(curPos);
-        if (inputX.contains("~")) { // Relative
-            if (!inputX.equals("~")) { // Relative with offset
+        if (inputX.contains("~")) {
+            if (!inputX.equals("~")) {
                 target.addX(Float.parseFloat(inputX.replace("~", "")));
             }
         } else if (inputX.contains("^")) {
             if (!inputX.equals("^")) {
                 offset.setX(Float.parseFloat(inputX.replace("^", "")));
             }
-        } else { // Absolute
+        } else {
             target.setX(Float.parseFloat(inputX));
         }
 
-        if (inputY.contains("~")) { // Relative
-            if (!inputY.equals("~")) { // Relative with offset
+        if (inputY.contains("~")) {
+            if (!inputY.equals("~")) {
                 target.addY(Float.parseFloat(inputY.replace("~", "")));
             }
         } else if (inputY.contains("^")) {
             if (!inputY.equals("^")) {
                 offset.setY(Float.parseFloat(inputY.replace("^", "")));
             }
-        } else { // Absolute
+        } else {
             target.setY(Float.parseFloat(inputY));
         }
 
-        if (inputZ.contains("~")) { // Relative
-            if (!inputZ.equals("~")) { // Relative with offset
+        if (inputZ.contains("~")) {
+            if (!inputZ.equals("~")) {
                 target.addZ(Float.parseFloat(inputZ.replace("~", "")));
             }
         } else if (inputZ.contains("^")) {
             if (!inputZ.equals("^")) {
                 offset.setZ(Float.parseFloat(inputZ.replace("^", "")));
             }
-        } else { // Absolute
+        } else {
             target.setZ(Float.parseFloat(inputZ));
         }
 
@@ -115,11 +114,9 @@ public class CommandHelpers {
     }
 
     public static Position calculateOffset(Position pos, Position rot, Position offset) {
-        // Degrees to radians
         float angleZ = (float) Math.toRadians(rot.getY());
         float angleX = (float) Math.toRadians(rot.getY() + 90);
 
-        // Calculate offset based on current position and rotation
         return new Position(
                 pos.getX()
                         + offset.getZ() * (float) Math.sin(angleZ)

@@ -20,7 +20,6 @@ public class HandlerSetPlayerBornDataReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         SetPlayerBornDataReq req = SetPlayerBornDataReq.parseFrom(payload);
 
-        // Sanity checks
         int avatarId = req.getAvatarId();
         int startingSkillDepot;
         if (avatarId == GameConstants.MAIN_CHARACTER_MALE) {
@@ -31,7 +30,6 @@ public class HandlerSetPlayerBornDataReq extends PacketHandler {
             return;
         }
 
-        // Make sure resources folder is set
         if (!GameData.getAvatarDataMap().containsKey(avatarId)) {
             Grasscutter.getLogger()
                     .error("No avatar data found! Please check your ExcelBinOutput folder.");
@@ -39,21 +37,17 @@ public class HandlerSetPlayerBornDataReq extends PacketHandler {
             return;
         }
 
-        // Get player object
         Player player = session.getPlayer();
         player.setNickname(req.getNickName());
 
-        // Create avatar
         if (player.getAvatars().getAvatarCount() == 0) {
             Avatar mainCharacter = new Avatar(avatarId);
 
-            // Check if the default Anemo skill should be given.
             if (!GAME_OPTIONS.questing.enabled) {
                 mainCharacter.setSkillDepotData(
                         GameData.getAvatarSkillDepotDataMap().get(startingSkillDepot));
             }
 
-            // Manually handle adding to team
             player.addAvatar(mainCharacter, false);
             player.setMainCharacterId(avatarId);
             player.setHeadImage(avatarId);
@@ -62,16 +56,13 @@ public class HandlerSetPlayerBornDataReq extends PacketHandler {
                     .getCurrentSinglePlayerTeamInfo()
                     .getAvatars()
                     .add(mainCharacter.getAvatarId());
-            player.save(); // TODO save player team in different object
+            player.save();
         } else {
             return;
         }
 
-        // Login done
         session.getPlayer().onLogin();
 
-        // Born resp packet. Empty is a valid success - retcode defaults to 0 - so the CmdId is the
-        // only thing this needs, and PacketOpcodes has no 7.0 entry for it.
         int rspCmdId = GAME_OPTIONS.newAccountIntro.setPlayerBornDataRsp;
         Grasscutter.getLogger()
                 .info("[intro] character creation finished: {} picked avatar {} (rsp cmdId={}).",
@@ -79,13 +70,10 @@ public class HandlerSetPlayerBornDataReq extends PacketHandler {
         if (rspCmdId > 0) session.send(new BasePacket(rspCmdId));
         else session.send(new BasePacket(PacketOpcodes.SetPlayerBornDataRsp));
 
-        // Default mail
         var welcomeMail = GAME_INFO.joinOptions.welcomeMail;
         MailBuilder mailBuilder = new MailBuilder(player.getUid(), new Mail());
         mailBuilder.mail.mailContent.title = welcomeMail.title.replace("{version}", GameConstants.VERSION);
         mailBuilder.mail.mailContent.sender = welcomeMail.sender;
-        // Please credit Grasscutter if changing something here. We don't condone commercial use of the
-        // project.
         mailBuilder.mail.mailContent.content =
                 welcomeMail.content.replace("{version}", GameConstants.VERSION)
                         + "\n<type=\"browser\" text=\"GitHub\" href=\"https://github.com/Grasscutters/Grasscutter\"/>";

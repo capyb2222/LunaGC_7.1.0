@@ -19,13 +19,13 @@ public class Account {
     @Collation(locale = "simple", caseLevel = true)
     private String username;
 
-    private String password; // Unused for now
+    private String password;
 
     private int reservedPlayerId;
     private String email;
 
     private String token;
-    private String sessionKey; // Session token for dispatch server
+    private String sessionKey;
     private List<String> permissions;
     private Locale locale;
 
@@ -43,26 +43,24 @@ public class Account {
     public static boolean permissionMatchesWildcard(String wildcard, String[] permissionParts) {
         String[] wildcardParts = wildcard.split("\\.");
         if (permissionParts.length
-                < wildcardParts.length) { // A longer wildcard can never match a shorter permission
+                < wildcardParts.length) {
             return false;
         }
         for (int i = 0; i < wildcardParts.length; i++) {
             switch (wildcardParts[i]) {
-                case "**": // Recursing match
+                case "**":
                     return true;
-                case "*": // Match only one layer
+                case "*":
                     if (i >= (permissionParts.length - 1)) {
                         return true;
                     }
                     break;
-                default: // This layer isn't a wildcard, it needs to match exactly
+                default:
                     if (!wildcardParts[i].equals(permissionParts[i])) {
                         return false;
                     }
             }
         }
-        // At this point the wildcard will have matched every layer, but if it is shorter then the
-        // permission then this is not a match at this point (no **).
         return (wildcardParts.length == permissionParts.length);
     }
 
@@ -110,7 +108,6 @@ public class Account {
         if (email != null && !email.isEmpty()) {
             return email;
         } else {
-            // As of game version 3.5+, only the email is displayed to a user.
             return this.getUsername() + "@grasscutter.io";
         }
     }
@@ -146,13 +143,11 @@ public class Account {
         if (password == null) {
             return false;
         }
-        // BCrypt-hashed password (new-style accounts).
         if (this.password.startsWith("$2")) {
             return BCrypt.verifyer()
                     .verify(password.toCharArray(), this.password.toCharArray())
                     .verified;
         }
-        // Legacy plaintext password.
         return this.password.equals(password);
     }
 
@@ -204,7 +199,6 @@ public class Account {
         this.isBanned = isBanned;
     }
 
-    /** The collection of a player's permissions. */
     public List<String> getPermissions() {
         return this.permissions;
     }
@@ -219,7 +213,6 @@ public class Account {
         if (permission.isEmpty()) return true;
         if (this.permissions.contains("*") && this.permissions.size() == 1) return true;
 
-        // Add default permissions if it doesn't exist
         List<String> permissions =
                 Stream.of(this.permissions, Arrays.asList(ACCOUNT.defaultPermissions))
                         .flatMap(Collection::stream)
@@ -246,7 +239,6 @@ public class Account {
         this.permissions.clear();
     }
 
-    // TODO make unique
     public String generateLoginToken() {
         this.token = Utils.bytesToHex(Crypto.createSessionKey(32));
         this.save();
@@ -259,12 +251,10 @@ public class Account {
 
     @PreLoad
     public void onLoad(Document document) {
-        // Grant the superuser permissions to accounts created before the permissions update
         if (!document.containsKey("permissions")) {
             this.addPermission("*");
         }
 
-        // Set account default language as server default language
         if (!document.containsKey("locale")) {
             this.locale = LANGUAGE;
         }

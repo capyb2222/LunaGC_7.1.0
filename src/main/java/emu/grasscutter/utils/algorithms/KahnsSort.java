@@ -4,7 +4,7 @@ import java.util.*;
 
 public class KahnsSort {
     public static class Node {
-        int source, dest; // Dest is a value, and source too
+        int source, dest;
 
         public Node(int source, int dest) {
             this.source = source;
@@ -47,7 +47,6 @@ public class KahnsSort {
         while (!zeroStack.isEmpty()) {
             int element = zeroStack.pop();
 
-            // If the list is empty then this node
             if (!graph.mainList.get(element).isEmpty()) orderedList.add(element);
             for (int topElement : graph.mainList.get(element)) {
                 degreeList.replace(topElement, degreeList.get(topElement) - 1);
@@ -57,7 +56,7 @@ public class KahnsSort {
         }
 
         if (degreeList.values().stream().filter(value -> value != 0).count() != 0)
-            return null; // Loop found
+            return null;
 
         return orderedList;
     }

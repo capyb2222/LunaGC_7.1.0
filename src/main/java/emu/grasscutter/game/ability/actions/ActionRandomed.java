@@ -29,7 +29,6 @@ public final class ActionRandomed extends AbilityActionHandler {
             if (AbilityManager.isServerOwnedChain()
                     && !AbilityManager.isAllowedInServerOwnedChain(child.type)) continue;
 
-            // In order, on this thread: a later block reads what an earlier one writes.
             manager.executeActionNow(ability, child, abilityData, target);
         }
 

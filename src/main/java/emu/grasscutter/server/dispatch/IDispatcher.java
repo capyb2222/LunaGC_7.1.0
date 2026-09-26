@@ -34,28 +34,22 @@ public interface IDispatcher {
         } else {
             var data = element.getAsString();
 
-            // Check if the element starts and ends with quotes.
             if (data.startsWith("\"") && data.endsWith("\"")) {
-                // Remove the quotes.
                 data = data.substring(1, data.length() - 1);
             }
 
-            // Un-escape the data.
             data = data.replaceAll("\\\\\"", "\"");
             data = data.replaceAll("\\\\", "");
 
-            // De-serialize the data.
             return JSON.fromJson(data, type);
         }
     }
 
     default <T> T await(
             JsonObject request, int requestId, int responseId, Function<JsonElement, T> parser) {
-        // Perform the setup for the request.
         var future = this.async(request, requestId, responseId, parser);
 
         try {
-            // Try to return the value.
             return future.get(5L, TimeUnit.SECONDS);
         } catch (Exception ignored) {
             return null;
@@ -68,11 +62,8 @@ public interface IDispatcher {
 
     default <T> CompletableFuture<T> async(
             JsonObject request, int requestId, int responseId, Function<JsonElement, T> parser) {
-        // Create the future.
         var future = new CompletableFuture<T>();
-        // Listen for the response.
         this.registerCallback(responseId, packet -> future.complete(parser.apply(packet)));
-        // Broadcast the packet.
         this.sendMessage(requestId, request);
 
         return future;
@@ -81,14 +72,11 @@ public interface IDispatcher {
     void sendMessage(int packetId, Object message);
 
     default JsonObject decodeMessage(byte[] message) {
-        // Decrypt the message.
         Crypto.xor(message, DISPATCH_INFO.encryptionKey);
-        // Deserialize the message.
         return JSON.fromJson(new String(message, StandardCharsets.UTF_8), JsonObject.class);
     }
 
     default JsonObject encodeMessage(int packetId, Object message) {
-        // Create a message from the message data.
         var serverMessage = new JsonObject();
         serverMessage.addProperty("packetId", packetId);
         serverMessage.addProperty("message", JSON.toJson(message));
@@ -97,7 +85,6 @@ public interface IDispatcher {
     }
 
     default void handleMessage(WebSocket socket, byte[] messageData) {
-        // Decode the message.
         var decoded = this.decodeMessage(messageData);
         if (decoded == null) {
             this.getLogger().warn("Received invalid message.");
@@ -105,12 +92,9 @@ public interface IDispatcher {
             return;
         }
 
-        // Get the packet ID.
         var packetId = decoded.get("packetId").getAsInt();
-        // Get the packet data.
         var packetData = decoded.get("message");
 
-        // Check to see if the client has authenticated.
         if (packetId != PacketIds.LoginNotify) {
             if (socket.getAttachment() instanceof Boolean authenticated) {
                 if (!authenticated) {
@@ -122,19 +106,13 @@ public interface IDispatcher {
         }
 
         try {
-            // Check if the packet ID is registered.
             if (this.getHandlers().containsKey(packetId)) {
-                // Get the handler.
                 var handler = this.getHandlers().get(packetId);
-                // Handle the packet.
                 handler.accept(socket, packetData);
             }
 
-            // Check if the packet ID has callbacks.
             if (this.getCallbacks().containsKey(packetId)) {
-                // Get the callbacks.
                 var callbacks = this.getCallbacks().get(packetId);
-                // Call the callbacks.
                 callbacks.forEach(callback -> callback.accept(packetData));
                 callbacks.clear();
             }
@@ -145,20 +123,16 @@ public interface IDispatcher {
     }
 
     default void registerHandler(int packetId, BiConsumer<WebSocket, JsonElement> handler) {
-        // Check if the packet ID is already registered.
         if (this.getHandlers().containsKey(packetId))
             throw new IllegalArgumentException("Packet ID already registered.");
 
-        // Register the handler.
         this.getHandlers().put(packetId, handler);
     }
 
     default void registerCallback(int packetId, Consumer<JsonElement> callback) {
-        // Check if the packet ID has a list for callbacks.
         if (!this.getCallbacks().containsKey(packetId))
             this.getCallbacks().put(packetId, new LinkedList<>());
 
-        // Register the callback.
         this.getCallbacks().get(packetId).add(callback);
     }
 

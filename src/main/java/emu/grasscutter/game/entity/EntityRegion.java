@@ -13,7 +13,7 @@ import lombok.Getter;
 @Getter
 public class EntityRegion extends GameEntity {
     private final Position position;
-    private final Set<Integer> entities; // Ids of entities inside this region
+    private final Set<Integer> entities;
     private final SceneRegion metaRegion;
     private boolean entityEnter;
     private boolean entityLeave;
@@ -85,7 +85,6 @@ public class EntityRegion extends GameEntity {
 
     @Override
     public SceneEntityInfoOuterClass.SceneEntityInfo toProto() {
-        /** The Region Entity would not be sent to client. */
         return null;
     }
 
@@ -95,7 +94,6 @@ public class EntityRegion extends GameEntity {
 
     @Override
     public void initAbilities() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'initAbilities'");
     }
 }

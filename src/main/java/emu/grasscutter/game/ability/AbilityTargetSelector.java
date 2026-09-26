@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public final class AbilityTargetSelector {
-    /** Shape names encode their size, e.g. CircleR20H10 is a radius of 20 and a height of 10. */
     private static final Pattern RADIUS = Pattern.compile("R(\\d+(?:\\.\\d+)?)");
 
     private static final Pattern HEIGHT = Pattern.compile("H(\\d+(?:\\.\\d+)?)");
@@ -47,7 +46,6 @@ public final class AbilityTargetSelector {
         return limit > 0 && found.size() > limit ? new ArrayList<>(found.subList(0, limit)) : found;
     }
 
-    /** The names come from either entityTypes or entityTypePriority depending on the selector. */
     private static Set<String> entityTypes(Map<String, Object> otherTargets) {
         var names = new HashSet<String>();
         for (var key : new String[] {"entityTypes", "entityTypePriority"}) {

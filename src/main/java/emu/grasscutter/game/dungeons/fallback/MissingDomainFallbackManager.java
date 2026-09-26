@@ -21,19 +21,13 @@ import java.util.Set;
 public final class MissingDomainFallbackManager {
     private static final int LOCAL_CHALLENGE_ID = 1;
 
-    // Standard "Defeat X opponent(s) within Y seconds" challenge config.
-    // Do not confuse this with DungeonPass condition id 51.
     private static final int CHALLENGE_DATA_ID = 2;
 
-    // Standard worktop option used by domain challenge starter keys.
     private static final int START_OPTION_ID = 7;
 
-    // Shared fallback starter key config id used in the resource group scripts.
     private static final int STARTER_KEY_CONFIG_ID = 9001;
 
     private static final Map<Integer, FallbackDomainConfig> CONFIGS_BY_SCENE = Map.ofEntries(
-			// Ancient Watchtower / Scrying Shadows / Estimation / rotating Forgery variants I
-			// Domain of Forgery reward IDs rotate by weekday, so this scene accepts any dungeon id.
 			Map.entry(
 					40774,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -47,7 +41,6 @@ public final class MissingDomainFallbackManager {
 									{1005, 1006, 1007}
 							})),
 
-			// Ancient Watchtower II
 			Map.entry(
 					40775,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -61,7 +54,6 @@ public final class MissingDomainFallbackManager {
 									{1005, 1006, 1007}
 							})),
 
-			// Ancient Watchtower III
 			Map.entry(
 					40776,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -75,7 +67,6 @@ public final class MissingDomainFallbackManager {
 									{1004, 1005, 1006}
 							})),
 
-			// Ancient Watchtower IV
 			Map.entry(
 					40777,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -88,8 +79,6 @@ public final class MissingDomainFallbackManager {
 									{1001}
 							})),
 							
-			// Blazing Ruins / Domain of Mastery rotating variants I
-			// Rotating talent-book domain, so this scene accepts any dungeon id.
 			Map.entry(
 					40764,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -103,7 +92,6 @@ public final class MissingDomainFallbackManager {
 									{1005, 1006, 1007}
 							})),
 
-			// Blazing Ruins II
 			Map.entry(
 					40765,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -117,7 +105,6 @@ public final class MissingDomainFallbackManager {
 									{1005, 1006, 1007}
 							})),
 
-			// Blazing Ruins III
 			Map.entry(
 					40766,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -131,7 +118,6 @@ public final class MissingDomainFallbackManager {
 									{1004, 1005, 1006}
 							})),
 			
-			// Blazing Ruins IV
 			Map.entry(
 					40767,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -144,7 +130,6 @@ public final class MissingDomainFallbackManager {
 									{1001, 1002}
 							})),
 			
-			// Sanctum of Rainbow Spirits / The Burning Gauntlet I
 			Map.entry(
 					40792,
 					FallbackDomainConfig.exactDungeonIds(
@@ -159,7 +144,6 @@ public final class MissingDomainFallbackManager {
 									{1005, 1006, 1007}
 							})),
 			
-			// Sanctum of Rainbow Spirits / The Burning Gauntlet II
 			Map.entry(
 					40793,
 					FallbackDomainConfig.exactDungeonIds(
@@ -174,7 +158,6 @@ public final class MissingDomainFallbackManager {
 									{1005, 1006, 1007}
 							})),
 
-			// Sanctum of Rainbow Spirits / The Burning Gauntlet III
 			Map.entry(
 					40794,
 					FallbackDomainConfig.exactDungeonIds(
@@ -189,7 +172,6 @@ public final class MissingDomainFallbackManager {
 									{1004, 1005, 1006}
 							})),
 
-			// Sanctum of Rainbow Spirits / The Burning Gauntlet IV
 			Map.entry(
 					40795,
 					FallbackDomainConfig.exactDungeonIds(
@@ -203,7 +185,6 @@ public final class MissingDomainFallbackManager {
 									{1001, 1002, 1003}
 							})),
 			
-            // Derelict Masonry Dock / Domain of Blessing: Deepfire Construct I
             Map.entry(
                     40796,
                     FallbackDomainConfig.exactDungeonIds(
@@ -218,7 +199,6 @@ public final class MissingDomainFallbackManager {
                                     {1004, 1005, 1006}
                             })),
 
-            // Derelict Masonry Dock / Domain of Blessing: Deepfire Construct II
             Map.entry(
                     40797,
                     FallbackDomainConfig.exactDungeonIds(
@@ -233,7 +213,6 @@ public final class MissingDomainFallbackManager {
                                     {1004, 1005, 1006}
                             })),
 
-            // Derelict Masonry Dock / Domain of Blessing: Deepfire Construct III
             Map.entry(
                     40798,
                     FallbackDomainConfig.exactDungeonIds(
@@ -248,7 +227,6 @@ public final class MissingDomainFallbackManager {
                                     {1004, 1005, 1006}
                             })),
 
-            // Derelict Masonry Dock / Domain of Blessing: Deepfire Construct IV
             Map.entry(
                     40799,
                     FallbackDomainConfig.exactDungeonIds(
@@ -262,7 +240,6 @@ public final class MissingDomainFallbackManager {
                                     {1001}
                             })),
 			
-			// Denouement of Sin / Domain of Blessing: Harmony I
 			Map.entry(
 					40780,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -276,7 +253,6 @@ public final class MissingDomainFallbackManager {
 									{1003, 1004, 1005}
 							})),
 
-			// Denouement of Sin / Domain of Blessing: Harmony II
 			Map.entry(
 					40781,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -290,7 +266,6 @@ public final class MissingDomainFallbackManager {
 									{1004, 1005, 1006}
 							})),
 
-			// Denouement of Sin / Domain of Blessing: Harmony III
 			Map.entry(
 					40782,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -304,7 +279,6 @@ public final class MissingDomainFallbackManager {
 									{1004, 1005, 1006}
 							})),
 
-			// Denouement of Sin / Domain of Blessing: Harmony IV
 			Map.entry(
 					40783,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -318,7 +292,6 @@ public final class MissingDomainFallbackManager {
 									{1004, 1005}
 							})),
 			
-			// Faded Theater / Domain of Blessing: Variation I
 			Map.entry(
 					40788,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -332,7 +305,6 @@ public final class MissingDomainFallbackManager {
 									{1013, 1014, 1015}
 							})),
 
-			// Faded Theater / Domain of Blessing: Variation II
 			Map.entry(
 					40789,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -346,7 +318,6 @@ public final class MissingDomainFallbackManager {
 									{1007, 1008, 1009, 1010}
 							})),
 
-			// Faded Theater / Domain of Blessing: Variation III
 			Map.entry(
 					40790,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -360,7 +331,6 @@ public final class MissingDomainFallbackManager {
 									{1002, 1003, 1004, 1005}
 							})),
 
-			// Faded Theater / Domain of Blessing: Variation IV
 			Map.entry(
 					40791,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -374,7 +344,6 @@ public final class MissingDomainFallbackManager {
 									{1003, 1004, 1005}
 							})),
 			
-			// Waterfall Wen / Domain of Blessing: Crumbling Assembly I
 			Map.entry(
 					40784,
 					FallbackDomainConfig.exactDungeonIds(
@@ -389,7 +358,6 @@ public final class MissingDomainFallbackManager {
 									{1013, 1014, 1015}
 							})),
 
-			// Waterfall Wen / Domain of Blessing: Crumbling Assembly II
 			Map.entry(
 					40785,
 					FallbackDomainConfig.exactDungeonIds(
@@ -404,7 +372,6 @@ public final class MissingDomainFallbackManager {
 									{1013, 1014, 1015}
 							})),
 
-			// Waterfall Wen / Domain of Blessing: Crumbling Assembly III
 			Map.entry(
 					40786,
 					FallbackDomainConfig.exactDungeonIds(
@@ -419,7 +386,6 @@ public final class MissingDomainFallbackManager {
 									{1004, 1005, 1006}
 							})),
 
-			// Waterfall Wen / Domain of Blessing: Crumbling Assembly IV
 			Map.entry(
 					40787,
 					FallbackDomainConfig.exactDungeonIds(
@@ -434,7 +400,6 @@ public final class MissingDomainFallbackManager {
 									{1005, 1006}
 							})),
 							
-			// Pale Forgotten Glory / Domain of Mastery: Rhyming Rhythm I
 			Map.entry(
 					40760,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -448,7 +413,6 @@ public final class MissingDomainFallbackManager {
 									{1003}
 							})),
 
-			// Pale Forgotten Glory / Domain of Mastery: Rhyming Rhythm II
 			Map.entry(
 					40761,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -462,7 +426,6 @@ public final class MissingDomainFallbackManager {
 									{1004}
 							})),
 
-			// Pale Forgotten Glory / Domain of Mastery: Rhyming Rhythm III
 			Map.entry(
 					40762,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -475,7 +438,6 @@ public final class MissingDomainFallbackManager {
 									{1001, 1002}
 							})),
 
-			// Pale Forgotten Glory / Domain of Mastery: Rhyming Rhythm IV
 			Map.entry(
 					40763,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -488,7 +450,6 @@ public final class MissingDomainFallbackManager {
 									{1001, 1002}
 							})),
 			
-			// Echoes of the Deep Tides I / Domain of Forgery I
 			Map.entry(
 					40770,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -502,7 +463,6 @@ public final class MissingDomainFallbackManager {
 											{1004, 1005, 1006}
 							})),
 
-			// Echoes of the Deep Tides II / Domain of Forgery II
 			Map.entry(
 					40771,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -516,7 +476,6 @@ public final class MissingDomainFallbackManager {
 											{1005, 1006, 1007}
 							})),
 
-			// Echoes of the Deep Tides III / Domain of Forgery III
 			Map.entry(
 					40772,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -530,7 +489,6 @@ public final class MissingDomainFallbackManager {
 											{1004, 1005}
 							})),
 
-			// Echoes of the Deep Tides IV / Domain of Forgery IV
 			Map.entry(
 					40773,
 					FallbackDomainConfig.acceptAnyDungeonId(
@@ -544,7 +502,6 @@ public final class MissingDomainFallbackManager {
 											{1004, 1005}
 							})),
 			
-			// Molten Iron Fortress / Domain of Blessing: Forsaken Rampart I
 			Map.entry(
 					40664,
 					FallbackDomainConfig.exactDungeonIds(
@@ -560,7 +517,6 @@ public final class MissingDomainFallbackManager {
 									{1011, 1012}
 							})),
 
-			// Molten Iron Fortress / Domain of Blessing: Forsaken Rampart II
 			Map.entry(
 					40665,
 					FallbackDomainConfig.exactDungeonIds(
@@ -575,7 +531,6 @@ public final class MissingDomainFallbackManager {
 									{1006, 1007, 1008, 1009}
 							})),
 
-			// Molten Iron Fortress / Domain of Blessing: Forsaken Rampart III
 			Map.entry(
 					40666,
 					FallbackDomainConfig.exactDungeonIds(
@@ -590,7 +545,6 @@ public final class MissingDomainFallbackManager {
 									{1005, 1006, 1007}
 							})),
 
-			// Molten Iron Fortress / Domain of Blessing: Forsaken Rampart IV
 			Map.entry(
 					40667,
 					FallbackDomainConfig.exactDungeonIds(
@@ -604,7 +558,6 @@ public final class MissingDomainFallbackManager {
 									{1001, 1002},
 									{1003, 1004}
 							})),
-            // Frostladen Machinery / Domain of Blessing: Derivations From the Deep I
             Map.entry(
                     40810,
                     FallbackDomainConfig.exactDungeonIds(
@@ -619,7 +572,6 @@ public final class MissingDomainFallbackManager {
                                     {1005, 1006, 1007}
                             })),
 
-            // Frostladen Machinery / Domain of Blessing: Derivations From the Deep II
             Map.entry(
                     40811,
                     FallbackDomainConfig.exactDungeonIds(
@@ -634,7 +586,6 @@ public final class MissingDomainFallbackManager {
                                     {1005, 1006, 1007}
                             })),
 
-            // Frostladen Machinery / Domain of Blessing: Derivations From the Deep III
             Map.entry(
                     40812,
                     FallbackDomainConfig.exactDungeonIds(
@@ -648,7 +599,6 @@ public final class MissingDomainFallbackManager {
                                     {1001, 1002}
                             })),
 
-            // Frostladen Machinery / Domain of Blessing: Derivations From the Deep IV
             Map.entry(
                     40813,
                     FallbackDomainConfig.exactDungeonIds(
@@ -661,7 +611,6 @@ public final class MissingDomainFallbackManager {
                             new int[][] {
                                     {1001}
                             })),
-            // Moonchild's Treasures / Domain of Blessing: Sacred Vault I
             Map.entry(
                     40820,
                     FallbackDomainConfig.exactDungeonIds(
@@ -676,7 +625,6 @@ public final class MissingDomainFallbackManager {
                                     {1005, 1006, 1007}
                             })),
 
-            // Moonchild's Treasures / Domain of Blessing: Sacred Vault II
             Map.entry(
                     40821,
                     FallbackDomainConfig.exactDungeonIds(
@@ -691,7 +639,6 @@ public final class MissingDomainFallbackManager {
                                     {1005, 1006, 1007}
                             })),
 
-            // Moonchild's Treasures / Domain of Blessing: Sacred Vault III
             Map.entry(
                     40822,
                     FallbackDomainConfig.exactDungeonIds(
@@ -706,7 +653,6 @@ public final class MissingDomainFallbackManager {
                                     {1005, 1006, 1007}
                             })),
 
-            // Moonchild's Treasures / Domain of Blessing: Sacred Vault IV
             Map.entry(
                     40823,
                     FallbackDomainConfig.exactDungeonIds(
@@ -721,7 +667,6 @@ public final class MissingDomainFallbackManager {
                                     {1004, 1005, 1006}
                             })),
 							
-            // Thorny Crown of the Mountain Wind / Domain of Blessing: Minstrel's Peak I
             Map.entry(
                     40824,
                     FallbackDomainConfig.exactDungeonIds(
@@ -736,7 +681,6 @@ public final class MissingDomainFallbackManager {
                                     {1003}
                             })),
 
-            // Thorny Crown of the Mountain Wind / Domain of Blessing: Minstrel's Peak II
             Map.entry(
                     40825,
                     FallbackDomainConfig.exactDungeonIds(
@@ -750,7 +694,6 @@ public final class MissingDomainFallbackManager {
                                     {1001}
                             })),
 
-            // Thorny Crown of the Mountain Wind / Domain of Blessing: Minstrel's Peak III
             Map.entry(
                     40826,
                     FallbackDomainConfig.exactDungeonIds(
@@ -764,7 +707,6 @@ public final class MissingDomainFallbackManager {
                                     {1001}
                             })),
 
-            // Thorny Crown of the Mountain Wind / Domain of Blessing: Minstrel's Peak IV
             Map.entry(
                     40827,
                     FallbackDomainConfig.exactDungeonIds(
@@ -778,7 +720,6 @@ public final class MissingDomainFallbackManager {
                                     {1001, 1002}
                             })),
 							
-            // Lightless Capital / Shared difficulty I; weekday rotations use the same scene.
             Map.entry(
                     40704,
                     FallbackDomainConfig.exactDungeonIds(
@@ -793,7 +734,6 @@ public final class MissingDomainFallbackManager {
                                     {1005, 1006, 1007}
                             })),
 
-            // Lightless Capital / Shared difficulty II; weekday rotations use the same scene.
             Map.entry(
                     40705,
                     FallbackDomainConfig.exactDungeonIds(
@@ -808,7 +748,6 @@ public final class MissingDomainFallbackManager {
                                     {1005, 1006, 1007}
                             })),
 
-            // Lightless Capital / Shared difficulty III; weekday rotations use the same scene.
             Map.entry(
                     40706,
                     FallbackDomainConfig.exactDungeonIds(
@@ -823,7 +762,6 @@ public final class MissingDomainFallbackManager {
                                     {1005, 1006, 1007}
                             })),
 
-            // Lightless Capital / Shared difficulty IV; weekday rotations use the same scene.
             Map.entry(
                     40707,
                     FallbackDomainConfig.exactDungeonIds(
@@ -837,7 +775,6 @@ public final class MissingDomainFallbackManager {
                                     {1001, 1002, 1003}
                             })),
 
-            // Lost Mooncourt / Shared difficulty I; weekday rotations use the same scene.
             Map.entry(
                     40816,
                     FallbackDomainConfig.exactDungeonIds(
@@ -852,7 +789,6 @@ public final class MissingDomainFallbackManager {
                                     {1005, 1006, 1007}
                             })),
 
-            // Lost Mooncourt / Shared difficulty II; weekday rotations use the same scene.
             Map.entry(
                     40817,
                     FallbackDomainConfig.exactDungeonIds(
@@ -867,7 +803,6 @@ public final class MissingDomainFallbackManager {
                                     {1005, 1006, 1007}
                             })),
 
-            // Lost Mooncourt / Shared difficulty III; weekday rotations use the same scene.
             Map.entry(
                     40818,
                     FallbackDomainConfig.exactDungeonIds(
@@ -882,7 +817,6 @@ public final class MissingDomainFallbackManager {
                                     {1005, 1006, 1007}
                             })),
 
-            // Lost Mooncourt  Shared difficulty IV; weekday rotations use the same scene.
             Map.entry(
                     40819,
                     FallbackDomainConfig.exactDungeonIds(
@@ -901,13 +835,11 @@ public final class MissingDomainFallbackManager {
 
     public static int getStatueDropOverride(int dungeonId) {
 		return switch (dungeonId) {
-			// City of Gold / Domain of Blessing: Desert Citadel I-IV
 			case 5060 -> 85333500;
 			case 5061 -> 85334000;
 			case 5062 -> 85334500;
 			case 5063 -> 85335500;
 
-			// Molten Iron Fortress / Domain of Blessing: Forsaken Rampart I-IV
 			case 5064 -> 85343500;
 			case 5065 -> 85344000;
 			case 5066 -> 85344500;
@@ -1007,8 +939,6 @@ public final class MissingDomainFallbackManager {
         if (entity instanceof EntityGadget initialGadget) {
             gadget = initialGadget;
         } else {
-            // Some imported domain scenes can have the group metadata loaded, but their initial suite may not be refreshed before this callback runs.
-            // Force suite 1 once, then check again.
             Grasscutter.getLogger()
                     .warn(
                             "[MissingDomainFallback] Starter key config {} was not present in scene {} group {}. Forcing suite refresh once.",
@@ -1116,8 +1046,6 @@ public final class MissingDomainFallbackManager {
             return;
         }
 
-        // These fallback groups are intentionally loaded by Java, not by normal player-proximity scene grids. 
-		// Keep them alive so Scene.checkGroups() cannot unload them between the loadDynamicGroup() call and the starter-key setup callback.
         group.dynamic_load = true;
         group.dontUnload = true;
 
@@ -1221,7 +1149,6 @@ public final class MissingDomainFallbackManager {
 
             super.onMonsterDeath(monster);
 
-            // If the previous call finished the whole challenge, do not spawn another wave.
             if (!inProgress()) {
                 return;
             }

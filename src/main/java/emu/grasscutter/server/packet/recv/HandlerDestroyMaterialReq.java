@@ -10,7 +10,6 @@ public class HandlerDestroyMaterialReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         DestroyMaterialReq req = DestroyMaterialReq.parseFrom(payload);
 
-        // Delete items
         session
                 .getServer()
                 .getInventorySystem()

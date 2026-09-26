@@ -46,7 +46,7 @@ public abstract class EntityBaseGadget extends GameEntity {
 
     @Override
     public void onDeath(int killerId) {
-        super.onDeath(killerId); // Invoke super class's onDeath() method.
+        super.onDeath(killerId);
 
         getScene()
                 .getPlayers()

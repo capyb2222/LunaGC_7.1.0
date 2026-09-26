@@ -8,7 +8,7 @@ import lombok.*;
 
 @ResourceType(name = "DungeonEntryExcelConfigData.json")
 @Getter
-@Setter // TODO: remove this next API break
+@Setter
 public class DungeonEntryData extends GameResource {
     @Getter(onMethod_ = @Override)
     private int id;

@@ -66,8 +66,6 @@ public final class TeamCommand implements CommandHandler {
             return false;
         }
 
-        // A character can be asked for by name, and a name can run to several words - settle that
-        // before the slot number below is read, or "hu tao 2" would take "tao" for the slot.
         var typed = args.get(1);
         if (!typed.contains(",") && !isNumber(typed)) {
             var rest = new ArrayList<>(args.subList(2, args.size()));
@@ -103,12 +101,10 @@ public final class TeamCommand implements CommandHandler {
         for (var avatarId : avatarIds) {
             int id;
             if (isNumber(avatarId)) {
-                // Short forms like 3 are still meant here; addAvatar raises them itself.
                 id = Integer.parseInt(avatarId);
             } else {
                 id = NameIndex.resolve(avatarId, new ArrayList<>());
                 if (!GameData.getAvatarDataMap().containsKey(id)) {
-                    // Not a number and not a name either - say so rather than throwing out of the loop.
                     CommandHandler.sendTranslatedMessage(
                             sender, "commands.team.failed_to_add_avatar", avatarId);
                     continue;
@@ -137,7 +133,6 @@ public final class TeamCommand implements CommandHandler {
         var indexes = new HashSet<Integer>();
         var ignoreList = new ArrayList<Integer>();
         for (var metaIndex : metaIndexList) {
-            // step 1: parse metaIndex to indexes
             var subIndexes = transformToIndexes(metaIndex, avatarCount);
             if (subIndexes == null) {
                 CommandHandler.sendTranslatedMessage(
@@ -145,7 +140,6 @@ public final class TeamCommand implements CommandHandler {
                 continue;
             }
 
-            // step 2: get all of the avatar id through indexes
             for (var avatarIndex : subIndexes) {
                 try {
                     indexes.add(currentTeamAvatars.get(avatarIndex - 1));
@@ -156,18 +150,15 @@ public final class TeamCommand implements CommandHandler {
             }
         }
 
-        // step 3: check if user remove all of the avatar
         if (indexes.size() >= avatarCount) {
             CommandHandler.sendTranslatedMessage(sender, "commands.team.remove_too_much");
             return false;
         }
 
-        // step 4: hint user for ignore index
         if (!ignoreList.isEmpty()) {
             CommandHandler.sendTranslatedMessage(sender, "commands.team.ignore_index", ignoreList);
         }
 
-        // step 5: remove
         currentTeamAvatars.removeAll(indexes);
         return true;
     }
@@ -246,14 +237,12 @@ public final class TeamCommand implements CommandHandler {
     }
 
     private List<Integer> transformToIndexes(String metaIndexes, int listLength) {
-        // step 1: check if metaIndexes is a special constants
         if (metaIndexes.equals("first")) {
             return List.of(1);
         } else if (metaIndexes.equals("last")) {
             return List.of(listLength);
         }
 
-        // step 2: check if metaIndexes is a range
         if (metaIndexes.contains("-")) {
             var range = metaIndexes.split("-");
             if (range.length < 2) {
@@ -292,7 +281,6 @@ public final class TeamCommand implements CommandHandler {
             return indexes;
         }
 
-        // step 3: index is a value, simply return
         try {
             int index = Integer.parseInt(metaIndexes);
             return List.of(index);

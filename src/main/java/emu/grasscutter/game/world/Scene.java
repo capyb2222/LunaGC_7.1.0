@@ -446,8 +446,6 @@ public class Scene {
         ElementType attackType = ElementType.getTypeByValue(result.getElementType());
 
         if (target == null) {
-            // 6000 lines of this in a single session, each one dumping a proto for a hit that was
-            // going nowhere anyway. Behind isDebugEnabled so the dump is not built when unwanted.
             var logger = Grasscutter.getLogger();
             if (logger.isDebugEnabled()) {
                 logger.debug(
@@ -568,8 +566,6 @@ public class Scene {
 
         this.broadcastPacket(new PacketLifeStateChangeNotify(attackerId, target, LifeState.LIFE_DEAD));
 
-        // Activity watchers count kills. The attacker may be a summon or a client gadget, so credit
-        // the avatar that actually owns it rather than the entity that landed the hit.
         if (target instanceof EntityMonster killed
                 && (attacker != null ? attacker.getTrueOwner() : null)
                         instanceof EntityAvatar avatarAttacker) {
@@ -611,7 +607,6 @@ public class Scene {
 
         target.onDeath(attackerId);
 
-        // A commission that asks for kills counts them here, by the group the monster belongs to.
         if (target instanceof EntityMonster monster) {
             var host = this.getWorld().getHost();
             if (host != null && host.getDailyTaskManager() != null) {
@@ -650,8 +645,6 @@ public class Scene {
 
         var sceneTime = getSceneTimeSeconds();
 
-        // getEntities() is already concurrent, so it is iterated in place rather than copied
-        // wholesale every tick - at a 200ms tick that copy was the scene's largest allocation.
         this.getEntities()
                 .forEach(
                         (eid, e) ->
@@ -667,7 +660,6 @@ public class Scene {
         stage(
                 "the tower",
                 () -> {
-                    // Ticked with nobody here this used to walk off the end of an empty list.
                     var host = this.players.isEmpty() ? null : this.players.get(0);
                     var towerManager = host != null ? host.getTowerManager() : null;
                     if (towerManager != null && towerManager.isInProgress()) towerManager.onTick();
@@ -685,7 +677,6 @@ public class Scene {
         }
     }
 
-    /** Stages of a tick already reported as failing, so the log says each one once. */
     private final Set<String> reportedStages = ConcurrentHashMap.newKeySet();
 
     private void stage(String name, Runnable body) {
@@ -1139,8 +1130,6 @@ public class Scene {
     }
 
     public void unloadGroup(SceneBlock block, int group_id) {
-        // Callers resolve the block via getBlocks().get(...), which yields null for a group whose
-        // block was never loaded (dynamic groups in particular). Nothing below can run without it.
         if (block == null) {
             Grasscutter.getLogger()
                     .debug("unloadGroup: no block for group {} in scene {}", group_id, this.getId());
@@ -1158,7 +1147,6 @@ public class Scene {
                     new PacketSceneEntityDisappearNotify(toRemove, VisionType.VisionType_VISION_REMOVE));
         }
 
-        // block.groups stays null until the block is actually loaded from script.
         var group = block.groups == null ? null : block.groups.get(group_id);
         if (group == null) {
             Grasscutter.getLogger()
@@ -1175,8 +1163,6 @@ public class Scene {
             challenge.fail();
         }
 
-        // The per-block set is dropped from the map once it empties (below), so a later unload
-        // targeting the same block finds no entry at all.
         var blockGroups = scriptManager.getLoadedGroupSetPerBlock().get(block.id);
         if (blockGroups != null) {
             blockGroups.remove(group);

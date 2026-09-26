@@ -2,7 +2,6 @@ package emu.grasscutter.utils.objects;
 
 import lombok.*;
 
-/** HTTP request object for handbook controls. */
 @SuppressWarnings("FieldMayBeFinal")
 public interface HandbookBody {
     @Builder
@@ -21,38 +20,38 @@ public interface HandbookBody {
 
     @Getter
     class GrantAvatar {
-        private String player; // Parse into online player ID.
-        private String playerToken; // Parse into session token.
-        private String avatar; // Parse into avatar ID.
+        private String player;
+        private String playerToken;
+        private String avatar;
 
-        private int level = 90; // Range between 1 - 90.
-        private int constellations = 6; // Range between 0 - 6.
-        private int talentLevels = 10; // Range between 1 - 15.
+        private int level = 90;
+        private int constellations = 6;
+        private int talentLevels = 10;
     }
 
     @Getter
     class GiveItem {
-        private String player; // Parse into online player ID.
-        private String playerToken; // Parse into session token.
-        private String item; // Parse into item ID.
+        private String player;
+        private String playerToken;
+        private String item;
 
-        private long amount = 1; // Range between 1 - Long.MAX_VALUE.
+        private long amount = 1;
     }
 
     @Getter
     class TeleportTo {
-        private String player; // Parse into online player ID.
-        private String playerToken; // Parse into session token.
-        private String scene; // Parse into a scene ID.
+        private String player;
+        private String playerToken;
+        private String scene;
     }
 
     @Getter
     class SpawnEntity {
-        private String player; // Parse into online player ID.
-        private String playerToken; // Parse into session token.
-        private String entity; // Parse into entity ID.
+        private String player;
+        private String playerToken;
+        private String entity;
 
-        private long amount = 1; // Range between 1 - Long.MAX_VALUE.
-        private int level = 1; // Range between 1 - 200.
+        private long amount = 1;
+        private int level = 1;
     }
 }

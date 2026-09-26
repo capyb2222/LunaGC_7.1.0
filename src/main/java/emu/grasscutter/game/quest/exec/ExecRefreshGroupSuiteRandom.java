@@ -30,7 +30,6 @@ public class ExecRefreshGroupSuiteRandom extends QuestExecHandler {
             val entryArray = entry.split(",");
             val groupId = Integer.parseInt(entryArray[0]);
 
-            // Pick a random suite ID from index 1 onwards
             if (entryArray.length > 1) {
                 val randomSuiteIndex = random.nextInt(1, entryArray.length);
                 val suiteId = Integer.parseInt(entryArray[randomSuiteIndex]);

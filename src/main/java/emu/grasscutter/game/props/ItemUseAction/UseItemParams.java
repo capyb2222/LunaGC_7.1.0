@@ -5,7 +5,6 @@ import emu.grasscutter.game.player.Player;
 import emu.grasscutter.game.props.ItemUseTarget;
 
 public class UseItemParams {
-    // Don't want to change 40 method signatures when this gets extended!
     public Player player;
     public ItemUseTarget itemUseTarget;
     public Avatar targetAvatar = null;

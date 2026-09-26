@@ -7,7 +7,6 @@ import io.javalin.http.Context;
 import javax.annotation.Nullable;
 import lombok.*;
 
-/** Defines an authenticator for the server. Can be changed by plugins. */
 public interface AuthenticationSystem {
 
     static AuthenticationRequest fromPasswordRequest(Context ctx, LoginAccountRequestJson jsonData) {
@@ -51,7 +50,6 @@ public interface AuthenticationSystem {
 
     HandbookAuthenticator getHandbookAuthenticator();
 
-    /** A data container that holds relevant data for authenticating a client. */
     @Builder
     @AllArgsConstructor
     @Getter

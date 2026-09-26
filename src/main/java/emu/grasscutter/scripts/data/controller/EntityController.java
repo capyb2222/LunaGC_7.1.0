@@ -58,7 +58,6 @@ public class EntityController {
         return 0;
     }
 
-    // TODO actual execution should probably be handle by EntityControllerScriptManager
     private LuaValue callControllerScriptFunc(GameEntity entity, String funcName, LuaValue arg1) {
         return callControllerScriptFunc(entity, funcName, arg1, LuaValue.NIL, LuaValue.NIL);
     }

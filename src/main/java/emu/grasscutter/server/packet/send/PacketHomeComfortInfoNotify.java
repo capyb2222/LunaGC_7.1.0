@@ -12,7 +12,6 @@ public class PacketHomeComfortInfoNotify extends BasePacket {
         super(PacketOpcodes.HomeComfortInfoNotify);
 
         if (player.getRealmList() == null) {
-            // Do not send
             return;
         }
 

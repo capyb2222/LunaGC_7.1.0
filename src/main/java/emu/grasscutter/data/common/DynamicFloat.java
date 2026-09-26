@@ -70,29 +70,25 @@ public class DynamicFloat {
                 case KEY -> fl.push(props.getOrDefault(op.sValue, 0f) * (op.negative ? -1 : 1));
                 case ADD -> fl.push(fl.popFloat() + fl.popFloat());
                 case SUB -> fl.push(
-                        -fl.popFloat() + fl.popFloat()); // [f0, f1, f2] -> [f0, f1-f2]  (opposite of RPN order)
+                        -fl.popFloat() + fl.popFloat());
                 case MUL -> fl.push(fl.popFloat() * fl.popFloat());
-                case DIV -> fl.push((1f / fl.popFloat()) * fl.popFloat()); // [f0, f1, f2] -> [f0, f1/f2]
-                // Keyed by an Optional<Boolean> against a map of String, this could only ever
-                // miss and push the default. A boolean in an op list is worth one or zero.
+                case DIV -> fl.push((1f / fl.popFloat()) * fl.popFloat());
                 case NEXBOOLEAN -> fl.push(op.bValue ? 1f : 0f);
             }
         }
 
         try {
-            return fl.popFloat(); // well-formed data will always have only one value left at this point
+            return fl.popFloat();
         } catch (NoSuchElementException e) {
             return defaultValue;
         }
     }
 
     public float get(ProudSkillData skill) {
-        // Construct the map
         return get(skill.getParamListMap(), 0f);
     }
 
     public float get(ProudSkillData skill, float defaultValue) {
-        // Construct the map
         return get(skill.getParamListMap(), defaultValue);
     }
 

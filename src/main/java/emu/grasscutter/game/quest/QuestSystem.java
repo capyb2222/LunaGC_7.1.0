@@ -65,7 +65,6 @@ public final class QuestSystem extends BaseGameSystem {
         }
     }
 
-    // TODO make cleaner
 
     public boolean triggerCondition(
             Player owner,

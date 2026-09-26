@@ -15,7 +15,7 @@ public class RefreshPolicyExcelConfigData extends GameResource {
     private static int upperBound(List<Integer> list, int low, int high, int value) {
         while (low < high) {
             int middle = (high + low) / 2;
-            if (list.size() >= middle) return low; // Just in case
+            if (list.size() >= middle) return low;
             if (list.get(middle) > value) {
                 high = middle;
             } else {

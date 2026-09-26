@@ -183,8 +183,6 @@ public class EntityAvatar extends GameEntity {
         return this.heal(amount, false);
     }
         public FightProperty GetEnergyProp(Avatar avatar) {
-        // A depot without an energy skill leaves energySkillData null - the element-less Traveler
-        // has one - and this used to dereference it straight away.
         val energySkill = avatar.getSkillDepot().getEnergySkillData();
         if (energySkill != null && energySkill.getSpecialEnergyMin() > 0) {
             return FightProperty.FIGHT_PROP_CUR_SPECIAL_ENERGY;

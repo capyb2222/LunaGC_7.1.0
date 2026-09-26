@@ -10,18 +10,15 @@ import java.util.List;
 @Command(label = "info", aliases = {"troubleshoot", "helpme"},
     usage = "/info", targetRequirement = Command.TargetRequirement.NONE)
 public final class InfoCommand implements CommandHandler {
-    // This command can use the 'grasscutter.command.troubleshoot' permission to show sensitive information.
 
     @Override
     public void execute(Player sender, Player targetPlayer, List<String> args) {
-        // Collect server information.
         var build = "%s (%s)".formatted(
             BuildConfig.VERSION, BuildConfig.GIT_HASH);
         var playerCount = Grasscutter.getGameServer()
             .getPlayers().size();
         var resourceInfo = Tools.resourcesInfo();
 
-        // Collect configuration information.
         var config = Grasscutter.getConfig();
         var gameOptions = config.server.game;
         var questingEnabled = gameOptions.gameOptions.questing.enabled;
@@ -38,7 +35,6 @@ public final class InfoCommand implements CommandHandler {
                  - Slushy Team (akio, azzu, Areha11Fz, tamil; protocol)
                  - Yuki (resource minifying & packaging)
                  - Dimbreath (dumping most resources)""");
-        // TODO: Send to remote server (Grasscutter API) and send dump link.
         if (
                 sender == null
                         || sender.getAccount()

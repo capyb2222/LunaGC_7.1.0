@@ -71,7 +71,6 @@ public enum ElementType implements IntValueEnum {
     private static final Map<String, ElementType> stringMap = new HashMap<>();
 
     static {
-        // Create bindings for each value.
         Stream.of(ElementType.values())
                 .forEach(
                         entry -> {

@@ -23,21 +23,17 @@ public final class FileUtils {
     static {
         FileSystem fs = null;
         Path path = null;
-        // Setup access to jar resources
         try {
             var uri = Grasscutter.class.getResource("/defaults/data").toURI();
             switch (uri.getScheme()) {
-                case "jar": // When running normally, as a jar
-                case "zip": // Honestly I have no idea what setup would result in this, but this should work
-                    // regardless
+                case "jar":
+                case "zip":
                     fs =
                             FileSystems.newFileSystem(
                                     uri,
-                                    Map.of()); // Have to mount zip filesystem. This leaks, but we want to keep it
-                    // forever anyway.
-                    // Fall-through
-                case "file": // When running in an IDE
-                    path = Path.of(uri); // Can access directly
+                                    Map.of());
+                case "file":
+                    path = Path.of(uri);
                     break;
                 default:
                     Grasscutter.getLogger()
@@ -45,20 +41,17 @@ public final class FileUtils {
                     break;
             }
         } catch (URISyntaxException | IOException e) {
-            // Failed to load this jar. How?
             Grasscutter.getLogger().error("Failed to load jar?!");
         } finally {
             DATA_DEFAULT_PATH = path;
             Grasscutter.getLogger().debug("Setting path for default data: " + path.toAbsolutePath());
         }
 
-        // Setup Resources path
         final String resources = Grasscutter.config.folderStructure.resources;
         fs = null;
         path = Path.of(resources);
         if (resources.endsWith(
-                ".zip")) { // Would be nice to support .tar.gz too at some point, but it doesn't come for
-            // free in Java
+                ".zip")) {
             try {
                 fs = FileSystems.newFileSystem(path);
             } catch (IOException e) {
@@ -93,7 +86,6 @@ public final class FileUtils {
         }
         RESOURCES_PATH = path;
 
-        // Setup Scripts path
         final String scripts = Grasscutter.config.folderStructure.scripts;
         SCRIPTS_PATH =
                 (scripts.startsWith("resources:"))
@@ -101,7 +93,6 @@ public final class FileUtils {
                         : Path.of(scripts);
     }
 
-    /* Apply after initialization. */
     private static final Path[] DATA_PATHS = {DATA_USER_PATH, DATA_DEFAULT_PATH};
 
     public static Path getDataPathTsjJsonTsv(String filename) {
@@ -118,7 +109,7 @@ public final class FileUtils {
         }
         return fallback
                 ? DATA_USER_PATH.resolve(name + ".tsj")
-                : null; // Maybe they want to write to a new file
+                : null;
     }
 
     public static Path getDataPath(String path) {
@@ -126,7 +117,7 @@ public final class FileUtils {
         if (Files.exists(userPath)) return userPath;
         Path defaultPath = DATA_DEFAULT_PATH.resolve(path);
         if (Files.exists(defaultPath)) return defaultPath;
-        return userPath; // Maybe they want to write to a new file
+        return userPath;
     }
 
     public static Path getDataUserPath(String path) {
@@ -219,7 +210,7 @@ public final class FileUtils {
         }
     }
 
-    @Deprecated // Misnamed legacy function
+    @Deprecated
     public static String getFilenameWithoutPath(String filename) {
         return getFilenameWithoutExtension(filename);
     }
@@ -237,12 +228,10 @@ public final class FileUtils {
 
     public static List<Path> getPathsFromResource(String folder) throws URISyntaxException {
         try {
-            // file walks JAR
             return Files.walk(Path.of(Grasscutter.class.getResource(folder).toURI()))
                     .filter(Files::isRegularFile)
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            // Eclipse puts resources in its bin folder
             try {
                 return Files.walk(Path.of(System.getProperty("user.dir"), folder))
                         .filter(Files::isRegularFile)

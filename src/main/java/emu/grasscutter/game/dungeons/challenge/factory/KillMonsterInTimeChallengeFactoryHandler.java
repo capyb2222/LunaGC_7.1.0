@@ -11,7 +11,6 @@ import lombok.val;
 public class KillMonsterInTimeChallengeFactoryHandler implements ChallengeFactoryHandler {
     @Override
     public boolean isThisType(ChallengeType challengeType) {
-        // ActiveChallenge with 180, 72, 240, 133220161, 133220161, 0
         return challengeType == ChallengeType.CHALLENGE_KILL_MONSTER_IN_TIME;
     }
 
@@ -29,11 +28,11 @@ public class KillMonsterInTimeChallengeFactoryHandler implements ChallengeFactor
         return new WorldChallenge(
                 scene,
                 realGroup,
-                challengeId, // Id
-                challengeIndex, // Index
+                challengeId,
+                challengeIndex,
                 List.of(timeLimit),
-                timeLimit, // Limit
-                0, // Goal
+                timeLimit,
+                0,
                 List.of(new KillMonsterTrigger(targetCfgId), new InTimeTrigger()));
     }
 }

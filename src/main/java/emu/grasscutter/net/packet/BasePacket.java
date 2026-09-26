@@ -5,14 +5,13 @@ import emu.grasscutter.net.proto.PacketHeadOuterClass.PacketHead;
 import java.io.*;
 
 public class BasePacket {
-    private static final int const1 = 17767; // 0x4567
-    private static final int const2 = -30293; // 0x89ab
+    private static final int const1 = 17767;
+    private static final int const2 = -30293;
     public boolean shouldEncrypt = true;
     private int opcode;
     private boolean shouldBuildHeader = false;
     private byte[] header;
     private byte[] data;
-    // Encryption
     private boolean useDispatchKey;
 
     public BasePacket(int opcode) {
@@ -111,13 +110,11 @@ public class BasePacket {
     }
 
     public void writeUint16(ByteArrayOutputStream baos, int i) {
-        // Unsigned short
         baos.write((byte) ((i >>> 8) & 0xFF));
         baos.write((byte) (i & 0xFF));
     }
 
     public void writeUint32(ByteArrayOutputStream baos, int i) {
-        // Unsigned int (long)
         baos.write((byte) ((i >>> 24) & 0xFF));
         baos.write((byte) ((i >>> 16) & 0xFF));
         baos.write((byte) ((i >>> 8) & 0xFF));
@@ -128,7 +125,6 @@ public class BasePacket {
         try {
             baos.write(bytes);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

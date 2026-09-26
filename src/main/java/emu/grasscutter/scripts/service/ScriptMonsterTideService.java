@@ -43,7 +43,6 @@ public final class ScriptMonsterTideService {
                 .getScriptMonsterSpawnService()
                 .addMonsterCreatedListener(onMonsterCreated);
         this.sceneScriptManager.getScriptMonsterSpawnService().addMonsterDeadListener(onMonsterDead);
-        // spawn the first turn
         for (int i = 0; i < this.monsterSceneLimit; i++) {
             sceneScriptManager.addEntity(
                     this.sceneScriptManager.createMonster(group.id, group.block_id, getNextMonster()));
@@ -63,13 +62,10 @@ public final class ScriptMonsterTideService {
     public SceneMonster getNextMonster() {
         var nextId = this.monsterConfigOrders.poll();
         if (nextId == null) {
-            // AutoMonsterTide has been called with fewer monster config IDs than the total tide count.
-            // Get last config ID from the list, then.
             return currentGroup.monsters.get(monsterConfigIds.get(monsterConfigIds.size() - 1));
         } else if (currentGroup.monsters.containsKey(nextId)) {
             return currentGroup.monsters.get(nextId);
         }
-        // TODO some monster config_id do not exist in groups, so temporarily set it to the first
         return currentGroup.monsters.values().stream().findFirst().orElse(null);
     }
 
@@ -80,17 +76,14 @@ public final class ScriptMonsterTideService {
                 return;
             }
             if (monsterAlive.decrementAndGet() >= monsterSceneLimit) {
-                // maybe not happen
                 return;
             }
             monsterKillCount.incrementAndGet();
             if (monsterTideCount.get() > 0) {
-                // add more
                 sceneScriptManager.addEntity(
                         sceneScriptManager.createMonster(
                                 currentGroup.id, currentGroup.block_id, getNextMonster()));
             }
-            // call registered events that may spawn in more monsters
             var scriptArgs =
                     new ScriptArgs(currentGroup.id, EventType.EVENT_MONSTER_TIDE_DIE, monsterKillCount.get());
             scriptArgs.setEventSource(source);

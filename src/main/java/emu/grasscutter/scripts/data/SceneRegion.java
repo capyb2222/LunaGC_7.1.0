@@ -11,9 +11,7 @@ public class SceneRegion {
     public int config_id;
     public int shape;
     public Position pos;
-    // for CUBIC
     public Position size;
-    // for SPHERE
     public int radius;
     public int area_id;
     public float height;
@@ -31,7 +29,6 @@ public class SceneRegion {
                 val x = pos.getX() - position.getX();
                 val y = pos.getY() - position.getY();
                 val z = pos.getZ() - position.getZ();
-                // x^2 + y^2 + z^2 = radius^2
                 return x * x + y * y + z * z <= radius * radius;
             }
             case ScriptRegionShape.CUBIC -> {
@@ -40,7 +37,6 @@ public class SceneRegion {
                         && (Math.abs(pos.getZ() - position.getZ()) <= size.getZ() / 2f);
             }
             case ScriptRegionShape.POLYGON -> {
-                // algorithm is "ray casting": https://www.youtube.com/watch?v=RSXM9bgqxJM
                 if (Math.abs(pos.getY() - position.getY()) > height / 2f) return false;
                 var count = 0;
                 for (var i = 0; i < point_array.size(); ++i) {
@@ -65,7 +61,6 @@ public class SceneRegion {
                 if (Math.abs(pos.getY() - position.getY()) > height / 2f) return false;
                 val x = pos.getX() - position.getX();
                 val z = pos.getZ() - position.getZ();
-                // x^2 + z^2 = radius^2
                 return x * x + z * z <= radius * radius;
             }
         }

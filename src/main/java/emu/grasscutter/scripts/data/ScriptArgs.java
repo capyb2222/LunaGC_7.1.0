@@ -7,11 +7,11 @@ public class ScriptArgs {
     public int param1;
     public int param2;
     public int param3;
-    public int source_eid; // Source entity
+    public int source_eid;
     public int target_eid;
     public int group_id;
-    public String source; // source string, used for timers
-    public int type; // lua event type, used by scripts and the ScriptManager
+    public String source;
+    public int type;
 
     public ScriptArgs(int groupId, int eventType) {
         this(groupId, eventType, 0, 0);

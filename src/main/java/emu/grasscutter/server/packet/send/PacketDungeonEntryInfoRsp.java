@@ -29,14 +29,12 @@ public class PacketDungeonEntryInfoRsp extends BasePacket {
 
         var packet = DungeonEntryInfoRsp.newBuilder().setPointId(pointData.getId());
 
-        // Add dungeon IDs from the point data.
         if (pointData.getDungeonIds() != null) {
             Arrays.stream(pointData.getDungeonIds())
                     .forEach(
                             id -> packet.addDungeonEntryList(DungeonEntryInfo.newBuilder().setDungeonId(id)));
         }
 
-        // Add additional dungeon IDs.
         additional.forEach(
                 id -> packet.addDungeonEntryList(DungeonEntryInfo.newBuilder().setDungeonId(id)));
 

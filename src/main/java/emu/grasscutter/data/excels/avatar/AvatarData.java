@@ -44,7 +44,6 @@ public class AvatarData extends GameResource {
     @Getter(onMethod_ = @Override)
     private int id;
 
-    // Transient
     @Getter
     private String name;
 
@@ -114,7 +113,6 @@ public class AvatarData extends GameResource {
     public void onLoad() {
         this.skillDepot = GameData.getAvatarSkillDepotDataMap().get(this.skillDepotId);
 
-        // Get fetters from GameData
         this.fetters = GameData.getFetterDataEntries().get(this.id);
 
         if (GameData.getFetterCharacterCardDataMap().get(this.id) != null) {
@@ -149,15 +147,12 @@ public class AvatarData extends GameResource {
             }
         }
 
-        // Left commented out for a long while against a field name that no longer exists, so the map
-        // stayed null and getGrowthCurveById would have thrown at whoever called it first.
         this.growthCurveMap = new Int2ObjectOpenHashMap<>();
         for (PropGrowCurve growCurve : this.propGrowCurves) {
             FightProperty prop = FightProperty.getPropByName(growCurve.getType());
             if (prop != null) this.growthCurveMap.put(prop.getId(), growCurve.getGrowCurve());
         }
 
-        // Cache abilities
         this.buildEmbryo();
     }
 

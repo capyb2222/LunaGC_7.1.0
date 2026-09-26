@@ -7,7 +7,6 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 @ResourceType(name = "GuideTriggerExcelConfigData.json")
 public class GuideTriggerData extends GameResource {
-    // more like open state guide than quest guide
     private String guideName;
     private String type;
     private String openState;

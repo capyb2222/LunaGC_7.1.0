@@ -33,10 +33,7 @@ public class TowerManager extends BasePlayerManager {
         return this.getTowerData().currentFloorId;
     }
 
-    /** floor number: 1 - 12, or 0 when no floor is selected * */
     public int getCurrentFloorNumber() {
-        // EntityMonster.recalcStats reads this while scaling tower monsters, and it runs from the
-        // constructor - early enough that no floor need be chosen yet. 0 simply scales nothing.
         var floorData = GameData.getTowerFloorDataMap().get(getCurrentFloorId());
         return floorData != null ? floorData.getFloorIndex() : 0;
     }
@@ -45,7 +42,6 @@ public class TowerManager extends BasePlayerManager {
         return this.getTowerData().currentLevelId + this.getTowerData().currentLevel;
     }
 
-    /** form 1-3 */
     public int getCurrentLevel() {
         return this.getTowerData().currentLevel + 1;
     }
@@ -54,7 +50,6 @@ public class TowerManager extends BasePlayerManager {
         var challenge = player.getScene().getChallenge();
         if (!inProgress || challenge == null || !challenge.inProgress()) return;
 
-        // Check star conditions and notify client if any failed.
         int stars = getCurLevelStars();
         while (stars < currentPossibleStars) {
             player
@@ -67,13 +62,10 @@ public class TowerManager extends BasePlayerManager {
     }
 
     public void onBegin() {
-        // onTick() already treats a missing scene challenge as normal; this re-reads it from the
-        // scene rather than using the one that triggered the call, so it can be null here too.
         var challenge = player.getScene().getChallenge();
         inProgress = true;
         currentTimeLimit = challenge != null ? challenge.getTimeLimit() : 0;
 
-        // The abyss hands every character a full burst at the start of a chamber.
         this.fillTeamEnergy();
     }
 
@@ -86,8 +78,6 @@ public class TowerManager extends BasePlayerManager {
                             var depot = entity.getAvatar().getSkillDepot();
                             if (depot == null) return;
 
-                            // Nightsoul characters spend a separate gauge, and addEnergy would top up
-                            // an elemental one they never use.
                             var energySkill = depot.getEnergySkillData();
                             if (energySkill != null && energySkill.getSpecialEnergyMin() > 0) {
                                 entity.addSpecialEnergy(
@@ -134,14 +124,11 @@ public class TowerManager extends BasePlayerManager {
         if (entranceFloors == null || entranceFloors.isEmpty()) return;
 
         for (int floorId : entranceFloors) {
-            // Levels within a floor are consecutive ids from levelIndex 1, which is the same
-            // assumption getCurrentLevelId() makes when it walks the floor.
             int firstLevelId = getFirstLevelId(floorId);
             if (firstLevelId == 0) continue;
 
             var record = recordMap.computeIfAbsent(floorId, TowerLevelRecord::new);
             if (record.getPassedLevelMap() == null) {
-                // A record loaded from a save written before the map existed.
                 record.setPassedLevelMap(new HashMap<>());
             }
 
@@ -168,7 +155,6 @@ public class TowerManager extends BasePlayerManager {
         }
     }
 
-    /** Id of a floor's first chamber, or 0 if the resources do not describe the floor. */
     private static int getFirstLevelId(int floorId) {
         var floorData = GameData.getTowerFloorDataMap().get(floorId);
         if (floorData == null) return 0;
@@ -208,13 +194,10 @@ public class TowerManager extends BasePlayerManager {
     }
 
     public int getCurrentMonsterLevel() {
-        // monsterLevel given in TowerLevelExcelConfigData.json is off by one.
         var levelData = getCurrentTowerLevelDataMap();
         if (levelData != null) {
             return levelData.getMonsterLevel() + 1;
         }
-        // Spawning is not worth aborting over a missing row; the floor's own override is the same
-        // number the client shows for the floor.
         var floorData = GameData.getTowerFloorDataMap().get(getCurrentFloorId());
         Grasscutter.getLogger()
                 .warn("No tower level data for level {}, falling back to the floor level", getCurrentLevelId());
@@ -224,7 +207,6 @@ public class TowerManager extends BasePlayerManager {
     public void enterLevel(int enterPointId) {
         var levelData = getCurrentTowerLevelDataMap();
         if (levelData == null) {
-            // No level means no dungeon to hand off to; entering would NPE on the way in.
             Grasscutter.getLogger()
                     .warn(
                             "Tower enter level {} on floor {} has no level data",
@@ -236,23 +218,19 @@ public class TowerManager extends BasePlayerManager {
         var dungeonId = levelData.getDungeonId();
 
         notifyCurLevelRecordChange();
-        // use team user choose
         player.getTeamManager().useTemporaryTeam(0);
         player
                 .getServer()
                 .getDungeonSystem()
                 .handoffDungeon(player, dungeonId, towerDungeonSettleListener);
 
-        // make sure user can exit dungeon correctly
         player.getScene().setPrevScene(getTowerData().entryScene);
         player.getScene().setPrevScenePoint(enterPointId);
 
         player
                 .getSession()
                 .send(new PacketTowerEnterLevelRsp(getTowerData().currentFloorId, getCurrentLevel()));
-        // stop using skill
         player.getSession().send(new PacketCanUseSkillNotify(false));
-        // notify the cond of stars
         currentPossibleStars = 3;
         player
                 .getSession()
@@ -278,7 +256,6 @@ public class TowerManager extends BasePlayerManager {
         }
 
         var levelData = getCurrentTowerLevelDataMap();
-        // 0-based indexing. "star" = 0 means checking for 1-star conditions.
         int star;
         for (star = 2; star >= 0; star--) {
             var cond = levelData.getCondType(star);
@@ -315,7 +292,6 @@ public class TowerManager extends BasePlayerManager {
                     currentFloorId,
                     new TowerLevelRecord(currentFloorId).setLevelStars(getCurrentLevelId(), stars));
         } else {
-            // Only update record if better than previous
             var prevRecord = recordMap.get(currentFloorId);
             var passedLevelMap = prevRecord.getPassedLevelMap();
             int prevStars = 0;
@@ -377,7 +353,6 @@ public class TowerManager extends BasePlayerManager {
     }
 
     public void mirrorTeamSetUp(int teamId) {
-        // use team user choose
         player.getTeamManager().useTemporaryTeam(teamId);
         player.sendPacket(new PacketTowerMiddleLevelChangeTeamNotify());
 

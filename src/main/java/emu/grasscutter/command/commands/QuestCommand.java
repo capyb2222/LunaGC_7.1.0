@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
         permissionTargeted = "player.quest.others")
 public final class QuestCommand implements CommandHandler {
     private static final List<String> SINGLE_ARG = List.of("dungeons", "list");
-    /** `forcefinish all` has a word where the id goes, so the id parse must be skipped. */
     private static boolean isWordArg(List<String> args) {
         return args.size() > 1 && "all".equalsIgnoreCase(args.get(1));
     }

@@ -3,7 +3,6 @@ package emu.grasscutter.utils.objects.text;
 import java.awt.*;
 import lombok.*;
 
-/* An instance of text. */
 public final class Text {
     public static Text of(String text) {
         return new Text(text, false);
@@ -45,7 +44,6 @@ public final class Text {
     }
 
     public String toString(boolean console) {
-        // Pull instances of style and text.
         var style = this.style.build();
         var text = this.text;
 

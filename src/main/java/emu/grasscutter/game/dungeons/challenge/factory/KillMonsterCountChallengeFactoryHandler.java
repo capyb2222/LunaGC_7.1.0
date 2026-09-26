@@ -11,7 +11,6 @@ import lombok.val;
 public class KillMonsterCountChallengeFactoryHandler implements ChallengeFactoryHandler {
     @Override
     public boolean isThisType(ChallengeType challengeType) {
-        // ActiveChallenge with 1, 1, 241033003, 15, 0, 0
         return challengeType == ChallengeType.CHALLENGE_KILL_COUNT;
     }
 
@@ -29,11 +28,11 @@ public class KillMonsterCountChallengeFactoryHandler implements ChallengeFactory
         return new WorldChallenge(
                 scene,
                 realGroup,
-                challengeId, // Id
-                challengeIndex, // Index
+                challengeId,
+                challengeIndex,
                 List.of(goal, groupId),
-                0, // Limit
-                goal, // Goal
+                0,
+                goal,
                 List.of(new KillMonsterCountTrigger()));
     }
 }

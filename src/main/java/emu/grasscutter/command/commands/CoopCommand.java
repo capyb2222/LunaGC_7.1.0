@@ -16,13 +16,13 @@ public final class CoopCommand implements CommandHandler {
     public void execute(Player sender, Player targetPlayer, List<String> args) {
         Player host = sender;
         switch (args.size()) {
-            case 0: // Summon target to self
-                if (sender == null) { // Console doesn't have a self to summon to
+            case 0:
+                if (sender == null) {
                     sendUsageMessage(sender);
                     return;
                 }
                 break;
-            case 1: // Summon target to argument
+            case 1:
                 try {
                     int hostId = Integer.parseInt(args.get(0));
                     host = Grasscutter.getGameServer().getPlayerByUid(hostId);
@@ -40,8 +40,6 @@ public final class CoopCommand implements CommandHandler {
                 return;
         }
 
-        // There's no target==host check but this just places them in multiplayer in their own world
-        // which seems fine.
         if (targetPlayer.isInMultiplayer()) {
             targetPlayer.getServer().getMultiplayerSystem().leaveCoop(targetPlayer);
         }

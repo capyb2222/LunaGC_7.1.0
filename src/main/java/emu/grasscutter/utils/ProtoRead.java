@@ -6,19 +6,16 @@ public final class ProtoRead {
 
     private ProtoRead() {}
 
-    /** The varint at {@code field}, or 0 if it is absent - which is what an absent varint means. */
     public static long varint(byte[] data, int field) {
         var found = find(data, field, 0);
         return found == null ? 0 : (long) found;
     }
 
-    /** The length-delimited field at {@code field} as UTF-8, or "" if absent. */
     public static String string(byte[] data, int field) {
         var found = find(data, field, 2);
         return found == null ? "" : new String((byte[]) found, StandardCharsets.UTF_8);
     }
 
-    /** Walks the payload and returns the first value of {@code field}, or null. */
     private static Object find(byte[] data, int field, int wanted) {
         if (data == null) return null;
         int i = 0;

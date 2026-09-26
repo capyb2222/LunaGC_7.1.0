@@ -11,7 +11,6 @@ public class HandlerWeaponAwakenReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         WeaponAwakenReq req = WeaponAwakenReq.parseFrom(payload);
 
-        // Weapon refinement
         var items = req.getItemGuidListList();
         for (long item : items) {
             session

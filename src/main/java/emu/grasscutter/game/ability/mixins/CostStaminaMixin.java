@@ -14,7 +14,7 @@ import emu.grasscutter.Grasscutter;
 
 @AbilityMixin(value = AbilityMixinData.Type.CostStaminaMixin)
 public class CostStaminaMixin extends AbilityMixinHandler {
-    private static final long MIN_COST_INTERVAL = 500; // 500ms sob
+    private static final long MIN_COST_INTERVAL = 500;
 
     @Override
     public boolean execute(Ability ability, AbilityMixinData mixinData, ByteString abilityData, GameEntity target) {
@@ -34,20 +34,17 @@ public class CostStaminaMixin extends AbilityMixinHandler {
         long lastCostTime = staminaManager.getLastCostStaminaTime();
         long pastTime = now - lastCostTime;
 
-        // i think this should be correct.. ruziqwhduqwhd
         if (pastTime > MIN_COST_INTERVAL) {
             staminaManager.setLastCostStaminaTime(now);
             pastTime = 0;
         }
 
-        // well on the sniff i also saw that 40 was 4000 so this should be correct
         int baseStaminaCost = (int) (staminaRatio * 100);
-        int costStamina = -(int) ((float) pastTime / 1000 * (float) baseStaminaCost); // in here i made sure that it doesnt take too much stamina per second, like the official server?
+        int costStamina = -(int) ((float) pastTime / 1000 * (float) baseStaminaCost);
 
-        // Anwenden des Stamina-Verbrauchs
         Consumption consumption = new Consumption(ConsumptionType.FIGHT, costStamina);
         staminaManager.updateStaminaRelative(session, consumption, true);
-        staminaManager.setLastCostStaminaTime(now); // balls
+        staminaManager.setLastCostStaminaTime(now);
         staminaManager.staminaRecoverDelay = 0;
 
         Grasscutter.getLogger().debug("MIXIN STAMINA CONSUMPTION: Skill={}, Cost={}, PastTime={}",

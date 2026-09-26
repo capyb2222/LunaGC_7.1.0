@@ -55,10 +55,8 @@ public class AvatarStorage extends BasePlayerManager implements Iterable<Avatar>
             return false;
         }
 
-        // Set owner first
         avatar.setOwner(getPlayer());
 
-        // Put into maps
         this.avatars.put(avatar.getAvatarId(), avatar);
         this.avatarsGuid.put(avatar.getGuid(), avatar);
 
@@ -68,12 +66,10 @@ public class AvatarStorage extends BasePlayerManager implements Iterable<Avatar>
     }
 
     public void addStartingWeapon(Avatar avatar) {
-        // Make sure avatar owner is this player
         if (avatar.getPlayer() != this.getPlayer()) {
             return;
         }
 
-        // Create weapon
         GameItem weapon = new GameItem(avatar.getAvatarData().getInitialWeapon());
 
         if (weapon.getItemData() != null) {
@@ -93,7 +89,6 @@ public class AvatarStorage extends BasePlayerManager implements Iterable<Avatar>
         avatar.setFlyCloak(flycloakId);
         avatar.save();
 
-        // Update
         getPlayer().sendPacket(new PacketAvatarFlycloakChangeNotify(avatar));
 
         return true;
@@ -110,12 +105,10 @@ public class AvatarStorage extends BasePlayerManager implements Iterable<Avatar>
             return false;
         }
 
-        // TODO make sure avatar can wear costume
 
         avatar.setCostume(costumeId);
         avatar.save();
 
-        // Update entity
         EntityAvatar entity = avatar.getAsEntity();
         if (entity == null) {
             entity =
@@ -126,10 +119,8 @@ public class AvatarStorage extends BasePlayerManager implements Iterable<Avatar>
             getPlayer().getWorld().broadcastPacket(new PacketAvatarChangeCostumeNotify(entity));
         }
 
-        // Notify costume change to HomeWorld
         this.getPlayer().getHome().onPlayerChangedAvatarCostume(avatar);
 
-        // Done
         return true;
     }
     public boolean changeTraceEffect(long avatarGuid, int traceEffectId) {
@@ -158,7 +149,6 @@ public class AvatarStorage extends BasePlayerManager implements Iterable<Avatar>
         List<Avatar> avatars = DatabaseHelper.getAvatars(getPlayer());
 
         for (Avatar avatar : avatars) {
-            // Should never happen
             if (avatar.getObjectId() == null) {
                 continue;
             }
@@ -170,19 +160,15 @@ public class AvatarStorage extends BasePlayerManager implements Iterable<Avatar>
                 continue;
             }
 
-            // Set ownerships
             avatar.setAvatarData(avatarData);
             avatar.setSkillDepot(skillDepot);
             avatar.setOwner(getPlayer());
 
-            // Force recalc of const boosted skills
             avatar.recalcConstellations();
 
-            // Add to avatar storage
             this.avatars.put(avatar.getAvatarId(), avatar);
             this.avatarsGuid.put(avatar.getGuid(), avatar);
 
-            // Set main character skill depot data, fixes loading with no element every login
             if ((avatar.getAvatarId() == 10000007) || (avatar.getAvatarId() == 10000005)) {
                 avatar.setSkillDepot(skillDepot);
                 avatar.setSkillDepotData(skillDepot);
@@ -195,11 +181,9 @@ public class AvatarStorage extends BasePlayerManager implements Iterable<Avatar>
 
     public void postLoad() {
         for (Avatar avatar : this) {
-            // Weapon check
             if (avatar.getWeapon() == null) {
                 this.addStartingWeapon(avatar);
             }
-            // Recalc stats
             avatar.recalcStats();
         }
     }

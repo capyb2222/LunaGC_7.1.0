@@ -13,13 +13,13 @@ import org.bson.types.ObjectId;
 public final class SceneGroupInstance {
     @Id private ObjectId id;
 
-    @Indexed private int ownerUid; // This group is owned by the host player
+    @Indexed private int ownerUid;
     @Getter private int groupId;
 
     @Getter private transient SceneGroup luaGroup;
     @Getter @Setter private int targetSuiteId;
     @Getter @Setter private int activeSuiteId;
-    @Getter private Set<Integer> deadEntities; // Config_ids
+    @Getter private Set<Integer> deadEntities;
     private boolean isCached;
 
     @Getter private Map<Integer, Integer> cachedGadgetStates;
@@ -39,10 +39,10 @@ public final class SceneGroupInstance {
         this.cachedVariables = new ConcurrentHashMap<>();
 
         this.isCached =
-                false; // This is true when the group is not loaded on scene but caches suite data
+                false;
     }
 
-    @Deprecated // Morphia only!
+    @Deprecated
     SceneGroupInstance() {
         this.cachedVariables = new ConcurrentHashMap<>();
         this.deadEntities = new HashSet<>();
@@ -60,11 +60,11 @@ public final class SceneGroupInstance {
 
     public void setCached(boolean value) {
         this.isCached = value;
-        save(); // Save each time a group is registered or unregistered
+        save();
     }
 
     public void cacheGadgetState(SceneGadget g, int state) {
-        if (g.persistent) // Only cache when is persistent
+        if (g.persistent)
         cachedGadgetStates.put(g.config_id, state);
     }
 

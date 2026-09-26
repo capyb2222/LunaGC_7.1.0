@@ -14,7 +14,7 @@ public class ExecUnregisterDynamicGroup extends QuestExecHandler {
     public boolean execute(GameQuest quest, QuestData.QuestExecParam condition, String... paramStr) {
         val groupId = Integer.parseInt(paramStr[0]);
         val unknownParam =
-                Integer.parseInt(paramStr[1]); // TODO: Goes from 0 to 1, maybe is a boolean. Investigate
+                Integer.parseInt(paramStr[1]);
         val scene = quest.getOwner().getScene();
 
         Grasscutter.getLogger().debug("Unregistering group {}", groupId);
@@ -23,7 +23,6 @@ public class ExecUnregisterDynamicGroup extends QuestExecHandler {
             return false;
         }
 
-        // Remove suites if they are registered
         quest
                 .getMainQuest()
                 .getQuestGroupSuites()

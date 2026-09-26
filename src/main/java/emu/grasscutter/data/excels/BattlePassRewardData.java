@@ -14,8 +14,6 @@ public class BattlePassRewardData extends GameResource {
 
     @Override
     public int getId() {
-        // Reward ID is a combination of index and level.
-        // We do this to get a unique ID.
         return this.indexId * 100 + this.level;
     }
 

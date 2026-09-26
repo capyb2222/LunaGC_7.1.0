@@ -2,7 +2,6 @@ package emu.grasscutter.server.dispatch;
 
 import emu.grasscutter.net.packet.PacketOpcodes;
 
-/* Packet IDs for the dispatch server. */
 public interface PacketIds {
     int LoginNotify = 1;
     int TokenValidateReq = 2;

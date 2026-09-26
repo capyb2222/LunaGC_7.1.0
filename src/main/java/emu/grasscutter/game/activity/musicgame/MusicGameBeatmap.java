@@ -51,9 +51,7 @@ public class MusicGameBeatmap {
     public UgcMusicBriefInfoOuterClass.UgcMusicBriefInfo.Builder toBriefProto() {
         return UgcMusicBriefInfoOuterClass.UgcMusicBriefInfo.newBuilder()
                 .setMusicId(musicId)
-                //            .setMusicNoteCount(musicNoteCount)
                 .setUgcGuid((int) musicShareId)
-                //            .setShareTime(createTime)
                 .setVersion(1);
     }
 

@@ -10,7 +10,6 @@ public class PacketPlayerHomeCompInfoNotify extends BasePacket {
         super(PacketOpcodes.PlayerHomeCompInfoNotify);
 
         if (player.getRealmList() == null) {
-            // Do not send
             return;
         }
 

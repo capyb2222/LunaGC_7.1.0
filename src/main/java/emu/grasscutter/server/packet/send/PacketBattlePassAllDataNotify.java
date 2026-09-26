@@ -12,17 +12,15 @@ public class PacketBattlePassAllDataNotify extends BasePacket {
         var proto = BattlePassAllDataNotify.newBuilder();
 
         proto.setHaveCurSchedule(true)
+                .setIsViewed(player.getBattlePassManager().isViewed())
                 .setCurSchedule(player.getBattlePassManager().getScheduleProto())
                 .setBattlePassPlan(player.getBattlePassManager().getRewardPlan());
 
         for (var missionData : GameData.getBattlePassMissionDataMap().values()) {
-            // Dont send invalid refresh types
             if (!missionData.isValidRefreshType()) {
                 continue;
             }
 
-            // Check if player has mission in bp manager. If not, then add an empty proto from the mission
-            // data
             if (player.getBattlePassManager().hasMission(missionData.getId())) {
                 proto.addMissionList(
                         player.getBattlePassManager().loadMissionById(missionData.getId()).toProto());

@@ -14,13 +14,12 @@ import java.util.*;
 public class HandlerGetHomeLevelUpRewardReq extends PacketHandler {
     @Override
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
-        // Replica of TakePlayerLevelReward for adv rank rewards
         Player pl = session.getPlayer();
         synchronized (pl) {
             GetHomeLevelUpRewardReq req = GetHomeLevelUpRewardReq.parseFrom(payload);
             int level = req.getLevel();
             Set<Integer> homeRewardedLevels = session.getPlayer().getHomeRewardedLevels();
-            if (!homeRewardedLevels.contains(level)) { // No duplicated reward
+            if (!homeRewardedLevels.contains(level)) {
                 int rewardId = GameData.getHomeWorldLevelDataMap().get(level).getRewardId();
                 if (rewardId != 0) {
                     List<ItemParamData> rewardItems =

@@ -42,7 +42,7 @@ public final class WatermarkUtils {
         List<Integer> bytes = new ArrayList<>(PRE_BYTES.length + textBytes.length + POST_BYTES.length);
         for (int b : PRE_BYTES) bytes.add(b);
 
-        bytes.add(textBytes.length + 1); // length byte, including the terminator
+        bytes.add(textBytes.length + 1);
         for (var b : textBytes) bytes.add((int) b);
 
         for (int b : POST_BYTES) bytes.add(b);

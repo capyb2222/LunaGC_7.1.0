@@ -9,10 +9,10 @@ public enum DungeonPassConditionType implements IntValueEnum {
     DUNGEON_COND_KILL_GROUP_MONSTER(5),
     DUNGEON_COND_KILL_TYPE_MONSTER(7),
     DUNGEON_COND_FINISH_QUEST(9),
-    DUNGEON_COND_KILL_MONSTER_COUNT(11), // TODO handle count
-    DUNGEON_COND_IN_TIME(13), // Missing triggers and tracking
+    DUNGEON_COND_KILL_MONSTER_COUNT(11),
+    DUNGEON_COND_IN_TIME(13),
     DUNGEON_COND_FINISH_CHALLENGE(14),
-    DUNGEON_COND_END_MULTISTAGE_PLAY(15) // Missing
+    DUNGEON_COND_END_MULTISTAGE_PLAY(15)
 ;
 
     @Getter private final int id;

@@ -11,7 +11,6 @@ public class HandlerLevelupCityReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         LevelupCityReq req = LevelupCityReq.parseFrom(payload);
 
-        // Level up city
         session
                 .getPlayer()
                 .getSotsManager()

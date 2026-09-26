@@ -11,6 +11,6 @@ public class ContentEnterDungeon extends BaseContent {
     @Override
     public boolean execute(
             GameQuest quest, QuestData.QuestContentCondition condition, String paramStr, int... params) {
-        return condition.getParam()[0] == params[0]; // missing params[1]
+        return condition.getParam()[0] == params[0];
     }
 }

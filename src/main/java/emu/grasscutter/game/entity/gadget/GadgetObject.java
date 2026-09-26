@@ -24,7 +24,6 @@ public class GadgetObject extends GadgetContent {
 
     @Override
     public boolean onInteract(Player player, GadgetInteractReqOuterClass.GadgetInteractReq req) {
-        // This is a workaround until a proper gadget interaction system can be put in place.
         ItemData itemData = GameData.getItemDataMap().get(this.itemId);
         if (itemData == null) {
             return false;

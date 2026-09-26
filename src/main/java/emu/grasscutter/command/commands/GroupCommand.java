@@ -31,7 +31,7 @@ public final class GroupCommand implements CommandHandler {
                 } catch (Exception e) {
                     CommandHandler.sendMessage(sender, translate(sender, "commands.group.invalid_suiteid"));
                     return;
-                } // Fallthrough
+                }
             case 1:
                 try {
                     groupId = Integer.parseInt(args.get(0));

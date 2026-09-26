@@ -222,8 +222,6 @@ public final class AbilityManager extends BasePlayerManager {
                             .debug("Ability execute action failed for {} at {}.", action.type, ability);
                     }
                 } catch (Throwable e) {
-                    // submit() parks anything thrown in a Future nobody reads, so an action that
-                    // blew up left no trace at all - the skill just quietly did nothing.
                     Grasscutter.getLogger()
                         .error("Ability action {} threw at {}.", action.type, ability, e);
                 }
@@ -796,7 +794,6 @@ public final class AbilityManager extends BasePlayerManager {
             return;
         }
 
-        // is_serverbuff_modifier has no named counterpart in the 7.0 AbilityInvokeEntryHead.
         if (false) {
 
             this.player.getScene().broadcastPacket(new PacketAbilityInvocationsNotify(invoke));
@@ -834,8 +831,6 @@ public final class AbilityManager extends BasePlayerManager {
                 if (head.getTargetId() != 0) {
                     var targetEntity = this.player.getScene().getEntityById(head.getTargetId());
                     if (targetEntity != null) {
-                        // An id of 0 means "no instanced ability" and is common - without the lower
-                        // bound that becomes get(-1) rather than a miss.
                         var index = head.getInstancedAbilityId() - 1;
                         if (index >= 0 && index < targetEntity.getInstancedAbilities().size()) {
                             instancedAbility = targetEntity.getInstancedAbilities().get(index);
@@ -1393,7 +1388,6 @@ public final class AbilityManager extends BasePlayerManager {
             (abilityName != null && abilityName.startsWith("Avatar_") && abilityName.endsWith("_MoonLight"))
             || getMoonLightAbilityHashes().contains(abHash);
 
-        // Repeated here: the client only wires the Moonsign up once its ability exists.
         if (isTeamMoonPhase || isMoonLightAbility) {
             var teamManager = this.player.getTeamManager();
             teamManager.sendMoonsignState();
@@ -1497,8 +1491,6 @@ public final class AbilityManager extends BasePlayerManager {
                     .trace("Entity of ID {} is EntityAvatar. Ignoring", invoke.getEntityId());
                 return;
             }
-            // Entities with no combat state of their own used to answer null here; they now answer
-            // an empty map, and reviving something that never had hit points is still meaningless.
             if (entity.getFightProperties().isEmpty()) return;
             entity.setFightProperty(
                 FightProperty.FIGHT_PROP_CUR_HP,

@@ -13,22 +13,18 @@ import java.util.jar.*;
 import javax.annotation.Nullable;
 import lombok.*;
 
-/** Manages the server's plugins and the event system. */
 public final class PluginManager {
     @SuppressWarnings("FieldCanBeLocal")
     public static int API_VERSION = 2;
 
-    /* All loaded plugins. */
     private final Map<String, Plugin> plugins = new LinkedHashMap<>();
-    /* All currently registered listeners per plugin. */
     private final Map<Class<? extends Event>, List<EventHandler<? extends Event>>> handlers =
             new LinkedHashMap<>();
 
     public PluginManager() {
-        this.loadPlugins(); // Load all plugins from the plugins directory.
+        this.loadPlugins();
     }
 
-    /** Loads plugins from the config-specified directory. */
     private void loadPlugins() {
         File pluginsDir = FileUtils.getPluginPath("").toFile();
         if (!pluginsDir.exists() && !pluginsDir.mkdirs()) {
@@ -39,7 +35,6 @@ public final class PluginManager {
 
         File[] files = pluginsDir.listFiles();
         if (files == null) {
-            // The directory is empty, there aren't any plugins to load.
             return;
         }
 
@@ -56,24 +51,17 @@ public final class PluginManager {
                     }
                 });
 
-        // Create a class loader for the plugins.
         URLClassLoader classLoader = new URLClassLoader(pluginNames);
-        // Create a list of plugins that require dependencies.
         List<PluginData> dependencies = new ArrayList<>();
 
-        // Initialize all plugins.
         for (var plugin : plugins) {
             try {
                 URL url = plugin.toURI().toURL();
                 try (URLClassLoader loader = new URLClassLoader(new URL[] {url})) {
-                    // Find the plugin.json file for each plugin.
                     URL configFile = loader.findResource("plugin.json");
-                    // Open the config file for reading.
                     InputStreamReader fileReader = new InputStreamReader(configFile.openStream());
 
-                    // Create a plugin config instance from the config file.
                     PluginConfig pluginConfig = JsonUtils.loadToClass(fileReader, PluginConfig.class);
-                    // Check the plugin's API version.
                     if (pluginConfig.api == null) {
                         Grasscutter.getLogger()
                                 .warn(translate("plugin.invalid_api.not_present", plugin.getName()));
@@ -89,15 +77,12 @@ public final class PluginManager {
                         continue;
                     }
 
-                    // Check if the plugin config is valid.
                     if (!pluginConfig.validate()) {
                         Grasscutter.getLogger().warn(translate("plugin.invalid_config", plugin.getName()));
                         continue;
                     }
 
-                    // Create a JAR file instance from the plugin's URL.
                     JarFile jarFile = new JarFile(plugin);
-                    // Load all class files from the JAR file.
                     Enumeration<JarEntry> entries = jarFile.entries();
                     while (entries.hasMoreElements()) {
                         JarEntry entry = entries.nextElement();
@@ -105,18 +90,14 @@ public final class PluginManager {
                                 || !entry.getName().endsWith(".class")
                                 || entry.getName().contains("module-info")) continue;
                         String className = entry.getName().replace(".class", "").replace("/", ".");
-                        classLoader.loadClass(className); // Use the same class loader for ALL plugins.
+                        classLoader.loadClass(className);
                     }
 
-                    // Create a plugin instance.
                     Class<?> pluginClass = classLoader.loadClass(pluginConfig.mainClass);
                     Plugin pluginInstance = (Plugin) pluginClass.getDeclaredConstructor().newInstance();
-                    // Close the file reader.
                     fileReader.close();
 
-                    // Check if the plugin has alternate dependencies.
                     if (pluginConfig.loadAfter != null && pluginConfig.loadAfter.length > 0) {
-                        // Add the plugin to a "load later" list.
                         dependencies.add(
                                 new PluginData(
                                         pluginInstance,
@@ -126,7 +107,6 @@ public final class PluginManager {
                         continue;
                     }
 
-                    // Load the plugin.
                     this.loadPlugin(pluginInstance, PluginIdentifier.fromPluginConfig(pluginConfig), loader);
                 } catch (ClassNotFoundException ignored) {
                     Grasscutter.getLogger().warn(translate("plugin.invalid_main_class", plugin.getName()));
@@ -139,30 +119,24 @@ public final class PluginManager {
             }
         }
 
-        // Load plugins with dependencies.
         int depth = 0;
         final int maxDepth = 30;
         while (!dependencies.isEmpty()) {
-            // Check if the depth is too high.
             if (depth >= maxDepth) {
                 Grasscutter.getLogger().error(translate("plugin.failed_to_load_dependencies"));
                 break;
             }
 
             try {
-                // Get the next plugin to load.
                 var pluginData = dependencies.get(0);
 
-                // Check if the plugin's dependencies are loaded.
                 if (!this.plugins.keySet().containsAll(List.of(pluginData.getDependencies()))) {
-                    depth++; // Increase depth counter.
-                    continue; // Continue to next plugin.
+                    depth++;
+                    continue;
                 }
 
-                // Remove the plugin from the list of dependencies.
                 dependencies.remove(pluginData);
 
-                // Load the plugin.
                 this.loadPlugin(
                         pluginData.getPlugin(), pluginData.getIdentifier(), pluginData.getClassLoader());
             } catch (Exception exception) {
@@ -175,7 +149,6 @@ public final class PluginManager {
     private void loadPlugin(Plugin plugin, PluginIdentifier identifier, URLClassLoader classLoader) {
         Grasscutter.getLogger().info(translate("plugin.loading_plugin", identifier.name));
 
-        // Add the plugin's identifier.
         try {
             Class<Plugin> pluginClass = Plugin.class;
             Method method =
@@ -188,10 +161,8 @@ public final class PluginManager {
             Grasscutter.getLogger().warn(translate("plugin.failed_add_id", identifier.name));
         }
 
-        // Add the plugin to the list of loaded plugins.
         this.plugins.put(identifier.name, plugin);
 
-        // Call the plugin's onLoad method.
         try {
             plugin.onLoad();
         } catch (Throwable exception) {
@@ -200,7 +171,6 @@ public final class PluginManager {
         }
     }
 
-    /** Enables all registered plugins. */
     public void enablePlugins() {
         this.plugins.forEach(
                 (name, plugin) -> {
@@ -218,7 +188,6 @@ public final class PluginManager {
                 });
     }
 
-    /** Disables all registered plugins. */
     public void disablePlugins() {
         this.plugins.forEach(
                 (name, plugin) -> {
@@ -228,48 +197,38 @@ public final class PluginManager {
     }
 
     public void registerListener(EventHandler<? extends Event> listener) {
-        // Check if the handlers map contains the event type.
         if (!this.handlers.containsKey(listener.handles()))
             this.handlers.put(listener.handles(), new LinkedList<>());
 
-        // Add the listener to the list of handlers.
         this.handlers.get(listener.handles()).add(listener);
 
-        this.sortListeners(); // Sort the listeners by priority.
+        this.sortListeners();
     }
 
     public void removeListeners(Plugin plugin) {
         var newMap = new HashMap<Class<? extends Event>, List<EventHandler<? extends Event>>>();
 
-        // Remove the plugin's listeners.
         this.handlers.forEach(
                 (event, handlers) -> {
-                    // Add the event to the new map.
                     newMap.put(event, new LinkedList<>());
 
-                    // Remove the plugin's listeners.
                     handlers.forEach(
                             handler -> {
                                 if (!handler.registrar().equals(plugin)) newMap.get(event).add(handler);
                             });
                 });
 
-        // Replace the old map with the new one.
         this.handlers.clear();
         this.handlers.putAll(newMap);
     }
 
     private void sortListeners() {
-        // Create a new map to store the sorted listeners.
         var newMap = new HashMap<Class<? extends Event>, List<EventHandler<? extends Event>>>();
 
-        // Sort the listeners by priority.
         this.handlers.forEach(
                 (event, handlers) -> {
-                    // Add the event to the new map.
                     newMap.put(event, new LinkedList<>());
 
-                    // Sort the handlers by priority.
                     var sorted =
                             handlers.stream()
                                     .sorted(Comparator.comparingInt(handler -> handler.getPriority().ordinal()))
@@ -277,7 +236,6 @@ public final class PluginManager {
                     newMap.get(event).addAll(sorted);
                 });
 
-        // Replace the old map with the new one.
         this.handlers.clear();
         this.handlers.putAll(newMap);
     }
@@ -295,7 +253,6 @@ public final class PluginManager {
 
     public void enablePlugin(Plugin plugin) {
         try {
-            // Call the plugin's onEnable method.
             plugin.onEnable();
         } catch (Exception exception) {
             Grasscutter.getLogger()
@@ -305,14 +262,12 @@ public final class PluginManager {
 
     public void disablePlugin(Plugin plugin) {
         try {
-            // Call the plugin's onDisable method.
             plugin.onDisable();
         } catch (Exception exception) {
             Grasscutter.getLogger()
                     .error(translate("plugin.disabling_failed", plugin.getName()), exception);
         }
 
-        // Un-register all listeners.
         this.removeListeners(plugin);
     }
 
@@ -322,7 +277,6 @@ public final class PluginManager {
             handler.getCallback().consume((T) event);
     }
 
-    /* Data about an unloaded plugin. */
     @AllArgsConstructor
     @Getter
     static class PluginData {

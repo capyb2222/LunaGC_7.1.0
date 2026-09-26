@@ -12,8 +12,6 @@ import lombok.val;
 public class KillMonsterTimeChallengeFactoryHandler implements ChallengeFactoryHandler {
     @Override
     public boolean isThisType(ChallengeType challengeType) {
-        // ActiveChallenge with 180,180,45,133108061,1,0
-        // ActiveChallenge Fast with 1001, 5, 15, 240004005, 10, 0
         return challengeType == ChallengeType.CHALLENGE_KILL_COUNT_IN_TIME
                 || challengeType == ChallengeType.CHALLENGE_KILL_COUNT_FAST;
     }
@@ -36,17 +34,17 @@ public class KillMonsterTimeChallengeFactoryHandler implements ChallengeFactoryH
         val challengeType = challengeData.getChallengeType();
         if (challengeType == ChallengeType.CHALLENGE_KILL_COUNT_FAST) {
             challengeTriggers.add(
-                    new KillMonsterTimeIncTrigger(timeLimit, 0 /* refresh to original limit on kill */));
+                    new KillMonsterTimeIncTrigger(timeLimit, 0 ));
         }
 
         return new WorldChallenge(
                 scene,
                 realGroup,
-                challengeId, // Id
-                challengeIndex, // Index
+                challengeId,
+                challengeIndex,
                 List.of(targetCount, timeLimit),
-                timeLimit, // Limit
-                targetCount, // Goal
+                timeLimit,
+                targetCount,
                 challengeTriggers);
     }
 }

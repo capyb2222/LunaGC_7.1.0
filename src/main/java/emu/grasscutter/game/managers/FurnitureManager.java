@@ -35,7 +35,7 @@ public class FurnitureManager extends BasePlayerManager {
 
     public boolean unlockFurnitureFormula(int id) {
         if (!player.getUnlockedFurniture().add(id)) {
-            return false; // Already unlocked!
+            return false;
         }
         notifyUnlockFurniture();
         return true;
@@ -43,7 +43,7 @@ public class FurnitureManager extends BasePlayerManager {
 
     public boolean unlockFurnitureSuite(int id) {
         if (!player.getUnlockedFurnitureSuite().add(id)) {
-            return false; // Already unlocked!
+            return false;
         }
         notifyUnlockFurnitureSuite();
         return true;
@@ -59,7 +59,6 @@ public class FurnitureManager extends BasePlayerManager {
             return;
         }
 
-        // check slot count
         if (player.getHome().getLevelData().getFurnitureMakeSlotCount()
                 <= player.getHome().getFurnitureMakeSlotItemList().size()) {
             player
@@ -68,7 +67,6 @@ public class FurnitureManager extends BasePlayerManager {
             return;
         }
 
-        // pay items first
         if (!player.getInventory().payItems(makeData.getMaterialItems())) {
             player
                     .getSession()
@@ -86,7 +84,6 @@ public class FurnitureManager extends BasePlayerManager {
                         .durTime(makeData.getMakeTime())
                         .build();
 
-        // add furniture make task
         player.getHome().getFurnitureMakeSlotItemList().add(furnitureSlot);
         player
                 .getSession()
@@ -133,7 +130,6 @@ public class FurnitureManager extends BasePlayerManager {
             return;
         }
 
-        // pay the speedup item
         if (isFastFinish && !player.getInventory().payItem(107013, 1)) {
             player
                     .getSession()
@@ -146,7 +142,6 @@ public class FurnitureManager extends BasePlayerManager {
         player.getInventory().addItem(makeData.getFurnitureItemID(), makeData.getCount());
         player.getHome().getFurnitureMakeSlotItemList().remove(slotItem.get());
 
-        // Should be for first craft, but until first craft check exists add exp for each item crafted
         player.getInventory().addItem(121, makeData.getExp(), ActionReason.FurnitureMakeTake);
 
         player

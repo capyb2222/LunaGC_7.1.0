@@ -3,7 +3,6 @@ package emu.grasscutter.server.http;
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
 
-/** Defines routes for an {@link Javalin} instance. */
 public interface Router {
 
     void applyRoutes(Javalin javalin);

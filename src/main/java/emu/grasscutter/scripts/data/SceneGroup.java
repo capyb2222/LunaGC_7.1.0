@@ -14,15 +14,15 @@ import org.luaj.vm2.*;
 @Setter
 public final class SceneGroup {
     public transient int
-            block_id; // Not an actual variable in the scripts but we will keep it here for reference
+            block_id;
 
     public int id;
     public int refresh_id;
     public Position pos;
 
-    public Map<Integer, SceneMonster> monsters; // <ConfigId, Monster>
-    public Map<Integer, SceneNPC> npcs; // <ConfigId, Npc>
-    public Map<Integer, SceneGadget> gadgets; // <ConfigId, Gadgets>
+    public Map<Integer, SceneMonster> monsters;
+    public Map<Integer, SceneNPC> npcs;
+    public Map<Integer, SceneGadget> gadgets;
     public Map<String, SceneTrigger> triggers;
     public Map<Integer, SceneRegion> regions;
     public List<SceneSuite> suites;
@@ -36,7 +36,6 @@ public final class SceneGroup {
 
     public SceneReplaceable is_replaceable;
 
-    /* These are not script variables. */
     private transient boolean loaded;
     private transient CompiledScript script;
     private transient Bindings bindings;
@@ -83,9 +82,7 @@ public final class SceneGroup {
         if (this.loaded) {
             return this;
         }
-        // Set flag here so if there is no script, we don't call this function over and over again.
         this.setLoaded(true);
-        // Create the bindings.
         this.bindings = ScriptLoader.getEngine().createBindings();
 
         CompiledScript cs;
@@ -103,11 +100,9 @@ public final class SceneGroup {
 
         this.script = cs;
 
-        // Eval script
         try {
             ScriptLoader.eval(cs, this.bindings);
 
-            // Set
             this.monsters =
                     ScriptLoader.getSerializer()
                             .toList(SceneMonster.class, this.bindings.get("monsters"))
@@ -147,7 +142,6 @@ public final class SceneGroup {
                     ScriptLoader.getSerializer()
                             .toObject(SceneInitConfig.class, this.bindings.get("init_config"));
 
-            // Garbages // TODO: fix properly later
             Object garbagesValue = this.bindings.get("garbages");
             if (garbagesValue instanceof LuaValue garbagesTable) {
                 this.garbages = new SceneGarbage();
@@ -160,11 +154,9 @@ public final class SceneGroup {
                 }
             }
 
-            // Add variables to suite
             this.variables =
                     ScriptLoader.getSerializer().toList(SceneVar.class, this.bindings.get("variables"));
 
-            // Add monsters and gadgets to suite
             this.suites.forEach(i -> i.init(this));
         } catch (ScriptException e) {
             Grasscutter.getLogger()
@@ -181,9 +173,9 @@ public final class SceneGroup {
         return this;
     }
 
-    public int findInitSuiteIndex(int exclude_index) { // TODO: Investigate end index
+    public int findInitSuiteIndex(int exclude_index) {
         if (init_config == null) return 1;
-        if (init_config.io_type == 1) return init_config.suite; // IO TYPE FLOW
+        if (init_config.io_type == 1) return init_config.suite;
         if (init_config.rand_suite) {
             if (suites.size() == 1) {
                 return init_config.suite;

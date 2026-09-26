@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 public class ConfigGlobalCombat {
     private DefaultAbilities defaultAbilities;
-    // TODO: Add more indices
 
     @Data
     public class DefaultAbilities {

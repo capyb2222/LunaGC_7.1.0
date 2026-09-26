@@ -59,14 +59,11 @@ public final class SpawnCommand implements CommandHandler {
 
         parseIntParameters(args, param, intCommandHandlers);
 
-        // At this point, first remaining argument MUST be the id and the rest the pos
         if (args.size() < 1) {
-            sendUsageMessage(sender); // Reachable if someone does `/give lv90` or similar
+            sendUsageMessage(sender);
             throw new IllegalArgumentException();
         }
 
-        // A name can run to several words, and the branching below counts arguments to decide what
-        // each one means, so fold the name back down to the single id argument it stands in for.
         if (!isNumber(args.get(0))) {
             var name = args.remove(0);
             var id = NameIndex.resolveEntity(name, args);
@@ -85,14 +82,14 @@ public final class SpawnCommand implements CommandHandler {
                 } catch (NumberFormatException ignored) {
                     CommandHandler.sendMessage(
                             sender, translate(sender, "commands.execution.argument_error"));
-                } // Fallthrough
+                }
             case 4:
                 try {
                     pos = CommandHelpers.parsePosition(args.get(1), args.get(2), args.get(3), pos, rot);
                 } catch (NumberFormatException ignored) {
                     CommandHandler.sendMessage(
                             sender, translate(sender, "commands.execution.argument_error"));
-                } // Fallthrough
+                }
             case 1:
                 try {
                     param.id = Integer.parseInt(args.get(0));
@@ -188,7 +185,6 @@ public final class SpawnCommand implements CommandHandler {
                 }
             }
 
-            // Builds the Chest/Worktop/GatherPoint content, without which it is not interactive.
             gadget.buildContent();
 
             if (param.state != -1) {

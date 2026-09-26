@@ -40,14 +40,14 @@ public final class BanCommand implements CommandHandler {
 
         switch (args.size()) {
             case 2:
-                reason = args.get(1); // Fall-through
+                reason = args.get(1);
             case 1:
                 try {
                     time = Integer.parseInt(args.get(0));
                 } catch (NumberFormatException ignored) {
                     CommandHandler.sendTranslatedMessage(sender, "commands.ban.invalid_time");
                     return;
-                } // Fall-through, unimportant
+                }
             default:
                 break;
         }

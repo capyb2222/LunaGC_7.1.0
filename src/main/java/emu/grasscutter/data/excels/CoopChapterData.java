@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 
 @ResourceType(name = "CoopChapterExcelConfigData.json")
 @Getter
-@Setter // TODO: remove setters next API break
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CoopChapterData extends GameResource {
     @Getter(onMethod_ = @Override)

@@ -19,7 +19,7 @@ final class GachaMappingRequestHandler implements DocumentationHandler {
         final int langIdx =
                 Language.TextStrings.MAP_LANGUAGES.getOrDefault(
                         DOCUMENT_LANGUAGE,
-                        0); // TODO: This should really be based off the client language somehow
+                        0);
         ctx.contentType(ContentType.APPLICATION_JSON).result(gachaJsons.get(langIdx));
     }
 }

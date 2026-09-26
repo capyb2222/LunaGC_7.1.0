@@ -13,11 +13,10 @@ import lombok.val;
 public class KillAndGuardChallengeFactoryHandler implements ChallengeFactoryHandler {
     @Override
     public boolean isThisType(ChallengeType challengeType) {
-        // ActiveChallenge with 1,188,234101003,12,3030,0
         return challengeType == CHALLENGE_KILL_COUNT_GUARD_HP;
     }
 
-    @Override /*TODO check param4 == monstesToKill*/
+    @Override
     public WorldChallenge build(
             int challengeIndex,
             int challengeId,
@@ -31,11 +30,11 @@ public class KillAndGuardChallengeFactoryHandler implements ChallengeFactoryHand
         return new WorldChallenge(
                 scene,
                 realGroup,
-                challengeId, // Id
-                challengeIndex, // Index
+                challengeId,
+                challengeIndex,
                 List.of(monstersToKill, gadgetCFGId),
-                0, // Limit
-                monstersToKill, // Goal
+                0,
+                monstersToKill,
                 List.of(new KillMonsterCountTrigger(), new GuardTrigger(gadgetCFGId)));
     }
 }

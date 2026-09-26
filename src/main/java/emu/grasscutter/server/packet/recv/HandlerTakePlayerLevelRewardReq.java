@@ -19,7 +19,7 @@ public class HandlerTakePlayerLevelRewardReq extends PacketHandler {
             TakePlayerLevelRewardReq req = TakePlayerLevelRewardReq.parseFrom(payload);
             int level = req.getLevel();
             Set<Integer> rewardedLevels = session.getPlayer().getRewardedLevels();
-            if (!rewardedLevels.contains(level)) { // No duplicated reward
+            if (!rewardedLevels.contains(level)) {
                 int rewardId = GameData.getPlayerLevelDataMap().get(level).getRewardId();
                 if (rewardId != 0) {
                     List<ItemParamData> rewardItems =

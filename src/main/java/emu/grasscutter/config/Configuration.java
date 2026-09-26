@@ -8,7 +8,6 @@ import java.util.Locale;
 
 public final class Configuration extends ConfigContainer {
 
-    // 'c' is short for 'config' and makes code look 'cleaner'.
     public static final ConfigContainer c = config;
 
     public static final Locale LANGUAGE = config.language.language;

@@ -17,7 +17,6 @@ public final class SceneTimeAxis {
     private final int delay;
     private final boolean loop;
 
-    /** Schedules the task to run. */
     public void start() {
         if (this.loop) {
             this.timer.scheduleAtFixedRate(new Task(), this.delay, this.delay);
@@ -26,7 +25,6 @@ public final class SceneTimeAxis {
         }
     }
 
-    /** Terminates a repeating task. */
     public void stop() {
         this.timer.cancel();
     }
@@ -34,7 +32,6 @@ public final class SceneTimeAxis {
     final class Task extends TimerTask {
         @Override
         public void run() {
-            // Invoke script event.
             SceneTimeAxis.this.handle.callEvent(
                     new ScriptArgs(SceneTimeAxis.this.groupId, EventType.EVENT_TIME_AXIS_PASS)
                             .setEventSource(SceneTimeAxis.this.identifier));

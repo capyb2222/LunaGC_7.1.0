@@ -16,7 +16,6 @@ public class PacketFinishedParentQuestNotify extends BasePacket {
         var questingEnabled = emu.grasscutter.config.Configuration.GAME_OPTIONS.questing.enabled;
 
         for (GameMainQuest mainQuest : player.getQuestManager().getMainQuests().values()) {
-            // Canceled Quests do not appear in this packet
             if (mainQuest.getState() == ParentQuestState.PARENT_QUEST_STATE_CANCELED) continue;
             if (!questingEnabled && mainQuest.getState() != ParentQuestState.PARENT_QUEST_STATE_FINISHED)
                 continue;

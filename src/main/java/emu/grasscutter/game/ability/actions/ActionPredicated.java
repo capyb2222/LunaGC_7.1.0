@@ -53,7 +53,6 @@ public final class ActionPredicated extends AbilityActionHandler {
         dispatch(mgr, ability, pass ? action.successActions : action.failActions, abilityData, self, candidate);
     }
 
-    /** True when the scene holds no living monster at all, i.e. the server cannot see enemies here. */
     private boolean blindScene(GameEntity self) {
         var scene = self != null ? self.getScene() : null;
         if (scene == null) return false;
@@ -77,7 +76,6 @@ public final class ActionPredicated extends AbilityActionHandler {
         if (actions == null) return;
         for (var child : actions) {
             if (child == null || !allowed(child)) continue;
-            // In order, on this thread: a later block reads what an earlier one writes.
             mgr.executeActionNow(ability, child, abilityData, "Target".equals(child.target) ? candidate : self);
         }
     }

@@ -76,7 +76,6 @@ public final class EventHandler<T extends Event> {
         return this;
     }
 
-    /** Registers the handler into the PluginManager. */
     public void register(Plugin plugin) {
         this.plugin = plugin;
         Grasscutter.getPluginManager().registerListener(this);

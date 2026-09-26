@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import lombok.*;
 
 public class GameDepot {
-    public static final int[] BLOCK_SIZE = new int[] {50, 500}; // Scales
+    public static final int[] BLOCK_SIZE = new int[] {50, 500};
 
     private static Int2ObjectMap<WeightedList<ReliquaryMainPropData>> relicRandomMainPropDepot =
             new Int2ObjectOpenHashMap<>();
@@ -93,7 +93,6 @@ public class GameDepot {
             list.add(data);
         }
         relicAffixDepot.values().forEach(depot -> weighAffixes(depot, odds.getSubStat()));
-        // Let the server owner know if theyre missing weights
         if (relicMainPropDepot.size() == 0 || relicAffixDepot.size() == 0) {
             Grasscutter.getLogger()
                     .error(

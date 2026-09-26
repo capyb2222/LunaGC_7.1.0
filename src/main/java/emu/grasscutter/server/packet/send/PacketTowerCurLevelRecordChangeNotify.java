@@ -15,7 +15,6 @@ public class PacketTowerCurLevelRecordChangeNotify extends BasePacket {
                                 TowerCurLevelRecord.newBuilder()
                                         .setCurFloorId(curFloorId)
                                         .setCurLevelIndex(curLevelIndex)
-                                        // TODO team info
                                         .build())
                         .build();
 

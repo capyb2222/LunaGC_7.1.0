@@ -40,7 +40,6 @@ public class PacketVehicleInteractRsp extends BasePacket {
                                     QuestContent.QUEST_CONTENT_ENTER_VEHICLE,
                                     ((EntityVehicle) vehicle).getGadgetId());
 
-                    // For phlogiston
                     var jsonName = GameData.getGadgetDataMap().get(((EntityVehicle) vehicle).getGadgetId())
                             .getJsonName().toLowerCase(Locale.ROOT);
                     var vehicleType = jsonName.contains("skiff") ? 2 : jsonName.contains("sorush") ? 3 :

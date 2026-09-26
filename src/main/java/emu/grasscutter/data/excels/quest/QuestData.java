@@ -43,7 +43,6 @@ public class QuestData extends GameResource {
         return type.name() + firstParam + (paramsStr != null ? paramsStr : "");
     }
 
-    // ResourceLoader not happy if you remove getId() ~~
     public int getId() {
         return subId;
     }

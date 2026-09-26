@@ -30,7 +30,6 @@ public class EntitySolarIsotomaElevatorPlatform extends EntityGadget {
         var combatProperties = combatData.getProperty();
 
         if (combatProperties.isUseCreatorProperty()) {
-            // If useCreatorProperty == true, use owner's property;
             GameEntity ownerEntity = getOwner();
             if (ownerEntity != null) {
                 getFightProperties().putAll(ownerEntity.getFightProperties());

@@ -9,7 +9,6 @@ public enum QuestState implements IntValueEnum {
     QUEST_STATE_FINISHED(3),
     QUEST_STATE_FAILED(4),
 
-    // Used by lua
     NONE(0),
     UNSTARTED(1),
     UNFINISHED(2),

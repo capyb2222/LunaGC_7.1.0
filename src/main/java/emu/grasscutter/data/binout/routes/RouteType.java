@@ -1,9 +1,8 @@
 package emu.grasscutter.data.binout.routes;
 
-// import emu.grasscutter.scripts.constants.IntValueEnum;
 import lombok.Getter;
 
-public enum RouteType /*implements IntValueEnum*/ {
+public enum RouteType  {
     Unknown(-1),
     OneWay(0),
     Reciprocate(1),
@@ -15,7 +14,6 @@ public enum RouteType /*implements IntValueEnum*/ {
         this.id = id;
     }
 
-    // @Override
     public int getValue() {
         return id;
     }

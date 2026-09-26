@@ -12,7 +12,6 @@ public class HandlerBackMyWorldReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         int prevScene = session.getPlayer().getPrevScene();
 
-        // Sanity check for switching between teapot realms
         if (prevScene >= 2000 && prevScene <= 2400) {
             prevScene = 3;
         }

@@ -76,8 +76,6 @@ public abstract class GameEntity {
     private Int2ObjectMap<AbilityModifierController> instancedModifiers =
             new Int2ObjectOpenHashMap<>();
 
-    // Abilities run on a thread pool, so a plain HashMap here threw ConcurrentModificationException
-    // out of whichever action happened to be reading the values while another wrote them
     @Getter private Map<String, Float> globalAbilityValues = new ConcurrentHashMap<>();
 
     public GameEntity(Scene scene) {
@@ -133,8 +131,6 @@ public abstract class GameEntity {
 
     public abstract Position getRotation();
 
-    // Not every entity carries fight properties, and the ones that do can be asked for them before
-    // they are built. Reading one used to throw straight out of whatever ability action asked.
     public void setFightProperty(FightProperty prop, float value) {
         this.setFightProperty(prop.getId(), value);
     }
@@ -339,7 +335,6 @@ public abstract class GameEntity {
       public void addSpecialEnergy(float energy){
        float curSpecialEnergy = getFightProperty(FightProperty.FIGHT_PROP_CUR_SPECIAL_ENERGY);
        float maxSpecialEnergy = getFightProperty(FightProperty.FIGHT_PROP_MAX_SPECIAL_ENERGY);
-       // Nightsoul is spent through here too, as a negative, so it needs a floor as well as a cap.
        curSpecialEnergy = Math.max(0, Math.min(maxSpecialEnergy, curSpecialEnergy + energy));
        setFightProperty(FightProperty.FIGHT_PROP_CUR_SPECIAL_ENERGY, curSpecialEnergy);
        this.getScene().broadcastPacket(new PacketEntityFightPropUpdateNotify(this, FightProperty.FIGHT_PROP_CUR_SPECIAL_ENERGY));

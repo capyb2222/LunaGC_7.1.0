@@ -75,7 +75,6 @@ public class EntityClientGadget extends EntityBaseGadget {
         this.ownerEntityId = notify.getOwnerEntityId();
         this.propOwnerEntityId = notify.getPropOwnerEntityId();
         this.targetEntityId = notify.getTargetEntityId();
-        // is_async_load is one of EvtCreateGadgetNotify's two unnamed bools in the 7.0 dump.
         this.asyncLoad = false;
 
         this.gadgetData = GameData.getGadgetDataMap().get(gadgetId);

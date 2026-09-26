@@ -92,7 +92,6 @@ public class GameHome {
                 .build();
     }
 
-    // avoid NPE caused by database remover.
     private void reassignIfNull() {
         this.getSceneMap().values().stream()
                 .map(HomeSceneItem::getBlockItems)
@@ -101,14 +100,13 @@ public class GameHome {
                 .forEach(HomeBlockItem::reassignIfNull);
     }
 
-    // Data fixer.
     private void fixMainHouseIfOld() {
         if (this.getMainHouseMap() == null) {
             Grasscutter.getLogger()
                     .debug(
                             "Player {}'s main house will be deleted due to GC update! (ps. sorry XD)",
                             this.getPlayer().getUid());
-            this.mainHouseMap = new ConcurrentHashMap<>(); // assign.
+            this.mainHouseMap = new ConcurrentHashMap<>();
         }
 
         this.getSceneMap().values().removeIf(homeSceneItem -> homeSceneItem.getSceneId() > 2200);
@@ -145,7 +143,6 @@ public class GameHome {
                         Grasscutter.getLogger()
                                 .info("Set player {} home {} to initial setting", ownerUid, sceneId);
                     } else {
-                        // Realm res missing bricks account, use default realm data to allow main house
                         defaultItem = GameData.getHomeworldDefaultSaveData().get(2001);
                     }
 
@@ -164,7 +161,7 @@ public class GameHome {
                             if (defaultItem == null) {
                                 Grasscutter.getLogger().info("defaultItem == null! returns Liyue style house.");
                                 return HomeSceneItem.parseFrom(
-                                        GameData.getHomeworldDefaultSaveData().get(2202), 2202); // Liyue style
+                                        GameData.getHomeworldDefaultSaveData().get(2202), 2202);
                             }
 
                             Grasscutter.getLogger()
@@ -177,15 +174,15 @@ public class GameHome {
     public void onMainHouseChanged() {
         Grasscutter.getLogger().debug("main house changed!");
         var outdoor = this.getPlayer().getCurrentRealmId() + 2000;
-        this.getMainHouseMap().remove(outdoor); // delete main house in current scene.
-        this.getMainHouseItem(outdoor); // put new main house with default arrangement.
+        this.getMainHouseMap().remove(outdoor);
+        this.getMainHouseItem(outdoor);
         this.save();
 
         this.getPlayer().getCurHomeWorld().getModuleManager().refreshMainHouse();
     }
 
     public void onOwnerLogin(Player player) {
-        this.player = player; // update player pointer. (prevent offline player from sending packet)
+        this.player = player;
         this.fixModuleIdIfInvalid();
         player.getSession().send(new PacketHomeBasicInfoNotify(player, false));
         player.getSession().send(new PacketPlayerHomeCompInfoNotify(player));
@@ -207,7 +204,7 @@ public class GameHome {
 
         this.player
                 .getRealmList()
-                .removeIf(integer -> !HOME_MODULE_IDS.contains(integer)); // Delete invalid module ids.
+                .removeIf(integer -> !HOME_MODULE_IDS.contains(integer));
 
         if (this.player.getRealmList().isEmpty()) {
             this.player.setRealmList(null);
@@ -226,7 +223,7 @@ public class GameHome {
                             firstRId);
         }
 
-        this.player.getCurHomeWorld().refreshModuleManager(); // Apply module id fix.
+        this.player.getCurHomeWorld().refreshModuleManager();
     }
 
     public void onPlayerChangedAvatarCostume(Avatar avatar) {
@@ -248,7 +245,6 @@ public class GameHome {
         world.getPlayers().forEach(player -> player.sendPacket(new PacketHomeMarkPointNotify(player)));
     }
 
-    // Tell the client the reward is claimed or realm unlocked
     public void onClaimReward(Player player) {
         player.getSession().send(new PacketPlayerHomeCompInfoNotify(player));
     }
@@ -333,7 +329,6 @@ public class GameHome {
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    // Same as Player.java addExpDirectly
     public void addExp(Player player, int count) {
         exp += count;
         int reqExp = getExpRequired(level);
@@ -343,11 +338,9 @@ public class GameHome {
             level += 1;
             reqExp = getExpRequired(level);
 
-            // Update client level and exp
             player.getSession().send(new PacketHomeBasicInfoNotify(player, false));
         }
 
-        // Update client home
         onOwnerLogin(player);
     }
 
@@ -355,7 +348,6 @@ public class GameHome {
         int clientTime = (int) ZonedDateTime.now().toEpochSecond();
         int owedRewards = 0;
 
-        // Don't owe if previous update hasn't passed
         if (nextUpdateTime > clientTime) {
             return;
         }
@@ -364,19 +356,15 @@ public class GameHome {
             lastUpdatedTime = clientTime;
         }
 
-        // Calculate number of owed rewards
         owedRewards = 1 + ((clientTime - nextUpdateTime) / 3600);
 
-        // Ensure next update is at top of the hour
         nextUpdateTime =
                 (int) ZonedDateTime.now().plusHours(1).truncatedTo(ChronoUnit.HOURS).toEpochSecond();
 
-        // Get resources
         var hourlyResources = getComfortResources(player);
         var owedCoin = hourlyResources.get(0) * owedRewards;
         var owedFetter = hourlyResources.get(1) * owedRewards;
 
-        // Update stored amounts
         storeResources(player, owedCoin, owedFetter);
     }
 
@@ -390,7 +378,6 @@ public class GameHome {
     public void takeHomeFetter(Player player) {
         List<Integer> invitedAvatars = new ArrayList<>();
 
-        // Outdoors avatars
         sceneMap
                 .get(player.getCurrentRealmId() + 2000)
                 .getBlockItems()
@@ -403,9 +390,7 @@ public class GameHome {
                                             });
                         });
 
-        // Check as realm 5 inside is not in defaults and will be null
         if (Objects.nonNull(mainHouseMap.get(player.getCurrentRealmId() + 2000))) {
-            // Indoors avatars
             mainHouseMap
                     .get(player.getCurrentRealmId() + 2000)
                     .getBlockItems()
@@ -419,7 +404,6 @@ public class GameHome {
                             });
         }
 
-        // Add exp to all avatars
         invitedAvatars.forEach(
                 id -> {
                     var avatar = player.getAvatars().getAvatarById(id);
@@ -437,63 +421,50 @@ public class GameHome {
     public void updateHourlyResources(Player player) {
         int clientTime = (int) ZonedDateTime.now().toEpochSecond();
 
-        // Check if resources can update
         if (nextUpdateTime > clientTime) {
             return;
         }
 
-        // If no update has occurred before
         if (lastUpdatedTime == 0) {
             lastUpdatedTime = clientTime;
         }
 
-        // Update stored resources
         storeResources(player, 0, 0);
         lastUpdatedTime = clientTime;
         nextUpdateTime =
                 (int) ZonedDateTime.now().plusHours(1).truncatedTo(ChronoUnit.HOURS).toEpochSecond();
         save();
 
-        // Send packet
         player.getSession().send(new PacketHomeResourceNotify(player));
     }
 
     public void storeResources(Player player, int owedCoin, int owedFetter) {
-        // Get max values
         var maxCoin = getMaxCoin(level);
         var maxFetter = getMaxFetter(level);
         int newCoin = 0;
         int newFetter = 0;
 
-        // Check if resources are already max
         if (storedCoin >= maxCoin && storedFetterExp >= maxFetter) {
             return;
         }
 
-        // Get resources
         var hourlyResources = getComfortResources(player);
 
-        // Update home coin
         if (storedCoin < maxCoin) {
-            // Check if owed or hourly
             if (owedCoin == 0) {
                 newCoin = storedCoin + hourlyResources.get(0);
             } else {
                 newCoin = storedCoin + owedCoin;
             }
-            // Ensure max is not exceeded
             storedCoin = Math.min(maxCoin, newCoin);
         }
 
-        // Update fetter exp
         if (storedFetterExp < maxFetter) {
-            // Check if owed or hourly
             if (owedFetter == 0) {
                 newFetter = storedFetterExp + hourlyResources.get(1);
             } else {
                 newFetter = storedFetterExp + owedFetter;
             }
-            // Ensure max is not exceeded
             storedFetterExp = Math.min(maxFetter, newFetter);
         }
 
@@ -503,21 +474,17 @@ public class GameHome {
     public List<Integer> getComfortResources(Player player) {
         List<Integer> allHomesComfort = new ArrayList<>();
         int highestComfort = 0;
-        // Use HomeComfortInfoNotify data since comfort value isn't stored
         if (player.getRealmList() == null) {
             return List.of(0, 0);
         }
 
-        // Calculate comfort value for each home
         for (int moduleId : player.getRealmList()) {
             var homeScene = player.getHome().getHomeSceneItem(moduleId + 2000);
             allHomesComfort.add(homeScene.calComfort());
         }
 
-        // Get highest comfort value
         highestComfort = Collections.max(allHomesComfort);
 
-        // Determine hourly resources
         if (highestComfort >= 20000) {
             return List.of(30, 5);
         } else if (highestComfort >= 15000) {

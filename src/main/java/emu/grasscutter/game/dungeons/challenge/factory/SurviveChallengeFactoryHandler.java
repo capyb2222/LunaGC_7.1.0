@@ -12,8 +12,6 @@ import java.util.List;
 public class SurviveChallengeFactoryHandler implements ChallengeFactoryHandler {
     @Override
     public boolean isThisType(ChallengeType challengeType) {
-        // grp 201055005
-        // ActiveChallenge with 100, 56, 60, 0, 0, 0
         return challengeType == CHALLENGE_SURVIVE;
     }
 
@@ -30,11 +28,11 @@ public class SurviveChallengeFactoryHandler implements ChallengeFactoryHandler {
         return new WorldChallenge(
                 scene,
                 group,
-                challengeId, // Id
-                challengeIndex, // Index
+                challengeId,
+                challengeIndex,
                 List.of(timeToSurvive),
-                timeToSurvive, // Limit
-                0, // Goal
+                timeToSurvive,
+                0,
                 List.of(new ForTimeTrigger()));
     }
 }

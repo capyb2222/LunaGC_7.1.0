@@ -19,9 +19,9 @@ public @interface Command {
     boolean threading() default false;
 
     enum TargetRequirement {
-        NONE, // targetPlayer is not required
-        OFFLINE, // targetPlayer must be offline
-        PLAYER, // targetPlayer can be online or offline
-        ONLINE // targetPlayer must be online
+        NONE,
+        OFFLINE,
+        PLAYER,
+        ONLINE
     }
 }

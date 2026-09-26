@@ -24,10 +24,8 @@ public class KillMonsterTimeIncTrigger extends ChallengeTrigger {
         var timeLeft = challenge.getTimeLimit() - elapsed;
         var increment = this.increment;
         if (increment == 0) {
-            // Refresh time limit back to max
             increment = maxTime - timeLeft;
         } else if (maxTime < timeLeft + increment) {
-            // Don't add back more time than original limit
             increment -= timeLeft + increment - maxTime;
         }
         challenge.setTimeLimit(challenge.getTimeLimit() + increment);

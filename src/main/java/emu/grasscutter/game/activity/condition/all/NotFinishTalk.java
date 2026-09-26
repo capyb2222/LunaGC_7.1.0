@@ -14,6 +14,6 @@ public class NotFinishTalk extends ActivityConditionBaseHandler {
                 .noneMatch(
                         q ->
                                 q.getValue().getTalks().get(params[0])
-                                        != null); // FIXME taken from ContentCompleteTalk
+                                        != null);
     }
 }

@@ -11,30 +11,24 @@ public final class ActionCopyGlobalValue extends AbilityActionHandler {
     @Override
     public boolean execute(
             Ability ability, AbilityModifierAction action, ByteString abilityData, GameEntity entity) {
-        // Get the entities referred to.
         var source = this.getTarget(ability, entity, action.srcTarget);
         var destination = this.getTarget(ability, entity, action.dstTarget);
-        // Check the entities.
         if (source == null || destination == null) {
             Grasscutter.getLogger().debug("ActionCopyGlobalValue: source or destination is null");
             return false;
         }
 
-        // An action can name neither key - Skirk's pickable handler does - and the map these go
-        // into rejects a null key outright.
         if (action.srcKey == null || action.dstKey == null) {
             Grasscutter.getLogger().debug("ActionCopyGlobalValue: source or destination key is null");
             return false;
         }
 
-        // Get the global value.
         var value = source.getGlobalAbilityValues().get(action.srcKey);
         if (value == null) {
             Grasscutter.getLogger().debug("ActionCopyGlobalValue: source value is null");
             return false;
         }
 
-        // Apply the new global value.
         destination.getGlobalAbilityValues().put(action.dstKey, value);
         destination.onAbilityValueUpdate();
 

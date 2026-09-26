@@ -13,13 +13,10 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public final class NameIndex {
-    /** What /give accepts: the things a player can be handed. */
     private static final Index THINGS = new Index();
 
-    /** What /spawn accepts: the things that can stand in a scene. */
     private static final Index ENTITIES = new Index();
 
-    /** Artifact set names, which name a whole family rather than one piece. */
     private static final Index SETS = new Index();
 
     private static boolean built;
@@ -31,13 +28,11 @@ public final class NameIndex {
         return THINGS.resolve(first, rest);
     }
 
-    /** As {@link #resolve}, over the things that can be spawned rather than given. */
     public static int resolveEntity(String first, List<String> rest) {
         build();
         return ENTITIES.resolve(first, rest);
     }
 
-    /** What a slot is called, in all the ways it gets called. */
     private static final Map<String, EquipType> SLOTS =
             Map.ofEntries(
                     Map.entry("flower", EquipType.EQUIP_BRACER),
@@ -71,7 +66,6 @@ public final class NameIndex {
         return piece;
     }
 
-    /** Every slot, in the order the game lists them. */
     private static final List<EquipType> WHOLE_SET =
             List.of(
                     EquipType.EQUIP_BRACER,
@@ -80,7 +74,6 @@ public final class NameIndex {
                     EquipType.EQUIP_RING,
                     EquipType.EQUIP_DRESS);
 
-    /** Words that mean "one of each" where a slot would go. */
     private static final Set<String> EVERY_SLOT = Set.of("all", "set", "full", "everything");
 
     public static List<Integer> resolveRelicSet(String first, List<String> rest) {
@@ -139,7 +132,6 @@ public final class NameIndex {
         return matches.stream().limit(limit).map(e -> describe(e.getValue())).toList();
     }
 
-    /** Internal names carry underscores; nothing the game prints does. */
     private static int internal(int id) {
         var name = nameOf(id);
         return name != null && name.indexOf('_') >= 0 ? 1 : 0;
@@ -189,8 +181,6 @@ public final class NameIndex {
         if (built) return;
         built = true;
 
-        // A name is shared more often than not - a character, their namecard and their story item
-        // all answer to it - so the most likely thing to be asked for outranks the rest.
         GameData.getAvatarDataMap()
                 .forEach((id, avatar) -> THINGS.claim(text(avatar.getNameTextMapHash()), id, 3));
 
@@ -209,8 +199,6 @@ public final class NameIndex {
                             var describe = GameData.getMonsterDescribeDataMap().get(monster.getDescribeId());
                             if (describe != null) ENTITIES.claim(text(describe.getNameTextMapHash()), id, 3);
 
-                            // Monsters carry a readable internal name where the excel table's own
-                            // name hash resolves to nothing at all, which is every one of them here.
                             ENTITIES.claim(monster.getMonsterName(), id, 2);
                         });
 
@@ -232,20 +220,15 @@ public final class NameIndex {
         return strings == null ? null : strings.get(0);
     }
 
-    /** One searchable set of names. */
     private static final class Index {
-        /** Sorted, so a partial phrase can be tested as a prefix of something longer. */
         private final TreeMap<String, Integer> byName = new TreeMap<>();
 
-        /** What kind of thing claimed each name, so a better claim can take it over. */
         private final Map<String, Integer> rank = new HashMap<>();
 
         void claim(String name, int id, int claimant) {
             var key = normalise(name);
             if (key.isEmpty()) return;
 
-            // Same name, same standing: keep the lower id, which is the plain form of a thing that
-            // ships in level or difficulty variants.
             var held = this.rank.getOrDefault(key, 0);
             if (claimant < held || (claimant == held && this.byName.get(key) <= id)) return;
 
@@ -253,7 +236,6 @@ public final class NameIndex {
             this.byName.put(key, id);
         }
 
-        /** Where a phrase matched and how many following words it took, or null for no match. */
         Match match(String first, List<String> rest) {
             var phrase = new StringBuilder(normalise(first));
             var found = this.byName.get(phrase.toString());
@@ -283,7 +265,6 @@ public final class NameIndex {
                     best = candidate;
                     consumed = i + 1;
                 } else if (!isPrefix(phrase.toString())) {
-                    // Nothing is called this or starts with it, so the rest is not part of the name.
                     break;
                 }
             }
@@ -298,10 +279,8 @@ public final class NameIndex {
         }
     }
 
-    /** A name that matched, and how many words after the first it needed. */
     private record Match(int id, int consumed) {}
 
-    /** Names are matched on their letters alone, so case, spacing and punctuation do not count. */
     private static String normalise(String text) {
         if (text == null) return "";
 

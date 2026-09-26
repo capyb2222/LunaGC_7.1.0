@@ -13,7 +13,7 @@ public class BattlePassMission {
 
     @Transient private BattlePassMissionData data;
 
-    @Deprecated // Morphia only
+    @Deprecated
     public BattlePassMission() {}
 
     public BattlePassMission(int id) {

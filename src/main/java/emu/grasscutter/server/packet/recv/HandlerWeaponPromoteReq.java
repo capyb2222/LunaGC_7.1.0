@@ -11,7 +11,6 @@ public class HandlerWeaponPromoteReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         WeaponPromoteReq req = WeaponPromoteReq.parseFrom(payload);
 
-        // Ascend weapon
         session
                 .getServer()
                 .getInventorySystem()

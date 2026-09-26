@@ -28,13 +28,10 @@ public class ScriptLoader {
     @Getter private static Serializer serializer;
     @Getter private static ScriptLib scriptLib;
     @Getter private static LuaValue scriptLibLua;
-    /** suggest GC to remove it if the memory is less */
     private static Map<String, SoftReference<String>> scriptSources = new ConcurrentHashMap<>();
 
     private static Map<String, SoftReference<CompiledScript>> scriptsCache =
             new ConcurrentHashMap<>();
-    /** sceneId - SceneMeta */
-    /** The globals every per-script environment is copied from. */
     private static Globals baseGlobals;
 
     private static Map<Integer, SoftReference<SceneMeta>> sceneMetaCache = new ConcurrentHashMap<>();
@@ -42,7 +39,6 @@ public class ScriptLoader {
     private static final AtomicReference<Bindings> currentBindings = new AtomicReference<>(null);
     private static final AtomicReference<ScriptContext> currentContext = new AtomicReference<>(null);
 
-    /** How many scripts have gone missing under each folder, so far this run. */
     private static final Map<String, Integer> missingScripts = new ConcurrentHashMap<>();
 
     private static void reportMissingScript(String path) {
@@ -60,29 +56,24 @@ public class ScriptLoader {
         }
     }
 
-    /** How many scripts are missing, by folder - {@code /reload} and friends can report it. */
     public static Map<String, Integer> getMissingScripts() {
         return Collections.unmodifiableMap(missingScripts);
     }
 
-    /** Initializes the script engine. */
     public static synchronized void init() throws Exception {
         if (sm != null) {
             throw new Exception("Script loader already initialized");
         }
 
-        // Create script engine
         ScriptLoader.sm = new ScriptEngineManager();
         var engine = ScriptLoader.engine = (LuaScriptEngine) sm.getEngineByName("luaj");
         ScriptLoader.serializer = new LuaSerializer();
 
-        // Set the Lua context.
         var ctx = new LuajContext(true, false);
         ctx.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE);
         engine.setContext(ctx);
         ScriptLoader.baseGlobals = ctx.globals;
 
-        // Set the 'require' function handler.
         ctx.globals.set("require", new RequireFunction());
 
         addEnumByIntValue(ctx, EntityType.values(), "EntityType");
@@ -98,8 +89,7 @@ public class ScriptLoader {
         ctx.globals.set(
                 "EventType",
                 CoerceJavaToLua.coerce(
-                        new EventType())); // TODO - make static class to avoid instantiating a new class every
-        // scene
+                        new EventType()));
         ctx.globals.set("GadgetState", CoerceJavaToLua.coerce(new ScriptGadgetState()));
         ctx.globals.set("RegionShape", CoerceJavaToLua.coerce(new ScriptRegionShape()));
 
@@ -141,11 +131,8 @@ public class ScriptLoader {
     }
 
     public static Object eval(CompiledScript script, Bindings bindings) throws ScriptException {
-        // Set the current bindings.
         currentBindings.set(bindings);
-        // Evaluate the script.
         var result = script.eval(bindings);
-        // Clear the current bindings.
         currentBindings.set(null);
 
         return result;
@@ -154,17 +141,14 @@ public class ScriptLoader {
     static final class RequireFunction extends OneArgFunction {
         @Override
         public LuaValue call(LuaValue arg) {
-            // Resolve the script path.
             var scriptName = arg.checkjstring();
             var scriptPath = "Common/" + scriptName + ".lua";
 
-            // Load & compile the script.
             var script = ScriptLoader.getScript(scriptPath);
             if (script == null) {
                 return LuaValue.NONE;
             }
 
-            // Append the script to the context.
             try {
                 var bindings = currentBindings.get();
 
@@ -180,7 +164,6 @@ public class ScriptLoader {
                 }
             }
 
-            // TODO: What is the proper return value?
             return LuaValue.NONE;
         }
     }
@@ -190,13 +173,11 @@ public class ScriptLoader {
     }
 
     public static String readScript(String path, boolean useAbsPath) {
-        // Check if the path is cached.
         var cached = ScriptLoader.tryGet(ScriptLoader.scriptSources.get(path));
         if (cached.isPresent()) {
             return cached.get();
         }
 
-        // Attempt to load the script.
         var scriptPath = useAbsPath ? Paths.get(path) : FileUtils.getScriptPath(path);
         if (!Files.exists(scriptPath)) {
             reportMissingScript(path);
@@ -220,7 +201,6 @@ public class ScriptLoader {
     }
 
     public static CompiledScript getScript(String path, boolean useAbsPath) {
-        // Check if the script is cached.
         var sc = ScriptLoader.tryGet(ScriptLoader.scriptsCache.get(path));
         if (sc.isPresent()) {
             return sc.get();
@@ -230,36 +210,28 @@ public class ScriptLoader {
             var sources = ScriptLoader.readScript(path, useAbsPath);
             if (sources == null) return null;
 
-            // Check to see if the script references other scripts.
             if (!Configuration.FAST_REQUIRE && sources.contains("require")) {
                 var lines = sources.split("\n");
                 var output = new StringBuilder();
                 for (var line : lines) {
-                    // Skip non-require lines.
                     if (!line.startsWith("require")) {
                         output.append(line).append("\n");
                         continue;
                     }
 
-                    // Extract the script name.
                     var scriptName = line.substring(9, line.length() - 1);
-                    // Resolve the script path.
                     var scriptPath = "Common/" + scriptName + ".lua";
                     var scriptSource = ScriptLoader.readScript(scriptPath, useAbsPath);
                     if (scriptSource == null) continue;
 
-                    // Append the script source.
                     output.append(scriptSource).append("\n");
                 }
                 sources = output.toString();
             }
 
-            // Compile a prototype rather than a closure. The closure is built per evaluation,
-            // against its own globals.
             var prototype = ScriptLoader.baseGlobals.compilePrototype(new StringReader(sources), path);
             CompiledScript script = new IsolatedCompiledScript(prototype);
 
-            // Cache the script.
             ScriptLoader.scriptsCache.put(path, new SoftReference<>(script));
             return script;
         } catch (Exception e) {
@@ -272,11 +244,9 @@ public class ScriptLoader {
     private static Globals createScriptGlobals(Bindings bindings) {
         var globals = new Globals();
 
-        // Copy the library globals - math, string, ScriptLib, EventType and friends.
         for (var key : ScriptLoader.baseGlobals.keys()) {
             globals.rawset(key, ScriptLoader.baseGlobals.rawget(key));
         }
-        // _G has to name the new environment, not the template it came from.
         globals.rawset("_G", globals);
         globals.setmetatable(new BindingsMetatable(bindings));
 
@@ -315,7 +285,6 @@ public class ScriptLoader {
         }
     }
 
-    /** A cached prototype whose closure is rebuilt, with fresh globals, for every evaluation. */
     private static final class IsolatedCompiledScript extends CompiledScript {
         private final Prototype prototype;
 

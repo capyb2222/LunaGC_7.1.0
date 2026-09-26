@@ -43,8 +43,6 @@ public abstract class AbilityActionHandler {
     }
 
     public static GameEntity resolveTarget(Ability ability, GameEntity entity, String target) {
-        // An action that names no target acts on whatever the modifier is attached to. Sandrone's
-        // robot has several of those, and switching on the absent name threw before the action ran.
         if (target == null) return entity;
 
         var playerOwner = ability.getPlayerOwner();
@@ -57,7 +55,7 @@ public abstract class AbilityActionHandler {
             case "OriginOwner", "CurLocalAvatar" -> teamManager != null
                     ? teamManager.getCurrentAvatarEntity()
                     : null;
-            case "CasterOriginOwner" -> null; // TODO: Figure out.
+            case "CasterOriginOwner" -> null;
             default -> {
                 Grasscutter.getLogger().debug("Unknown ability target type: {}", target);
                 yield entity;

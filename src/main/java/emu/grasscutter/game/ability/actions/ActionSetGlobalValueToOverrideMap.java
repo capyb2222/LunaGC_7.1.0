@@ -12,7 +12,6 @@ public final class ActionSetGlobalValueToOverrideMap extends AbilityActionHandle
     @Override
     public boolean execute(
             Ability ability, AbilityModifierAction action, ByteString abilityData, GameEntity target) {
-        // TODO:
         GameEntity entity = target;
         if (action.isFromOwner) {
             if (target instanceof EntityClientGadget) {
@@ -23,8 +22,6 @@ public final class ActionSetGlobalValueToOverrideMap extends AbilityActionHandle
                 entity = gadget.getOwner();
             }
         }
-        // isFromOwner can resolve to nothing - a summon whose owner has already left the scene -
-        // and the whole action then threw on the first read below.
         if (entity == null || ability == null) return true;
 
         String globalValueKey = action.globalValueKey;

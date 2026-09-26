@@ -10,7 +10,6 @@ public class HandlerSetPlayerSignatureReq extends PacketHandler {
 
     @Override
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
-        // Auto template
         SetPlayerSignatureReq req = SetPlayerSignatureReq.parseFrom(payload);
 
         if (req.getSignature() != null && req.getSignature().length() > 0) {

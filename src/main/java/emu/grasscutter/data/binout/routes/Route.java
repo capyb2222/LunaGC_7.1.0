@@ -11,9 +11,9 @@ public class Route {
     private String name;
     private RouteType type = RouteType.Unknown;
     private RoutePoint[] points;
-    private float arriveRange; // optional
-    private RotType rotType; // optional
-    private RotAngleType rotAngleType; // optional
+    private float arriveRange;
+    private RotType rotType;
+    private RotAngleType rotAngleType;
 
     public RouteOuterClass.Route toProto() {
         val builder = RouteOuterClass.Route.newBuilder().setRouteType(type.getValue());

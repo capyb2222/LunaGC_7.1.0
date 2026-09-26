@@ -9,12 +9,10 @@ import emu.grasscutter.game.quest.handlers.QuestExecHandler;
 public class ExecUnlockArea extends QuestExecHandler {
     @Override
     public boolean execute(GameQuest quest, QuestData.QuestExecParam condition, String... paramStr) {
-        // Unlock the trans point for the player.
         int sceneId = Integer.parseInt(paramStr[0]);
         int areaId = Integer.parseInt(paramStr[1]);
         quest.getOwner().getProgressManager().unlockSceneArea(sceneId, areaId);
 
-        // Done.
         return true;
     }
 }

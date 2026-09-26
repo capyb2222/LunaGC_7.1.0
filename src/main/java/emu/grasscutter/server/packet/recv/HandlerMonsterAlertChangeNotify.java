@@ -32,6 +32,5 @@ public class HandlerMonsterAlertChangeNotify extends PacketHandler {
             }
         }
 
-        // TODO: Research invisible monsters
     }
 }

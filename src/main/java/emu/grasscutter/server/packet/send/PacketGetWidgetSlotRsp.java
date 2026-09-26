@@ -14,8 +14,7 @@ public class PacketGetWidgetSlotRsp extends BasePacket {
                 GetWidgetSlotRspOuterClass.GetWidgetSlotRsp.newBuilder();
 
         if (player.getWidgetId()
-                == 0) { // TODO: check this logic later, it was null-checking an int before which made it
-            // dead code
+                == 0) {
             proto.addAllSlotList(List.of());
         } else {
             proto.addSlotList(

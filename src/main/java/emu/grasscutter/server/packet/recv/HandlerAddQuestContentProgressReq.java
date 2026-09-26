@@ -12,7 +12,6 @@ public class HandlerAddQuestContentProgressReq extends PacketHandler {
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         var req = AddQuestContentProgressReq.parseFrom(payload);
 
-        // Find all conditions in quest that are the same as the given one
         var type = QuestContent.getContentTriggerByValue(req.getContentType());
         if (type != null) {
             session.getPlayer().getQuestManager().queueEvent(type, req.getParam());

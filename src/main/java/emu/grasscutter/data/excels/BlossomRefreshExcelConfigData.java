@@ -10,22 +10,19 @@ import lombok.Getter;
 public class BlossomRefreshExcelConfigData extends GameResource {
     @Getter(onMethod_ = @Override)
     private int id;
-    // Map details
     private long nameTextMapHash;
     private long descTextMapHash;
     private String icon;
-    private String clientShowType; // BLOSSOM_SHOWTYPE_CHALLENGE, BLOSSOM_SHOWTYPE_NPCTALK
+    private String clientShowType;
 
-    // Refresh details
-    private String refreshType; // Leyline blossoms, magical ore outcrops
-    private int refreshCount; // Number of entries to spawn at refresh (1 for each leyline type for each city,
-    // 4 for magical ore for each city)
-    private String refreshTime; // Server time-of-day to refresh at
+    private String refreshType;
+    private int refreshCount;
+    private String refreshTime;
     @SerializedName(value = "RefreshCondVec", alternate = "refreshCondVec")
-    private RefreshCond[] refreshCondVec; // AR requirements etc.
+    private RefreshCond[] refreshCondVec;
 
     private int cityId;
-    private int blossomChestId; // 1 for mora, 2 for exp
+    private int blossomChestId;
     @SerializedName(value = "DropVec", alternate = "dropVec")
     private Drop[] dropVec;
 

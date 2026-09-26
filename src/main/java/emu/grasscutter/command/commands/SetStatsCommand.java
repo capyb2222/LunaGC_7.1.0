@@ -13,7 +13,7 @@ import java.util.*;
         aliases = {"stats", "stat"},
         usage = {
             "[set] <stat> <value>",
-            "(lock|freeze) <stat> [<value>]", // Can lock to current value
+            "(lock|freeze) <stat> [<value>]",
             "(unlock|unfreeze) <stat>"
         },
         permission = "player.setstats",
@@ -26,25 +26,21 @@ public final class SetStatsCommand implements CommandHandler {
         for (String key : FightProperty.getShortNames()) {
             this.stats.put(key, new Stat(FightProperty.getPropByShortName(key)));
         }
-        // Full FightProperty enum that won't be advertised but can be used by devs
-        // They have a prefix to avoid the "hp" clash
         for (FightProperty prop : FightProperty.values()) {
-            String name = prop.toString().substring(10); // FIGHT_PROP_BASE_HP -> _BASE_HP
-            String key = name.toLowerCase(); // _BASE_HP -> _base_hp
-            name = name.substring(1); // _BASE_HP -> BASE_HP
+            String name = prop.toString().substring(10);
+            String key = name.toLowerCase();
+            name = name.substring(1);
             this.stats.put(key, new Stat(name, prop));
         }
 
-        // Compatibility aliases
         this.stats.put("mhp", this.stats.get("maxhp"));
-        this.stats.put("hp", this.stats.get("_cur_hp")); // Overrides FIGHT_PROP_HP
-        this.stats.put("atk", this.stats.get("_cur_attack")); // Overrides FIGHT_PROP_ATTACK
-        this.stats.put("def", this.stats.get("_cur_defense")); // Overrides FIGHT_PROP_DEFENSE
+        this.stats.put("hp", this.stats.get("_cur_hp"));
+        this.stats.put("atk", this.stats.get("_cur_attack"));
+        this.stats.put("def", this.stats.get("_cur_defense"));
         this.stats.put(
                 "atkb",
                 this.stats.get(
-                        "_base_attack")); // This doesn't seem to get used to recalculate ATK, so it's only
-        // useful for stuff like Bennett's buff.
+                        "_base_attack"));
         this.stats.put("eanemo", this.stats.get("anemo%"));
         this.stats.put("ecryo", this.stats.get("cryo%"));
         this.stats.put("edendro", this.stats.get("dendro%"));
@@ -77,15 +73,14 @@ public final class SetStatsCommand implements CommandHandler {
             return;
         }
 
-        // Get the action and stat
         String arg0 = args.remove(0).toLowerCase();
         Action action =
                 switch (arg0) {
                     default -> {
                         statStr = arg0;
                         yield Action.ACTION_SET;
-                    } // Implicit set command
-                    case "set" -> Action.ACTION_SET; // Explicit set command
+                    }
+                    case "set" -> Action.ACTION_SET;
                     case "lock", "freeze" -> Action.ACTION_LOCK;
                     case "unlock", "unfreeze" -> Action.ACTION_UNLOCK;
                 };
@@ -93,21 +88,20 @@ public final class SetStatsCommand implements CommandHandler {
             statStr = args.remove(0).toLowerCase();
         }
         if (!stats.containsKey(statStr)) {
-            sendUsageMessage(sender); // Invalid stat or action
+            sendUsageMessage(sender);
             return;
         }
         Stat stat = stats.get(statStr);
         EntityAvatar entity = targetPlayer.getTeamManager().getCurrentAvatarEntity();
         Avatar avatar = entity.getAvatar();
 
-        // Get the value if the action requires it
         try {
             switch (action) {
                 case ACTION_LOCK:
-                    if (args.isEmpty()) { // Lock to current value
+                    if (args.isEmpty()) {
                         value = avatar.getFightProperty(stat.prop);
                         break;
-                    } // Else fall-through and lock to supplied value
+                    }
                 case ACTION_SET:
                     value = parsePercent(args.remove(0));
                     break;
@@ -122,7 +116,7 @@ public final class SetStatsCommand implements CommandHandler {
             return;
         }
 
-        if (!args.isEmpty()) { // Leftover arguments!
+        if (!args.isEmpty()) {
             sendUsageMessage(sender);
             return;
         }
@@ -142,7 +136,6 @@ public final class SetStatsCommand implements CommandHandler {
                 break;
         }
 
-        // Report action
         if (FightProperty.isPercentage(stat.prop)) {
             valueStr = String.format("%.1f%%", value * 100f);
         } else {

@@ -13,16 +13,13 @@ public final class HandlerBargainOfferPriceReq extends PacketHandler {
         var packet = BargainOfferPriceReq.parseFrom(payload);
         var player = session.getPlayer();
 
-        // Fetch the active bargain.
         var bargainId = packet.getBargainId();
         var progress = player.getPlayerProgress();
         var bargain = progress.getBargains().get(bargainId);
         if (bargain == null) return;
 
-        // Apply the offer.
         var result = bargain.applyOffer(packet.getPrice());
 
-        // Queue the quest content event.
         var questManager = player.getQuestManager();
         switch (result) {
             case BARGAIN_COMPLETE_SUCC -> questManager.queueEvent(
@@ -33,7 +30,6 @@ public final class HandlerBargainOfferPriceReq extends PacketHandler {
                     QuestContent.QUEST_CONTENT_BARGAIN_FAIL, bargainId, 0);
         }
 
-        // Return the resulting packet.
         session.send(new PacketBargainOfferPriceRsp(result, bargain));
     }
 }

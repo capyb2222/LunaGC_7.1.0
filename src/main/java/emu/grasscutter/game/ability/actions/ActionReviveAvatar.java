@@ -37,13 +37,12 @@ public final class ActionReviveAvatar extends AbilityActionHandler {
 
         float ratio = action.amountByTargetMaxHPRatio.get(properties, 0.0f);
         player.getTeamManager().getActiveTeam().forEach(entityAvatar -> {
-            boolean wasDead = !entityAvatar.isAlive(); // Check if alive but idrk sob
+            boolean wasDead = !entityAvatar.isAlive();
 
             if (wasDead) {
                 float maxHp = entityAvatar.getFightProperty(FightProperty.FIGHT_PROP_MAX_HP);
                 float healAmount = maxHp * ratio;
 
-                // tthis should work, plz
                 entityAvatar.getWorld().broadcastPacket(
                     new PacketAvatarLifeStateChangeNotify(entityAvatar.getAvatar())
                 );

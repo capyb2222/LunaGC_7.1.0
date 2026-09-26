@@ -7,7 +7,7 @@ public class AbilityModifierEntry {
     public List<AbilityModifierAction> onModifierAdded;
     public List<AbilityModifierAction> onThinkInterval;
     public List<AbilityModifierAction> onRemoved;
-    private final String name; // Custom value
+    private final String name;
 
     public AbilityModifierEntry(String name) {
         this.name = name;

@@ -5,7 +5,6 @@ import lombok.*;
 @Setter
 @Getter
 @NoArgsConstructor
-// todo find way to deserialize from lua with final fields, maybe with the help of Builder?
 public final class SceneTrigger {
     private String name;
     private int config_id;

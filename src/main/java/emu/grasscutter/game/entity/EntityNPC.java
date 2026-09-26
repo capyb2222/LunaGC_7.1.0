@@ -85,7 +85,6 @@ public class EntityNPC extends GameEntity {
 
     @Override
     public void initAbilities() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'initAbilities'");
     }
 }

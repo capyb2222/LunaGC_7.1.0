@@ -10,8 +10,6 @@ public final class HandlerClientLockGameTimeNotify extends PacketHandler {
     @Override
     public void handle(GameSession session, byte[] header, byte[] payload) throws Exception {
         var packet = ClientLockGameTimeNotify.parseFrom(payload);
-        // session.getPlayer().getWorld().lockTime(packet.getIsLock());
-        // TODO: figure out what to implement here
         if (packet.getIsLock())
             Grasscutter.getLogger()
                     .warn(

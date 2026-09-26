@@ -48,7 +48,6 @@ public final class ClearCommand implements CommandHandler {
         Inventory playerInventory = targetPlayer.getInventory();
         ClearItemParameters param = new ClearItemParameters();
 
-        // Extract any tagged int arguments (e.g. "lv90", "x100", "r5")
         parseIntParameters(args, param, intCommandHandlers);
 
         if (args.size() < 1) {
@@ -56,7 +55,7 @@ public final class ClearCommand implements CommandHandler {
             return;
         }
 
-        String playerString = targetPlayer.getNickname(); // Should probably be UID instead but whatever
+        String playerString = targetPlayer.getNickname();
         switch (args.get(0)) {
             case "wp" -> {
                 playerInventory.removeItems(getWeapons(playerInventory, param).toList());

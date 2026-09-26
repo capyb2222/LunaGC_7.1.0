@@ -59,8 +59,6 @@ public final class DatabaseHelper {
                 Grasscutter.getLogger().error("Failed to save {}.", name, e);
                 return;
             }
-            // The id is reflected back onto the object by the failed insert, so the retry
-            // becomes a replace.
             try {
                 DatabaseManager.getGameDatastore().save(object);
             } catch (Throwable t) {
@@ -73,7 +71,6 @@ public final class DatabaseHelper {
                     DatabaseManager.getGameDatastore().save(object);
                     return;
                 } catch (ConcurrentModificationException ignored) {
-                    // The other thread has not settled yet.
                 } catch (InterruptedException interrupted) {
                     Thread.currentThread().interrupt();
                     return;
@@ -95,7 +92,6 @@ public final class DatabaseHelper {
     public static <T> CompletableFuture<T> fetchAsync(Returnable<T> task) {
         var future = new CompletableFuture<T>();
 
-        // Run the task on the event executor.
         DatabaseHelper.eventExecutor.submit(
                 () -> {
                     try {
@@ -113,14 +109,11 @@ public final class DatabaseHelper {
     }
 
     public static Account createAccountWithUid(String username, int reservedUid) {
-        // Unique names only
         if (DatabaseHelper.checkIfAccountExists(username)) {
             return null;
         }
 
-        // Make sure there are no id collisions
         if (reservedUid > 0) {
-            // Cannot make account with the same uid as the server console
             if (reservedUid == GameConstants.SERVER_CONSOLE_UID) {
                 return null;
             }
@@ -129,13 +122,11 @@ public final class DatabaseHelper {
                 return null;
             }
 
-            // Make sure no existing player already has this id.
             if (DatabaseHelper.checkIfPlayerExists(reservedUid)) {
                 return null;
             }
         }
 
-        // Account
         @SuppressWarnings("deprecation")
         Account account = new Account();
         account.setUsername(username);
@@ -151,13 +142,11 @@ public final class DatabaseHelper {
 
     @Deprecated
     public static Account createAccountWithPassword(String username, String password) {
-        // Unique names only
         Account exists = DatabaseHelper.getAccountByName(username);
         if (exists != null) {
             return null;
         }
 
-        // Account
         Account account = new Account();
         account.setId(Integer.toString(DatabaseManager.getNextId(account)));
         account.setUsername(username);
@@ -226,7 +215,6 @@ public final class DatabaseHelper {
     public static synchronized void deleteAccount(Account target) {
         Player player = Grasscutter.getGameServer().getPlayerByAccountId(target.getId());
 
-        // Close session first
         if (player != null) {
             player.getSession().close();
         } else {
@@ -237,7 +225,6 @@ public final class DatabaseHelper {
 
         DatabaseHelper.asyncOperation(
                 () -> {
-                    // Delete data from collections
                     DatabaseManager.getGameDatabase()
                             .getCollection("achievements")
                             .deleteMany(eq("uid", uid));
@@ -259,13 +246,11 @@ public final class DatabaseHelper {
                             .getCollection("friendships")
                             .deleteMany(eq("friendId", uid));
 
-                    // Delete the player last.
                     DatabaseManager.getGameDatastore()
                             .find(Player.class)
                             .filter(Filters.eq("id", uid))
                             .delete();
 
-                    // Finally, delete the account itself.
                     DatabaseManager.getAccountDatastore()
                             .find(Account.class)
                             .filter(Filters.eq("id", target.getId()))
@@ -320,7 +305,6 @@ public final class DatabaseHelper {
     }
 
     public static synchronized void generatePlayerUid(Player character, int reservedId) {
-        // Check if reserved id
         int id;
         if (reservedId > 0 && !checkIfPlayerExists(reservedId)) {
             id = reservedId;
@@ -332,12 +316,10 @@ public final class DatabaseHelper {
             character.setUid(id);
         }
 
-        // Save to database
         DatabaseHelper.saveGameAsync(character);
     }
 
     public static synchronized int getNextPlayerId(int reservedId) {
-        // Check if reserved id
         int id;
         if (reservedId > 0 && !checkIfPlayerExists(reservedId)) {
             id = reservedId;

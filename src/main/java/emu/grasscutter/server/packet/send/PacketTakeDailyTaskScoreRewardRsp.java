@@ -19,8 +19,6 @@ public class PacketTakeDailyTaskScoreRewardRsp extends BasePacket {
         var proto =
                 _TakeDailyTaskScoreRewardRsp.newBuilder()
                         .setRetcode(retcode)
-                        // Echoed rather than decided here: the client sets it to say which screen it
-                        // is claiming from, and the reply is about the same claim.
                         .setIsClaimDailyAttendance(isClaimDailyAttendance);
 
         for (ItemParamData item : items) {

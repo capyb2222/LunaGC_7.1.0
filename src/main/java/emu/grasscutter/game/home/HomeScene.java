@@ -68,7 +68,7 @@ public class HomeScene extends Scene {
     @Override
     public void killEntity(GameEntity target, int attackerId) {
         if (target instanceof Rebornable rebornable) {
-            rebornable.onAiKillSelf(); // Teapot animals will not die. They will revive!
+            rebornable.onAiKillSelf();
             return;
         }
 

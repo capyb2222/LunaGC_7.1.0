@@ -17,18 +17,14 @@ public class HandlerSetWidgetSlotReq extends PacketHandler {
         Player player = session.getPlayer();
         player.setWidgetId(req.getMaterialId());
 
-        // WidgetSlotChangeNotify op & slot key
         session.send(
                 new PacketWidgetSlotChangeNotify(
                         WidgetSlotOpOuterClass.WidgetSlotOp.WidgetSlotOp_DETACH));
 
-        // only attaching the widget can set it
         if (req.getOp() == WidgetSlotOpOuterClass.WidgetSlotOp.WidgetSlotOp_ATTACH) {
-            // WidgetSlotChangeNotify slot
             session.send(new PacketWidgetSlotChangeNotify(req.getMaterialId()));
         }
 
-        // SetWidgetSlotRsp
         session.send(new PacketSetWidgetSlotRsp(req.getMaterialId()));
     }
 }

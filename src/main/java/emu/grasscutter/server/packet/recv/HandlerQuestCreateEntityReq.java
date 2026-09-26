@@ -35,12 +35,10 @@ public class HandlerQuestCreateEntityReq extends PacketHandler {
                             case Chest -> {
                                 var chest = gadgetInfo.getChest();
                                 var gadget = new EntityGadget(scene, gadgetId, pos, rot);
-                                // Create the gadget data for the chest.
                                 var metaGadget = new SceneGadget();
-                                metaGadget.drop_count = 1; // TODO: Check if more items should be dropped.
+                                metaGadget.drop_count = 1;
                                 metaGadget.chest_drop_id = chest.getChestDropId();
                                 metaGadget.setShowcutscene(chest.getIsShowCutscene());
-                                // Apply the gadget data to the chest.
                                 gadget.setMetaGadget(metaGadget);
 
                                 yield gadget;

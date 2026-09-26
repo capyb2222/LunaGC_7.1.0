@@ -15,7 +15,6 @@ public final class ServerMessageEvent extends Event {
         var isBinary = message.get("binary").getAsBoolean();
         var data = Base64.getDecoder().decode(message.get("data").getAsString());
 
-        // Create the event and invoke it.
         new ServerMessageEvent(client, isBinary, data).call();
     }
 

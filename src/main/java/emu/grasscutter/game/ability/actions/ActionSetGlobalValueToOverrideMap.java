@@ -41,6 +41,7 @@ public final class ActionSetGlobalValueToOverrideMap extends AbilityActionHandle
         entity.getGlobalAbilityValues().put(globalValueKey, globalValue);
         ability.getAbilitySpecials().put(action.overrideMapKey, globalValue.floatValue());
         entity.onAbilityValueUpdate();
+        if (entity.getScene() == null || entity.getScene().getHost() == null) return true;
         entity.getScene().getHost().sendPacket(new PacketServerGlobalValueChangeNotify(entity, globalValueKey, globalValue.floatValue()));
         return true;
     }

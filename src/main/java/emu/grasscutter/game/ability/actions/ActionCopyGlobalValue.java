@@ -5,7 +5,6 @@ import emu.grasscutter.Grasscutter;
 import emu.grasscutter.data.binout.AbilityModifier.AbilityModifierAction;
 import emu.grasscutter.game.ability.Ability;
 import emu.grasscutter.game.entity.GameEntity;
-import emu.grasscutter.server.packet.send.PacketServerGlobalValueChangeNotify;
 
 @AbilityAction(AbilityModifierAction.Type.CopyGlobalValue)
 public final class ActionCopyGlobalValue extends AbilityActionHandler {
@@ -38,13 +37,6 @@ public final class ActionCopyGlobalValue extends AbilityActionHandler {
         // Apply the new global value.
         destination.getGlobalAbilityValues().put(action.dstKey, value);
         destination.onAbilityValueUpdate();
-
-        // Send a value update packet.
-        var scene = entity.getScene();
-        var host = scene == null ? null : scene.getHost();
-        if (host != null) {
-            host.sendPacket(new PacketServerGlobalValueChangeNotify(entity, action.dstKey, value));
-        }
 
         return true;
     }

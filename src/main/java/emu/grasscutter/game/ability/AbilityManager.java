@@ -942,9 +942,12 @@ public final class AbilityManager extends BasePlayerManager {
             if (fromParentName && hasOrchestration && modifierData.onAdded != null) {
                 final var finalAbility = instancedAbility;
                 final var finalEntity = entity;
-                for (var a : modifierData.onAdded) {
-                    executeAction(finalAbility, a, invoke.getAbilityData(), finalEntity);
-                }
+                runServerOwned(
+                    () -> {
+                        for (var a : modifierData.onAdded) {
+                            executeActionNow(finalAbility, a, invoke.getAbilityData(), finalEntity);
+                        }
+                    });
             } else if (modifierData.onAdded != null) {
                 final var ownedAbility = instancedAbility;
                 final var ownedEntity = entity;
@@ -995,11 +998,6 @@ public final class AbilityManager extends BasePlayerManager {
 
         float value = entry.getFloatValue();
         if (Float.isNaN(value)) return;
-
-        if (key.equals("MoonOvergrowPoint_All")) {
-            value = 50f;
-            this.player.sendPacket(new PacketServerGlobalValueChangeNotify(entity, key, 50f));
-        }
 
         if ("_ABILITY_Clorinde_Dodge_HealFlag".equals(key) && value == 0f
                 && entity instanceof EntityAvatar clorinde
@@ -1166,9 +1164,12 @@ public final class AbilityManager extends BasePlayerManager {
                 syntheticModifierId(ability.getData().abilityName, modifierName), modifierData, ability);
 
         if (modifierData.onAdded != null) {
-            for (var action : modifierData.onAdded) {
-                if (action != null) this.executeAction(ability, action, abilityData, entity);
-            }
+            runServerOwned(
+                () -> {
+                    for (var action : modifierData.onAdded) {
+                        if (action != null) this.executeActionNow(ability, action, abilityData, entity);
+                    }
+                });
         }
 
         this.processModifierMixins(entity, ability, modifierData, abilityData, depth);
@@ -1266,7 +1267,7 @@ public final class AbilityManager extends BasePlayerManager {
 
     public void refreshGlobalValueWatchers(GameEntity entity) {
         if (entity == null) return;
-        for (var ability : entity.getInstancedAbilities()) {
+        for (var ability : new java.util.ArrayList<>(entity.getInstancedAbilities())) {
             if (ability == null || ability.getData() == null || ability.getData().modifiers == null)
                 continue;
 

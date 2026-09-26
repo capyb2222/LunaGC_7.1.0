@@ -1,5 +1,6 @@
 package emu.grasscutter.data.binout.config.fields;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import lombok.*;
 
@@ -9,6 +10,7 @@ public class ConfigCombatSummon {
 
     @Getter
     public final class SummonTag {
+        @SerializedName(value = "summonTag", alternate = {"PCLFAKBGHCI"})
         int summonTag;
     }
 }

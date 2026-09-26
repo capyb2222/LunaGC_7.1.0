@@ -13,7 +13,7 @@ import emu.grasscutter.net.proto.AbilityActionCreateGadgetOuterClass.AbilityActi
 public class ActionCreateGadget extends AbilityActionHandler {
 
     private static boolean clientOwnsChain(GameEntity entity) {
-        if (entity instanceof EntityClientGadget) return true;
+        if (entity instanceof EntityClientGadget || entity instanceof EntityAvatar) return true;
 
         // Owners are only ever set at creation, to an entity that already exists, so walking up
         // cannot come back around.

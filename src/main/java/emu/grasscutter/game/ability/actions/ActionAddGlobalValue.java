@@ -43,7 +43,7 @@ public final class ActionAddGlobalValue extends AbilityActionHandler {
         target.getGlobalAbilityValues().put(valueKey, newValue);
 
         target.onAbilityValueUpdate();
-        if (!AbilityManager.isServerOwnedChain()) {
+        if (!AbilityManager.isServerOwnedChain() && target.getScene() != null && target.getScene().getHost() != null) {
             target
                     .getScene()
                     .getHost()

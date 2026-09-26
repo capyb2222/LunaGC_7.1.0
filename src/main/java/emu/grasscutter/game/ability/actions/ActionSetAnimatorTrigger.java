@@ -3,6 +3,7 @@ package emu.grasscutter.game.ability.actions;
 import com.google.protobuf.ByteString;
 import emu.grasscutter.data.binout.AbilityModifier.AbilityModifierAction;
 import emu.grasscutter.game.ability.Ability;
+import emu.grasscutter.game.ability.AbilityManager;
 import emu.grasscutter.game.entity.GameEntity;
 import emu.grasscutter.net.proto.AnimatorParameterValueInfoOuterClass.AnimatorParameterValueInfo;
 import emu.grasscutter.net.proto.CombatInvokeEntryOuterClass.CombatInvokeEntry;
@@ -23,6 +24,7 @@ public final class ActionSetAnimatorTrigger extends AbilityActionHandler {
     }
 
     static void broadcastAnimatorParam(GameEntity target, String paramName, int paraType, boolean boolVal) {
+        if (AbilityManager.isServerOwnedChain()) return;
         var value = AnimatorParameterValueInfo.newBuilder()
                 .setParaType(paraType)
                 .setBoolVal(boolVal)
@@ -40,6 +42,7 @@ public final class ActionSetAnimatorTrigger extends AbilityActionHandler {
     }
 
     static void broadcastAnimatorParamInt(GameEntity target, String paramName, int paraType, int intVal) {
+        if (AbilityManager.isServerOwnedChain()) return;
         var value = AnimatorParameterValueInfo.newBuilder()
                 .setParaType(paraType)
                 .setIntVal(intVal)
@@ -57,6 +60,7 @@ public final class ActionSetAnimatorTrigger extends AbilityActionHandler {
     }
 
     static void broadcastAnimatorParamFloat(GameEntity target, String paramName, int paraType, float floatVal) {
+        if (AbilityManager.isServerOwnedChain()) return;
         var value = AnimatorParameterValueInfo.newBuilder()
                 .setParaType(paraType)
                 .setFloatVal(floatVal)

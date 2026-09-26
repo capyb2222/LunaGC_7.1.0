@@ -56,6 +56,7 @@ public class AbilityModifier implements Serializable {
     @SerializedName(value = "onReconnect", alternate = "OPOMCDOLKFF")
     public AbilityModifierAction[] onReconnect;
 
+    @SerializedName(value = "onChangeAuthority", alternate = {"OOINAHKLNHJ"})
     public AbilityModifierAction[] onChangeAuthority;
 
     @SerializedName(value = "onVehicleIn", alternate = "NNFFLLKFNKN")
@@ -115,6 +116,7 @@ public class AbilityModifier implements Serializable {
             AvatarShareCDSkillStart,
             AvatarSkillStart,
             BroadcastNeuronStimulate,
+            @SerializedName(value = "ByTargetGlobalValue", alternate = {"EOFDCELPGFO"})
             ByTargetGlobalValue,
             CalcDvalinS04RebornPoint,
             CallLuaTask,
@@ -336,25 +338,28 @@ public class AbilityModifier implements Serializable {
 
         @SerializedName(
                 value = "amountByCasterMaxHPRatio",
-                alternate = {"PKPBLCNMPIG", "HFNJHOGGFKB", "GEJGGCIOLKN", "MEEACMKOLJF", "OLMENJCGGJJ","EJGDELKANMO", "ECOAIFKENNM"})
+                alternate = {"PKPBLCNMPIG", "HFNJHOGGFKB", "GEJGGCIOLKN", "MEEACMKOLJF", "OLMENJCGGJJ", "EJGDELKANMO", "ECOAIFKENNM", "GJBFAJMJFOP"})
         public DynamicFloat amountByCasterMaxHPRatio = DynamicFloat.ZERO;
 
         public DynamicFloat amountByGetDamage = DynamicFloat.ZERO;
 
         public DynamicFloat amountByCasterDefRatio = DynamicFloat.ZERO;
 
-        @SerializedName(value = "amountByTargetCurrentHPRatio")
+        @SerializedName(value = "amountByTargetCurrentHPRatio", alternate = {"BJEKIJMNDAA"})
         public DynamicFloat amountByTargetCurrentHPRatio = DynamicFloat.ZERO;
 
-        @SerializedName(value = "amountByTargetMaxHPRatio", alternate = "GGLMMJHNGMO")
+        @SerializedName(
+                value = "amountByTargetMaxHPRatio",
+                alternate = {"GGLMMJHNGMO", "FPOCDLCHDPE"})
         public DynamicFloat amountByTargetMaxHPRatio = DynamicFloat.ZERO;
 
+        @SerializedName(value = "limboByTargetMaxHPRatio", alternate = {"KHFHMJCMOHH"})
         public DynamicFloat limboByTargetMaxHPRatio = DynamicFloat.ZERO;
 
         public DynamicFloat healRatio = DynamicFloat.ONE;
         public DynamicFloat speed = DynamicFloat.ONE;
 
-        @SerializedName(value = "ignoreAbilityProperty", alternate = "HHFGADCJJDI")
+        @SerializedName(value = "ignoreAbilityProperty", alternate = {"HHFGADCJJDI", "BPFPAELLNIL"})
         public boolean ignoreAbilityProperty;
 
         public String modifierName;
@@ -401,6 +406,7 @@ public class AbilityModifier implements Serializable {
         public int skillID;
         public int resistanceListID;
         public int monsterID;
+        @SerializedName(value = "summonTag", alternate = {"PCLFAKBGHCI"})
         public int summonTag;
 
         public AbilityModifierAction[] actions;
@@ -439,7 +445,7 @@ public class AbilityModifier implements Serializable {
         public String funcName;
         public LuaCallType luaCallType;
 
-        @SerializedName("CallParamList")
+        @SerializedName(value = "CallParamList", alternate = {"NPNEPKILMEK"})
         public int[] callParamList;
 
         public String content;

@@ -106,8 +106,11 @@ public final class GiveCommand implements CommandHandler {
                     6;
         for (AvatarData avatarData : GameData.getAvatarDataMap().values()) {
             int id = avatarData.getId();
-            if (id < 10000002 || id >= 10000990) continue;
             if (!"AVATAR_FORMAL".equals(avatarData.getUseType())) continue;
+            if (!GameData.getFetterDataEntries().containsKey(id)) continue;
+            if (avatarData.getCandSkillDepotIds() != null
+                    && !avatarData.getCandSkillDepotIds().isEmpty()
+                    && id != player.getMainCharacterId()) continue;
             try {
                 Avatar owned = player.getAvatars().getAvatarById(id);
                 if (owned != null) {

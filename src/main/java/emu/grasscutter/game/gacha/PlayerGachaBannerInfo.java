@@ -18,7 +18,7 @@ public class PlayerGachaBannerInfo {
     @Getter @Setter private int failedChosenItemPulls = 0;
     @Getter @Setter private int wishItemId = 0;
 
-    @Getter @Setter private int consecutiveFeaturedLosses = 0;
+    @Getter @Setter private int capturingRadianceCounter = 1;
 
     public void addTotalPulls(int amount) {
         this.totalPulls += amount;
@@ -36,8 +36,14 @@ public class PlayerGachaBannerInfo {
         failedChosenItemPulls += amount;
     }
 
-    public void addConsecutiveFeaturedLosses(int amount) {
-        consecutiveFeaturedLosses += amount;
+    public void onFiftyFifty(boolean won, boolean captured, int max) {
+        if (captured) {
+            capturingRadianceCounter = 1;
+        } else if (won) {
+            capturingRadianceCounter = capturingRadianceCounter == 1 ? 0 : 1;
+        } else {
+            capturingRadianceCounter = Math.min(capturingRadianceCounter + 1, max);
+        }
     }
 
     public int getFailedFeaturedItemPulls(int rarity) {

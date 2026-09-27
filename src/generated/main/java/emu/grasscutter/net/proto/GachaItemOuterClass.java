@@ -19,13 +19,13 @@ public final class GachaItemOuterClass {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>bool is_flash_card = 50000;</code>
+     * <code>bool is_flash_card = 13;</code>
      * @return The isFlashCard.
      */
     boolean getIsFlashCard();
 
     /**
-     * <code>bool is_gacha_item_new = 50001;</code>
+     * <code>bool is_gacha_item_new = 12;</code>
      * @return The isGachaItemNew.
      */
     boolean getIsGachaItemNew();
@@ -172,14 +172,14 @@ public final class GachaItemOuterClass {
                   input.readMessage(emu.grasscutter.net.proto.ItemParamOuterClass.ItemParam.parser(), extensionRegistry));
               break;
             }
-            case 400000: {
-
-              isFlashCard_ = input.readBool();
-              break;
-            }
-            case 400008: {
+            case 96: {
 
               isGachaItemNew_ = input.readBool();
+              break;
+            }
+            case 104: {
+
+              isFlashCard_ = input.readBool();
               break;
             }
             default: {
@@ -220,10 +220,10 @@ public final class GachaItemOuterClass {
               emu.grasscutter.net.proto.GachaItemOuterClass.GachaItem.class, emu.grasscutter.net.proto.GachaItemOuterClass.GachaItem.Builder.class);
     }
 
-    public static final int IS_FLASH_CARD_FIELD_NUMBER = 50000;
+    public static final int IS_FLASH_CARD_FIELD_NUMBER = 13;
     private boolean isFlashCard_;
     /**
-     * <code>bool is_flash_card = 50000;</code>
+     * <code>bool is_flash_card = 13;</code>
      * @return The isFlashCard.
      */
     @java.lang.Override
@@ -231,10 +231,10 @@ public final class GachaItemOuterClass {
       return isFlashCard_;
     }
 
-    public static final int IS_GACHA_ITEM_NEW_FIELD_NUMBER = 50001;
+    public static final int IS_GACHA_ITEM_NEW_FIELD_NUMBER = 12;
     private boolean isGachaItemNew_;
     /**
-     * <code>bool is_gacha_item_new = 50001;</code>
+     * <code>bool is_gacha_item_new = 12;</code>
      * @return The isGachaItemNew.
      */
     @java.lang.Override
@@ -371,11 +371,11 @@ public final class GachaItemOuterClass {
       for (int i = 0; i < tokenItemList_.size(); i++) {
         output.writeMessage(8, tokenItemList_.get(i));
       }
-      if (isFlashCard_ != false) {
-        output.writeBool(50000, isFlashCard_);
-      }
       if (isGachaItemNew_ != false) {
-        output.writeBool(50001, isGachaItemNew_);
+        output.writeBool(12, isGachaItemNew_);
+      }
+      if (isFlashCard_ != false) {
+        output.writeBool(13, isFlashCard_);
       }
       unknownFields.writeTo(output);
     }
@@ -398,13 +398,13 @@ public final class GachaItemOuterClass {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(8, tokenItemList_.get(i));
       }
-      if (isFlashCard_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(50000, isFlashCard_);
-      }
       if (isGachaItemNew_ != false) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(50001, isGachaItemNew_);
+          .computeBoolSize(12, isGachaItemNew_);
+      }
+      if (isFlashCard_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(13, isFlashCard_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -813,7 +813,7 @@ public final class GachaItemOuterClass {
 
       private boolean isFlashCard_ ;
       /**
-       * <code>bool is_flash_card = 50000;</code>
+       * <code>bool is_flash_card = 13;</code>
        * @return The isFlashCard.
        */
       @java.lang.Override
@@ -821,7 +821,7 @@ public final class GachaItemOuterClass {
         return isFlashCard_;
       }
       /**
-       * <code>bool is_flash_card = 50000;</code>
+       * <code>bool is_flash_card = 13;</code>
        * @param value The isFlashCard to set.
        * @return This builder for chaining.
        */
@@ -832,7 +832,7 @@ public final class GachaItemOuterClass {
         return this;
       }
       /**
-       * <code>bool is_flash_card = 50000;</code>
+       * <code>bool is_flash_card = 13;</code>
        * @return This builder for chaining.
        */
       public Builder clearIsFlashCard() {
@@ -844,7 +844,7 @@ public final class GachaItemOuterClass {
 
       private boolean isGachaItemNew_ ;
       /**
-       * <code>bool is_gacha_item_new = 50001;</code>
+       * <code>bool is_gacha_item_new = 12;</code>
        * @return The isGachaItemNew.
        */
       @java.lang.Override
@@ -852,7 +852,7 @@ public final class GachaItemOuterClass {
         return isGachaItemNew_;
       }
       /**
-       * <code>bool is_gacha_item_new = 50001;</code>
+       * <code>bool is_gacha_item_new = 12;</code>
        * @param value The isGachaItemNew to set.
        * @return This builder for chaining.
        */
@@ -863,7 +863,7 @@ public final class GachaItemOuterClass {
         return this;
       }
       /**
-       * <code>bool is_gacha_item_new = 50001;</code>
+       * <code>bool is_gacha_item_new = 12;</code>
        * @return This builder for chaining.
        */
       public Builder clearIsGachaItemNew() {
@@ -1539,13 +1539,13 @@ public final class GachaItemOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\017GachaItem.proto\032\027GachaTransferItem.pro" +
-      "to\032\017ItemParam.proto\"\262\001\n\tGachaItem\022\027\n\ris_" +
-      "flash_card\030\320\206\003 \001(\010\022\033\n\021is_gacha_item_new\030" +
-      "\321\206\003 \001(\010\022\036\n\ngacha_item\030\006 \001(\0132\n.ItemParam\022" +
-      "*\n\016transfer_items\030\005 \003(\0132\022.GachaTransferI" +
-      "tem\022#\n\017token_item_list\030\010 \003(\0132\n.ItemParam" +
-      "B0\n\031emu.grasscutter.net.protoB\023GachaItem" +
-      "OuterClassb\006proto3"
+      "to\032\017ItemParam.proto\"\256\001\n\tGachaItem\022\025\n\ris_" +
+      "flash_card\030\r \001(\010\022\031\n\021is_gacha_item_new\030\014 " +
+      "\001(\010\022\036\n\ngacha_item\030\006 \001(\0132\n.ItemParam\022*\n\016t" +
+      "ransfer_items\030\005 \003(\0132\022.GachaTransferItem\022" +
+      "#\n\017token_item_list\030\010 \003(\0132\n.ItemParamB0\n\031" +
+      "emu.grasscutter.net.protoB\023GachaItemOute" +
+      "rClassb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -29,9 +29,9 @@ message GachaInfo {
 	string gacha_record_url_oversea = 2032;
 	string gacha_prob_url_oversea = 425;
 	string title_textmap = 7;
-	uint32 wish_max_progress = 50018;
-	uint32 wish_progress = 50019;
-	uint32 cur_schedule_daily_gacha_times = 50020;
-	uint32 wish_item_id = 50021;
+	uint32 wish_max_progress = 586;
+	uint32 wish_progress = 590;
+	uint32 cur_schedule_daily_gacha_times = 1659;
+	uint32 wish_item_id = 1272;
 	repeated GachaUpInfo gacha_up_info_list = 1931;
 }

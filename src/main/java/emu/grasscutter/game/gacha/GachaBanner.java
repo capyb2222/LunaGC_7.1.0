@@ -31,7 +31,7 @@ public class GachaBanner {
         11501, 11502, 12501, 12502, 13502, 13505, 14501, 14502, 15501, 15502
     };
     static final int[] EMPTY_POOL = {};
-    static final int[] DEFAULT_CAPTURING_RADIANCE = {0, 10, 50, 100};
+    static final int[] DEFAULT_CAPTURING_RADIANCE = {0, 0, 10, 100};
     @Getter int scheduleId = -1;
     @Getter int sortId = -1;
     @Getter private int gachaType = -1;
@@ -164,9 +164,15 @@ public class GachaBanner {
         };
     }
 
-    public int getCapturingRadianceChance(int consecutiveLosses) {
+    public int getCapturingRadianceMax() {
+        return capturingRadianceChances == null || capturingRadianceChances.length == 0
+                ? 0
+                : capturingRadianceChances.length - 1;
+    }
+
+    public int getCapturingRadianceChance(int counter) {
         if (capturingRadianceChances == null || capturingRadianceChances.length == 0) return 0;
-        int index = Math.min(Math.max(consecutiveLosses, 0), capturingRadianceChances.length - 1);
+        int index = Math.min(Math.max(counter, 0), capturingRadianceChances.length - 1);
         return capturingRadianceChances[index];
     }
 

@@ -22,7 +22,8 @@ public class HandlerGachaWishReq extends PacketHandler {
             return;
         }
 
-        if (Arrays.stream(banner.getRateUpItems5()).noneMatch(id -> id == req.getItemId())) {
+        if (req.getItemId() != 0
+                && Arrays.stream(banner.getRateUpItems5()).noneMatch(id -> id == req.getItemId())) {
             session.send(new PacketGachaWishRsp(Retcode.RET_GACHA_WISH_INVALID_ITEM));
             return;
         }

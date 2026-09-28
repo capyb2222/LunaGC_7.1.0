@@ -380,6 +380,7 @@ public class AbilityModifier implements Serializable {
         public GadgetInfo gadgetInfo;
 
         public boolean isFromOwner;
+        @SerializedName(value = "healTag", alternate = {"FFNEJGGNAFF"})
         public String healTag;
         public String key;
         public String abilityName;

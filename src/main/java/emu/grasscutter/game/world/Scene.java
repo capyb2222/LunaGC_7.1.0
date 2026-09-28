@@ -485,13 +485,17 @@ public class Scene {
         if (attacker instanceof EntityAvatar arlecAttacker
                 && arlecAttacker.getAvatar().getAvatarId() == 10000096
                 && !(target instanceof EntityAvatar)) {
-            reduceArlecchinoBoL(arlecAttacker);
+            synchronized (arlecAttacker) {
+                reduceArlecchinoBoL(arlecAttacker);
+            }
         }
 
         if (attacker instanceof EntityAvatar clorindeAttacker
                 && clorindeAttacker.getAvatar().getAvatarId() == 10000098
                 && !(target instanceof EntityAvatar)) {
-            reduceClorindeBoL(clorindeAttacker);
+            synchronized (clorindeAttacker) {
+                reduceClorindeBoL(clorindeAttacker);
+            }
         }
     }
 

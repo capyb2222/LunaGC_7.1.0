@@ -18,12 +18,9 @@ import emu.grasscutter.net.proto.AbilityIdentifierOuterClass.AbilityIdentifier;
 import emu.grasscutter.net.proto.AbilityInvokeEntryOuterClass.AbilityInvokeEntry;
 import emu.grasscutter.net.proto.AttackResultOuterClass.AttackResult;
 import emu.grasscutter.net.proto.ChangeEnergyReasonOuterClass.ChangeEnergyReason;
-import emu.grasscutter.net.proto.ChangeHpDebtsReasonOuterClass;
 import emu.grasscutter.net.proto.EvtBeingHitInfoOuterClass.EvtBeingHitInfo;
 import emu.grasscutter.net.proto.PropChangeReasonOuterClass.PropChangeReason;
 import emu.grasscutter.server.game.GameSession;
-import emu.grasscutter.server.packet.send.PacketEntityFightPropChangeReasonNotify;
-import emu.grasscutter.server.packet.send.PacketEntityFightPropUpdateNotify;
 import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.objects.*;
 import java.util.*;
@@ -236,26 +233,6 @@ public class EnergyManager extends BasePlayerManager {
 
         if (avatar.getAvatarId() == 10000096) {
             this.player.getAbilityManager().onArlecchinoSkillNotify(skillId);
-            var skillData = GameData.getAvatarSkillDataMap().get(skillId);
-            int energySkillId = avatar.getSkillDepot() != null ? avatar.getSkillDepot().getEnergySkill() : -1;
-            float costElemVal = skillData != null ? skillData.getCostElemVal() : -1f;
-            boolean isBurst = (skillId == energySkillId) || (costElemVal > 0);
-            if (isBurst) {
-                float curDebt = casterEntity.getFightProperty(FightProperty.FIGHT_PROP_CUR_HP_DEBTS);
-                if (curDebt > 0f) {
-                    casterEntity.setFightProperty(FightProperty.FIGHT_PROP_CUR_HP_DEBTS, 0f);
-                    var scene = this.player.getScene();
-                    scene.broadcastPacket(new PacketEntityFightPropUpdateNotify(casterEntity, FightProperty.FIGHT_PROP_CUR_HP_DEBTS));
-                    scene.broadcastPacket(new PacketEntityFightPropChangeReasonNotify(
-                        casterEntity,
-                        FightProperty.FIGHT_PROP_CUR_HP_DEBTS,
-                        -curDebt,
-                        PropChangeReason.PropChangeReason_PROP_CHANGE_ABILITY,
-                        ChangeHpDebtsReasonOuterClass.ChangeHpDebtsReason.CHANGE_HP_DEBTS_REASON_CHANGE_HP_DEBTS_PAY_FINISH
-                    ));
-                    Grasscutter.getLogger().info("[BoL] Arlecchino burst: cleared {} BoL", curDebt);
-                }
-            }
         }
     }
 

@@ -102,7 +102,7 @@ public final class ActionHealHP extends AbilityActionHandler {
         target.getGlobalAbilityValues().put("_ABILITY_Clorinde_Dodge_HealFlag", dodgeHealFlag);
         target.getWorld().broadcastPacket(new PacketServerGlobalValueChangeNotify(target, "_ABILITY_Clorinde_Dodge_HealFlag", dodgeHealFlag));
 
-    if (target.isConvertToHpDebt()) {
+    if (target.isConvertToHpDebt() && !"Arlecchino_ElementalBurst_Heal".equals(healTag)) {
         if (target instanceof EntityAvatar avatar) {
             float healAmount = amountToRegenerate * abilityRatio * action.healRatio.get(ability, 1f);
 

@@ -15,7 +15,7 @@ message GachaInfo {
 	uint32 ten_cost_item_num = 4;
 	uint32 gacha_times_limit = 14;
 	uint32 cost_item_id = 8;
-	string gacha_record_url = 600;
+	string gacha_record_url = 7;
 	uint32 cost_item_num = 12;
 	string gacha_prob_url = 9;
 	string gacha_prefab_path = 15;
@@ -26,9 +26,9 @@ message GachaInfo {
 	repeated uint32 display_up4_item_list = 1440;
 	bool is_new_wish = 410;
 	repeated uint32 display_up5_item_list = 1343;
-	string gacha_record_url_oversea = 2032;
+	string gacha_record_url_oversea = 600;
 	string gacha_prob_url_oversea = 425;
-	string title_textmap = 7;
+	string title_textmap = 2032;
 	uint32 wish_max_progress = 586;
 	uint32 wish_progress = 590;
 	uint32 cur_schedule_daily_gacha_times = 1659;

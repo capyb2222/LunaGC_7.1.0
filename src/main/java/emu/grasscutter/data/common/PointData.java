@@ -14,6 +14,7 @@ public final class PointData {
 
     private String $type;
     @Getter private Position tranPos;
+    @Getter private Position tranRot;
     @Getter private Position pos;
     @Getter private Position rot;
     @Getter private Position size;

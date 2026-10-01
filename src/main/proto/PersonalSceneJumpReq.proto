@@ -4,5 +4,5 @@ option java_package = "emu.grasscutter.net.proto";
 option java_outer_classname = "PersonalSceneJumpReqOuterClass";
 
 message PersonalSceneJumpReq {
-	uint32 point_id = 5;
+	uint32 point_id = 11;
 }

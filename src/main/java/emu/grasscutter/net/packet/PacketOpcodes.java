@@ -107,7 +107,7 @@ public final class PacketOpcodes {
     public static final int TeamHexenzirkelChangeNotify = -6;
     public static final int AvatarDieAnimationEndReq = 29784;
     public static final int AvatarDieAnimationEndRsp = 26739;
-    public static final int PersonalSceneJumpReq = -7;
+    public static final int PersonalSceneJumpReq = 13;
     public static final int VehicleStaminaNotify = 22099;
     public static final int ServerBuffChangeNotify = 20465;
     public static final int VehicleInteractReq = 22285;

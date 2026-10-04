@@ -91,8 +91,15 @@ public class DailyTaskManager {
 		}
     }
 
+	private static final int OPEN_STATE_DAILY_TASK = 4510;
+
+	public boolean isUnlocked() {
+		return this.player != null
+				&& this.player.getProgressManager().getOpenState(OPEN_STATE_DAILY_TASK) == 1;
+	}
+
 	public void onPlayerLogin() {
-		if (this.player == null) {
+		if (this.player == null || !this.isUnlocked()) {
 			return;
 		}
 
@@ -123,7 +130,7 @@ public class DailyTaskManager {
 
 	private synchronized int ensureDailyTasksForToday(
 			boolean syncClient) {
-		if (this.player == null) {
+		if (this.player == null || !this.isUnlocked()) {
 			return 0;
 		}
 
@@ -524,6 +531,7 @@ public class DailyTaskManager {
 
 	public synchronized int loadActiveGroups(Scene scene) {
 		if (scene == null
+				|| !this.isUnlocked()
 				|| scene.getId() != TEYVAT_SCENE_ID
 				|| scene.getScriptManager() == null
 				|| !scene.getScriptManager().isInit()) {
@@ -672,6 +680,7 @@ public class DailyTaskManager {
 			int groupId) {
 		if (groupId <= 0
 				|| this.player == null
+				|| !this.isUnlocked()
 				|| this.dailyTasks == null) {
 			return;
 		}

@@ -21,7 +21,6 @@ import emu.grasscutter.net.proto.RetcodeOuterClass.Retcode;
 import emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo;
 import emu.grasscutter.net.proto.TpsAmmunitionChangeNotifyOuterClass.TpsAmmunitionChangeNotify;
 import emu.grasscutter.net.proto.TpsAmmunitionCountOuterClass.TpsAmmunitionCount;
-import emu.grasscutter.net.proto.TpsAmmunitionUpdateTypeOuterClass.TpsAmmunitionUpdateType;
 import emu.grasscutter.net.proto.TpsWeaponAmmunitionInfoOuterClass.TpsWeaponAmmunitionInfo;
 import emu.grasscutter.net.proto._TpsWeaponOuterClass._TpsWeapon;
 import emu.grasscutter.server.packet.send.PacketStoreItemChangeNotify;
@@ -540,15 +539,6 @@ public final class TpsWeaponSystem {
 
     public static void onAmmunitionInvoke(Player player, AbilityInvokeEntry invoke) throws Exception {
         var update = AbilityMetaUpdateTpsWeaponAmmunition.parseFrom(invoke.getAbilityData());
-        if (update.getUpdateType() != TpsAmmunitionUpdateType.TPS_AMMUNITION_UPDATE_TYPE_COST) {
-            Grasscutter.getLogger()
-                    .info(
-                            "[tps] ammunition {} from entity {}: {}",
-                            update.getUpdateType(),
-                            invoke.getEntityId(),
-                            update.toString().replace('\n', ' '));
-        }
-
         for (var change : update.getAmmunitionListList()) {
             changeTotal(player, change.getAmmunitionConfigId(), change.getChangeCount());
             player.getTpsAmmunitionSent()

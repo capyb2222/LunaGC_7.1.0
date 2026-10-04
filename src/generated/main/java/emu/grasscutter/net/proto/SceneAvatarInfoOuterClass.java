@@ -423,27 +423,27 @@ public final class SceneAvatarInfoOuterClass {
     int getUnlockedSkillDepotIdList(int index);
 
     /**
-     * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+     * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
      */
     java.util.List<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo> 
-        getAltCosmeticPlanList();
+        getTpsWeaponListList();
     /**
-     * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+     * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
      */
-    emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo getAltCosmeticPlan(int index);
+    emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo getTpsWeaponList(int index);
     /**
-     * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+     * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
      */
-    int getAltCosmeticPlanCount();
+    int getTpsWeaponListCount();
     /**
-     * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+     * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
      */
     java.util.List<? extends emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder> 
-        getAltCosmeticPlanOrBuilderList();
+        getTpsWeaponListOrBuilderList();
     /**
-     * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+     * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
      */
-    emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder getAltCosmeticPlanOrBuilder(
+    emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder getTpsWeaponListOrBuilder(
         int index);
   }
   /**
@@ -469,7 +469,7 @@ public final class SceneAvatarInfoOuterClass {
       ExpressionList_ = java.util.Collections.emptyList();
       SpecialProudSkillList_ = emptyIntList();
       UnlockedSkillDepotIdList_ = emptyIntList();
-      altCosmeticPlan_ = java.util.Collections.emptyList();
+      tpsWeaponList_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -810,10 +810,10 @@ public final class SceneAvatarInfoOuterClass {
             }
             case 250: {
               if (!((mutable_bitField0_ & 0x00001000) != 0)) {
-                altCosmeticPlan_ = new java.util.ArrayList<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo>();
+                tpsWeaponList_ = new java.util.ArrayList<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo>();
                 mutable_bitField0_ |= 0x00001000;
               }
-              altCosmeticPlan_.add(
+              tpsWeaponList_.add(
                   input.readMessage(emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.parser(), extensionRegistry));
               break;
             }
@@ -863,7 +863,7 @@ public final class SceneAvatarInfoOuterClass {
           UnlockedSkillDepotIdList_.makeImmutable(); // C
         }
         if (((mutable_bitField0_ & 0x00001000) != 0)) {
-          altCosmeticPlan_ = java.util.Collections.unmodifiableList(altCosmeticPlan_);
+          tpsWeaponList_ = java.util.Collections.unmodifiableList(tpsWeaponList_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -1633,44 +1633,44 @@ public final class SceneAvatarInfoOuterClass {
     }
     private int UnlockedSkillDepotIdListMemoizedSerializedSize = -1;
 
-    public static final int ALT_COSMETIC_PLAN_FIELD_NUMBER = 31;
-    private java.util.List<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo> altCosmeticPlan_;
+    public static final int TPS_WEAPON_LIST_FIELD_NUMBER = 31;
+    private java.util.List<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo> tpsWeaponList_;
     /**
-     * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+     * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
      */
     @java.lang.Override
-    public java.util.List<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo> getAltCosmeticPlanList() {
-      return altCosmeticPlan_;
+    public java.util.List<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo> getTpsWeaponListList() {
+      return tpsWeaponList_;
     }
     /**
-     * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+     * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
      */
     @java.lang.Override
     public java.util.List<? extends emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder> 
-        getAltCosmeticPlanOrBuilderList() {
-      return altCosmeticPlan_;
+        getTpsWeaponListOrBuilderList() {
+      return tpsWeaponList_;
     }
     /**
-     * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+     * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
      */
     @java.lang.Override
-    public int getAltCosmeticPlanCount() {
-      return altCosmeticPlan_.size();
+    public int getTpsWeaponListCount() {
+      return tpsWeaponList_.size();
     }
     /**
-     * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+     * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
      */
     @java.lang.Override
-    public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo getAltCosmeticPlan(int index) {
-      return altCosmeticPlan_.get(index);
+    public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo getTpsWeaponList(int index) {
+      return tpsWeaponList_.get(index);
     }
     /**
-     * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+     * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
      */
     @java.lang.Override
-    public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder getAltCosmeticPlanOrBuilder(
+    public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder getTpsWeaponListOrBuilder(
         int index) {
-      return altCosmeticPlan_.get(index);
+      return tpsWeaponList_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1805,8 +1805,8 @@ public final class SceneAvatarInfoOuterClass {
       for (int i = 0; i < UnlockedSkillDepotIdList_.size(); i++) {
         output.writeUInt32NoTag(UnlockedSkillDepotIdList_.getInt(i));
       }
-      for (int i = 0; i < altCosmeticPlan_.size(); i++) {
-        output.writeMessage(31, altCosmeticPlan_.get(i));
+      for (int i = 0; i < tpsWeaponList_.size(); i++) {
+        output.writeMessage(31, tpsWeaponList_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -2005,9 +2005,9 @@ public final class SceneAvatarInfoOuterClass {
         }
         UnlockedSkillDepotIdListMemoizedSerializedSize = dataSize;
       }
-      for (int i = 0; i < altCosmeticPlan_.size(); i++) {
+      for (int i = 0; i < tpsWeaponList_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(31, altCosmeticPlan_.get(i));
+          .computeMessageSize(31, tpsWeaponList_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2094,8 +2094,8 @@ public final class SceneAvatarInfoOuterClass {
           .equals(other.getSpecialProudSkillListList())) return false;
       if (!getUnlockedSkillDepotIdListList()
           .equals(other.getUnlockedSkillDepotIdListList())) return false;
-      if (!getAltCosmeticPlanList()
-          .equals(other.getAltCosmeticPlanList())) return false;
+      if (!getTpsWeaponListList()
+          .equals(other.getTpsWeaponListList())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -2198,9 +2198,9 @@ public final class SceneAvatarInfoOuterClass {
         hash = (37 * hash) + _UNLOCKED_SKILL_DEPOT_ID_LIST_FIELD_NUMBER;
         hash = (53 * hash) + getUnlockedSkillDepotIdListList().hashCode();
       }
-      if (getAltCosmeticPlanCount() > 0) {
-        hash = (37 * hash) + ALT_COSMETIC_PLAN_FIELD_NUMBER;
-        hash = (53 * hash) + getAltCosmeticPlanList().hashCode();
+      if (getTpsWeaponListCount() > 0) {
+        hash = (37 * hash) + TPS_WEAPON_LIST_FIELD_NUMBER;
+        hash = (53 * hash) + getTpsWeaponListList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -2360,7 +2360,7 @@ public final class SceneAvatarInfoOuterClass {
           getServerBuffListFieldBuilder();
           getCostumeSetListFieldBuilder();
           getExpressionListFieldBuilder();
-          getAltCosmeticPlanFieldBuilder();
+          getTpsWeaponListFieldBuilder();
         }
       }
       @java.lang.Override
@@ -2454,11 +2454,11 @@ public final class SceneAvatarInfoOuterClass {
         bitField0_ = (bitField0_ & ~0x00000400);
         UnlockedSkillDepotIdList_ = emptyIntList();
         bitField0_ = (bitField0_ & ~0x00000800);
-        if (altCosmeticPlanBuilder_ == null) {
-          altCosmeticPlan_ = java.util.Collections.emptyList();
+        if (tpsWeaponListBuilder_ == null) {
+          tpsWeaponList_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00001000);
         } else {
-          altCosmeticPlanBuilder_.clear();
+          tpsWeaponListBuilder_.clear();
         }
         return this;
       }
@@ -2590,14 +2590,14 @@ public final class SceneAvatarInfoOuterClass {
           bitField0_ = (bitField0_ & ~0x00000800);
         }
         result.UnlockedSkillDepotIdList_ = UnlockedSkillDepotIdList_;
-        if (altCosmeticPlanBuilder_ == null) {
+        if (tpsWeaponListBuilder_ == null) {
           if (((bitField0_ & 0x00001000) != 0)) {
-            altCosmeticPlan_ = java.util.Collections.unmodifiableList(altCosmeticPlan_);
+            tpsWeaponList_ = java.util.Collections.unmodifiableList(tpsWeaponList_);
             bitField0_ = (bitField0_ & ~0x00001000);
           }
-          result.altCosmeticPlan_ = altCosmeticPlan_;
+          result.tpsWeaponList_ = tpsWeaponList_;
         } else {
-          result.altCosmeticPlan_ = altCosmeticPlanBuilder_.build();
+          result.tpsWeaponList_ = tpsWeaponListBuilder_.build();
         }
         onBuilt();
         return result;
@@ -2866,29 +2866,29 @@ public final class SceneAvatarInfoOuterClass {
           }
           onChanged();
         }
-        if (altCosmeticPlanBuilder_ == null) {
-          if (!other.altCosmeticPlan_.isEmpty()) {
-            if (altCosmeticPlan_.isEmpty()) {
-              altCosmeticPlan_ = other.altCosmeticPlan_;
+        if (tpsWeaponListBuilder_ == null) {
+          if (!other.tpsWeaponList_.isEmpty()) {
+            if (tpsWeaponList_.isEmpty()) {
+              tpsWeaponList_ = other.tpsWeaponList_;
               bitField0_ = (bitField0_ & ~0x00001000);
             } else {
-              ensureAltCosmeticPlanIsMutable();
-              altCosmeticPlan_.addAll(other.altCosmeticPlan_);
+              ensureTpsWeaponListIsMutable();
+              tpsWeaponList_.addAll(other.tpsWeaponList_);
             }
             onChanged();
           }
         } else {
-          if (!other.altCosmeticPlan_.isEmpty()) {
-            if (altCosmeticPlanBuilder_.isEmpty()) {
-              altCosmeticPlanBuilder_.dispose();
-              altCosmeticPlanBuilder_ = null;
-              altCosmeticPlan_ = other.altCosmeticPlan_;
+          if (!other.tpsWeaponList_.isEmpty()) {
+            if (tpsWeaponListBuilder_.isEmpty()) {
+              tpsWeaponListBuilder_.dispose();
+              tpsWeaponListBuilder_ = null;
+              tpsWeaponList_ = other.tpsWeaponList_;
               bitField0_ = (bitField0_ & ~0x00001000);
-              altCosmeticPlanBuilder_ = 
+              tpsWeaponListBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getAltCosmeticPlanFieldBuilder() : null;
+                   getTpsWeaponListFieldBuilder() : null;
             } else {
-              altCosmeticPlanBuilder_.addAllMessages(other.altCosmeticPlan_);
+              tpsWeaponListBuilder_.addAllMessages(other.tpsWeaponList_);
             }
           }
         }
@@ -5491,244 +5491,244 @@ public final class SceneAvatarInfoOuterClass {
         return this;
       }
 
-      private java.util.List<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo> altCosmeticPlan_ =
+      private java.util.List<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo> tpsWeaponList_ =
         java.util.Collections.emptyList();
-      private void ensureAltCosmeticPlanIsMutable() {
+      private void ensureTpsWeaponListIsMutable() {
         if (!((bitField0_ & 0x00001000) != 0)) {
-          altCosmeticPlan_ = new java.util.ArrayList<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo>(altCosmeticPlan_);
+          tpsWeaponList_ = new java.util.ArrayList<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo>(tpsWeaponList_);
           bitField0_ |= 0x00001000;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder> altCosmeticPlanBuilder_;
+          emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder> tpsWeaponListBuilder_;
 
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public java.util.List<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo> getAltCosmeticPlanList() {
-        if (altCosmeticPlanBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(altCosmeticPlan_);
+      public java.util.List<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo> getTpsWeaponListList() {
+        if (tpsWeaponListBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(tpsWeaponList_);
         } else {
-          return altCosmeticPlanBuilder_.getMessageList();
+          return tpsWeaponListBuilder_.getMessageList();
         }
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public int getAltCosmeticPlanCount() {
-        if (altCosmeticPlanBuilder_ == null) {
-          return altCosmeticPlan_.size();
+      public int getTpsWeaponListCount() {
+        if (tpsWeaponListBuilder_ == null) {
+          return tpsWeaponList_.size();
         } else {
-          return altCosmeticPlanBuilder_.getCount();
+          return tpsWeaponListBuilder_.getCount();
         }
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo getAltCosmeticPlan(int index) {
-        if (altCosmeticPlanBuilder_ == null) {
-          return altCosmeticPlan_.get(index);
+      public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo getTpsWeaponList(int index) {
+        if (tpsWeaponListBuilder_ == null) {
+          return tpsWeaponList_.get(index);
         } else {
-          return altCosmeticPlanBuilder_.getMessage(index);
+          return tpsWeaponListBuilder_.getMessage(index);
         }
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public Builder setAltCosmeticPlan(
+      public Builder setTpsWeaponList(
           int index, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo value) {
-        if (altCosmeticPlanBuilder_ == null) {
+        if (tpsWeaponListBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureAltCosmeticPlanIsMutable();
-          altCosmeticPlan_.set(index, value);
+          ensureTpsWeaponListIsMutable();
+          tpsWeaponList_.set(index, value);
           onChanged();
         } else {
-          altCosmeticPlanBuilder_.setMessage(index, value);
+          tpsWeaponListBuilder_.setMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public Builder setAltCosmeticPlan(
+      public Builder setTpsWeaponList(
           int index, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder builderForValue) {
-        if (altCosmeticPlanBuilder_ == null) {
-          ensureAltCosmeticPlanIsMutable();
-          altCosmeticPlan_.set(index, builderForValue.build());
+        if (tpsWeaponListBuilder_ == null) {
+          ensureTpsWeaponListIsMutable();
+          tpsWeaponList_.set(index, builderForValue.build());
           onChanged();
         } else {
-          altCosmeticPlanBuilder_.setMessage(index, builderForValue.build());
+          tpsWeaponListBuilder_.setMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public Builder addAltCosmeticPlan(emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo value) {
-        if (altCosmeticPlanBuilder_ == null) {
+      public Builder addTpsWeaponList(emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo value) {
+        if (tpsWeaponListBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureAltCosmeticPlanIsMutable();
-          altCosmeticPlan_.add(value);
+          ensureTpsWeaponListIsMutable();
+          tpsWeaponList_.add(value);
           onChanged();
         } else {
-          altCosmeticPlanBuilder_.addMessage(value);
+          tpsWeaponListBuilder_.addMessage(value);
         }
         return this;
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public Builder addAltCosmeticPlan(
+      public Builder addTpsWeaponList(
           int index, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo value) {
-        if (altCosmeticPlanBuilder_ == null) {
+        if (tpsWeaponListBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureAltCosmeticPlanIsMutable();
-          altCosmeticPlan_.add(index, value);
+          ensureTpsWeaponListIsMutable();
+          tpsWeaponList_.add(index, value);
           onChanged();
         } else {
-          altCosmeticPlanBuilder_.addMessage(index, value);
+          tpsWeaponListBuilder_.addMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public Builder addAltCosmeticPlan(
+      public Builder addTpsWeaponList(
           emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder builderForValue) {
-        if (altCosmeticPlanBuilder_ == null) {
-          ensureAltCosmeticPlanIsMutable();
-          altCosmeticPlan_.add(builderForValue.build());
+        if (tpsWeaponListBuilder_ == null) {
+          ensureTpsWeaponListIsMutable();
+          tpsWeaponList_.add(builderForValue.build());
           onChanged();
         } else {
-          altCosmeticPlanBuilder_.addMessage(builderForValue.build());
+          tpsWeaponListBuilder_.addMessage(builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public Builder addAltCosmeticPlan(
+      public Builder addTpsWeaponList(
           int index, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder builderForValue) {
-        if (altCosmeticPlanBuilder_ == null) {
-          ensureAltCosmeticPlanIsMutable();
-          altCosmeticPlan_.add(index, builderForValue.build());
+        if (tpsWeaponListBuilder_ == null) {
+          ensureTpsWeaponListIsMutable();
+          tpsWeaponList_.add(index, builderForValue.build());
           onChanged();
         } else {
-          altCosmeticPlanBuilder_.addMessage(index, builderForValue.build());
+          tpsWeaponListBuilder_.addMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public Builder addAllAltCosmeticPlan(
+      public Builder addAllTpsWeaponList(
           java.lang.Iterable<? extends emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo> values) {
-        if (altCosmeticPlanBuilder_ == null) {
-          ensureAltCosmeticPlanIsMutable();
+        if (tpsWeaponListBuilder_ == null) {
+          ensureTpsWeaponListIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, altCosmeticPlan_);
+              values, tpsWeaponList_);
           onChanged();
         } else {
-          altCosmeticPlanBuilder_.addAllMessages(values);
+          tpsWeaponListBuilder_.addAllMessages(values);
         }
         return this;
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public Builder clearAltCosmeticPlan() {
-        if (altCosmeticPlanBuilder_ == null) {
-          altCosmeticPlan_ = java.util.Collections.emptyList();
+      public Builder clearTpsWeaponList() {
+        if (tpsWeaponListBuilder_ == null) {
+          tpsWeaponList_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00001000);
           onChanged();
         } else {
-          altCosmeticPlanBuilder_.clear();
+          tpsWeaponListBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public Builder removeAltCosmeticPlan(int index) {
-        if (altCosmeticPlanBuilder_ == null) {
-          ensureAltCosmeticPlanIsMutable();
-          altCosmeticPlan_.remove(index);
+      public Builder removeTpsWeaponList(int index) {
+        if (tpsWeaponListBuilder_ == null) {
+          ensureTpsWeaponListIsMutable();
+          tpsWeaponList_.remove(index);
           onChanged();
         } else {
-          altCosmeticPlanBuilder_.remove(index);
+          tpsWeaponListBuilder_.remove(index);
         }
         return this;
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder getAltCosmeticPlanBuilder(
+      public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder getTpsWeaponListBuilder(
           int index) {
-        return getAltCosmeticPlanFieldBuilder().getBuilder(index);
+        return getTpsWeaponListFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder getAltCosmeticPlanOrBuilder(
+      public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder getTpsWeaponListOrBuilder(
           int index) {
-        if (altCosmeticPlanBuilder_ == null) {
-          return altCosmeticPlan_.get(index);  } else {
-          return altCosmeticPlanBuilder_.getMessageOrBuilder(index);
+        if (tpsWeaponListBuilder_ == null) {
+          return tpsWeaponList_.get(index);  } else {
+          return tpsWeaponListBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
       public java.util.List<? extends emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder> 
-           getAltCosmeticPlanOrBuilderList() {
-        if (altCosmeticPlanBuilder_ != null) {
-          return altCosmeticPlanBuilder_.getMessageOrBuilderList();
+           getTpsWeaponListOrBuilderList() {
+        if (tpsWeaponListBuilder_ != null) {
+          return tpsWeaponListBuilder_.getMessageOrBuilderList();
         } else {
-          return java.util.Collections.unmodifiableList(altCosmeticPlan_);
+          return java.util.Collections.unmodifiableList(tpsWeaponList_);
         }
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder addAltCosmeticPlanBuilder() {
-        return getAltCosmeticPlanFieldBuilder().addBuilder(
+      public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder addTpsWeaponListBuilder() {
+        return getTpsWeaponListFieldBuilder().addBuilder(
             emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.getDefaultInstance());
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
-      public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder addAltCosmeticPlanBuilder(
+      public emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder addTpsWeaponListBuilder(
           int index) {
-        return getAltCosmeticPlanFieldBuilder().addBuilder(
+        return getTpsWeaponListFieldBuilder().addBuilder(
             index, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.getDefaultInstance());
       }
       /**
-       * <code>repeated .SceneWeaponInfo alt_cosmetic_plan = 31;</code>
+       * <code>repeated .SceneWeaponInfo tps_weapon_list = 31;</code>
        */
       public java.util.List<emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder> 
-           getAltCosmeticPlanBuilderList() {
-        return getAltCosmeticPlanFieldBuilder().getBuilderList();
+           getTpsWeaponListBuilderList() {
+        return getTpsWeaponListFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
           emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder> 
-          getAltCosmeticPlanFieldBuilder() {
-        if (altCosmeticPlanBuilder_ == null) {
-          altCosmeticPlanBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          getTpsWeaponListFieldBuilder() {
+        if (tpsWeaponListBuilder_ == null) {
+          tpsWeaponListBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfo.Builder, emu.grasscutter.net.proto.SceneWeaponInfoOuterClass.SceneWeaponInfoOrBuilder>(
-                  altCosmeticPlan_,
+                  tpsWeaponList_,
                   ((bitField0_ & 0x00001000) != 0),
                   getParentForChildren(),
                   isClean());
-          altCosmeticPlan_ = null;
+          tpsWeaponList_ = null;
         }
-        return altCosmeticPlanBuilder_;
+        return tpsWeaponListBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -5811,7 +5811,7 @@ public final class SceneAvatarInfoOuterClass {
       ".proto\032\032BeyondExpressionInfo.proto\032\024CurV" +
       "ehicleInfo.proto\032\030SceneReliquaryInfo.pro" +
       "to\032\025SceneWeaponInfo.proto\032\020ServerBuff.pr" +
-      "oto\032\033_BeyondCostumeSetInfo.proto\"\363\010\n\017Sce" +
+      "oto\032\033_BeyondCostumeSetInfo.proto\"\361\010\n\017Sce" +
       "neAvatarInfo\022\013\n\003uid\030\001 \001(\r\022\021\n\tavatar_id\030\002" +
       " \001(\r\022\014\n\004guid\030\003 \001(\004\022\017\n\007peer_id\030\004 \001(\r\022\025\n\re" +
       "quip_id_list\030\005 \003(\r\022\026\n\016skill_depot_id\030\006 \001" +
@@ -5836,12 +5836,12 @@ public final class SceneAvatarInfoOuterClass {
       "eSetInfo\022/\n\020_expression_list\030\034 \003(\0132\025.Bey" +
       "ondExpressionInfo\022!\n\031_special_proud_skil" +
       "l_list\030\035 \003(\r\022%\n\035_unlocked_skill_depot_id" +
-      "_list\030\036 \003(\r\022+\n\021alt_cosmetic_plan\030\037 \003(\0132\020" +
-      ".SceneWeaponInfo\0324\n\022SkillLevelMapEntry\022\013" +
-      "\n\003key\030\001 \001(\r\022\r\n\005value\030\002 \001(\r:\0028\001\032>\n\034ProudS" +
-      "killExtraLevelMapEntry\022\013\n\003key\030\001 \001(\r\022\r\n\005v" +
-      "alue\030\002 \001(\r:\0028\001B6\n\031emu.grasscutter.net.pr" +
-      "otoB\031SceneAvatarInfoOuterClassb\006proto3"
+      "_list\030\036 \003(\r\022)\n\017tps_weapon_list\030\037 \003(\0132\020.S" +
+      "ceneWeaponInfo\0324\n\022SkillLevelMapEntry\022\013\n\003" +
+      "key\030\001 \001(\r\022\r\n\005value\030\002 \001(\r:\0028\001\032>\n\034ProudSki" +
+      "llExtraLevelMapEntry\022\013\n\003key\030\001 \001(\r\022\r\n\005val" +
+      "ue\030\002 \001(\r:\0028\001B6\n\031emu.grasscutter.net.prot" +
+      "oB\031SceneAvatarInfoOuterClassb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -5859,7 +5859,7 @@ public final class SceneAvatarInfoOuterClass {
     internal_static_SceneAvatarInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_SceneAvatarInfo_descriptor,
-        new java.lang.String[] { "Uid", "AvatarId", "Guid", "PeerId", "EquipIdList", "SkillDepotId", "TalentIdList", "Weapon", "ReliquaryList", "CoreProudSkillLevel", "InherentProudSkillList", "SkillLevelMap", "ProudSkillExtraLevelMap", "ServerBuffList", "TeamResonanceList", "WearingFlycloakId", "BornTime", "CostumeId", "CurVehicleInfo", "ExcelInfo", "AnimHash", "TraceEffectId", "WeaponSkinId", "AvatarCostumeSet", "VoiceId", "CostumeSetList", "ExpressionList", "SpecialProudSkillList", "UnlockedSkillDepotIdList", "AltCosmeticPlan", });
+        new java.lang.String[] { "Uid", "AvatarId", "Guid", "PeerId", "EquipIdList", "SkillDepotId", "TalentIdList", "Weapon", "ReliquaryList", "CoreProudSkillLevel", "InherentProudSkillList", "SkillLevelMap", "ProudSkillExtraLevelMap", "ServerBuffList", "TeamResonanceList", "WearingFlycloakId", "BornTime", "CostumeId", "CurVehicleInfo", "ExcelInfo", "AnimHash", "TraceEffectId", "WeaponSkinId", "AvatarCostumeSet", "VoiceId", "CostumeSetList", "ExpressionList", "SpecialProudSkillList", "UnlockedSkillDepotIdList", "TpsWeaponList", });
     internal_static_SceneAvatarInfo_SkillLevelMapEntry_descriptor =
       internal_static_SceneAvatarInfo_descriptor.getNestedTypes().get(0);
     internal_static_SceneAvatarInfo_SkillLevelMapEntry_fieldAccessorTable = new

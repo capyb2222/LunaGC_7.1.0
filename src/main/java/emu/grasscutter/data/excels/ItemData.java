@@ -16,7 +16,8 @@ import lombok.Getter;
             "MaterialExcelConfigData.json",
             "WeaponExcelConfigData.json",
             "ReliquaryExcelConfigData.json",
-            "HomeWorldFurnitureExcelConfigData.json"
+            "HomeWorldFurnitureExcelConfigData.json",
+            "TpsWeaponExcelConfigData.json"
         })
 @Getter
 public class ItemData extends GameResource {

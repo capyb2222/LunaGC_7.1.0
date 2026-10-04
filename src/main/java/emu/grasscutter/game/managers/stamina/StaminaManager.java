@@ -6,6 +6,7 @@ import emu.grasscutter.game.avatar.Avatar;
 import emu.grasscutter.game.entity.*;
 import emu.grasscutter.game.player.*;
 import emu.grasscutter.game.props.*;
+import emu.grasscutter.game.tps.TpsAvatarSystem;
 import emu.grasscutter.game.world.Position;
 import emu.grasscutter.net.proto.EntityMoveInfoOuterClass.EntityMoveInfo;
 import emu.grasscutter.net.proto.MotionStateOuterClass.MotionState;
@@ -159,12 +160,27 @@ public class StaminaManager extends BasePlayerManager {
         lastSkillCasterId = skillCasterId;
     }
 
+    private boolean usesTpsStamina() {
+        var entity = player.getTeamManager().getCurrentAvatarEntity();
+        return entity != null && TpsAvatarSystem.isTpsAvatar(entity.getAvatar());
+    }
+
+    private PlayerProperty maxStaminaProperty() {
+        return usesTpsStamina() ? PlayerProperty.PROP_MAX_TPS_STAMINA : PlayerProperty.PROP_MAX_STAMINA;
+    }
+
+    private PlayerProperty currentStaminaProperty() {
+        return usesTpsStamina()
+                ? PlayerProperty.PROP_CUR_PERSIST_TPS_STAMINA
+                : PlayerProperty.PROP_CUR_PERSIST_STAMINA;
+    }
+
     public int getMaxCharacterStamina() {
-        return player.getProperty(PlayerProperty.PROP_MAX_STAMINA);
+        return player.getProperty(this.maxStaminaProperty());
     }
 
     public int getCurrentCharacterStamina() {
-        return player.getProperty(PlayerProperty.PROP_CUR_PERSIST_STAMINA);
+        return player.getProperty(this.currentStaminaProperty());
     }
 
     public int getMaxVehicleStamina() {
@@ -190,7 +206,7 @@ public class StaminaManager extends BasePlayerManager {
         var value = cur + amount;
         if (value > max)
             value = max;
-        this.player.setProperty(PlayerProperty.PROP_CUR_PERSIST_STAMINA, value);
+        this.player.setProperty(this.currentStaminaProperty(), value);
         return true;
     }
 
@@ -292,7 +308,7 @@ public class StaminaManager extends BasePlayerManager {
         }
 
         if (isCharacterStamina) {
-            player.setProperty(PlayerProperty.PROP_CUR_PERSIST_STAMINA, newStamina);
+            player.setProperty(this.currentStaminaProperty(), newStamina);
         } else {
             vehicleStamina = newStamina;
             session.send(new PacketVehicleStaminaNotify(vehicleId, ((float) newStamina) / 100));

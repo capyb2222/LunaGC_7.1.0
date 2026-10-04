@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_package = "emu.grasscutter.net.proto";
+option java_outer_classname = "TpsAmmunitionCountOuterClass";
+
+message TpsAmmunitionCount {
+	int32 count = 4;
+	uint32 ammunition_config_id = 8;
+}

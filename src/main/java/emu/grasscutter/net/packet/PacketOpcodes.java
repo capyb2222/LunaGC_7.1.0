@@ -2901,7 +2901,11 @@ public final class PacketOpcodes {
     public static final int PIHOBBKMLFN = 25984;
     public static final int PIOBEFIHDFC = 9592;
     public static final int PJCLLHHJAOC = 3771;
-    public static final int PJFEBILHHJJ = 21312;
+    public static final int TpsEquipChangeNotify = 21312;
+    public static final int WearTpsEquipReq = 20756;
+    public static final int WearTpsEquipRsp = 25902;
+    public static final int TpsRegionalPlaySupplyInfoNotify = 6579;
+    public static final int TpsAmmunitionChangeNotify = 24371;
     public static final int PJJNBFBOGCN = 6936;
     public static final int PJKDLDPHGMA = 21650;
     public static final int PJMNDBADAOM = 26157;

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option java_package = "emu.grasscutter.net.proto";
+option java_outer_classname = "AbilityMetaUpdateTpsWeaponAmmunitionOuterClass";
+
+import "TpsAmmunitionChange.proto";
+import "TpsAmmunitionUpdateType.proto";
+import "TpsWeaponAccessoryInfo.proto";
+
+message AbilityMetaUpdateTpsWeaponAmmunition {
+	TpsAmmunitionUpdateType update_type = 3;
+	bool FENKFADBDID = 7;
+	repeated TpsWeaponAccessoryInfo accessory_list = 8;
+	repeated TpsAmmunitionChange ammunition_list = 9;
+}

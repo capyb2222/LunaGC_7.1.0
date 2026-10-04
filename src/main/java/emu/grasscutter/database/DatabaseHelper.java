@@ -339,6 +339,10 @@ public final class DatabaseHelper {
         DatabaseHelper.saveGameAsync(avatar);
     }
 
+    public static void deleteAvatar(Avatar avatar) {
+        DatabaseManager.getGameDatastore().delete(avatar);
+    }
+
     public static List<Avatar> getAvatars(Player player) {
         return DatabaseManager.getGameDatastore()
                 .find(Avatar.class)

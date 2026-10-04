@@ -90,8 +90,14 @@ public class AvatarSkillDepotData extends GameResource {
     }
 
     public IntStream getSkillsAndEnergySkill() {
-        return IntStream.concat(this.skills.stream().mapToInt(i -> i), IntStream.of(this.energySkill))
-                .filter(skillId -> skillId > 0);
+        var skillIds =
+                IntStream.concat(this.skills.stream().mapToInt(i -> i), IntStream.of(this.energySkill))
+                        .filter(skillId -> skillId > 0)
+                        .toArray();
+        if (skillIds.length == 0 && this.attackModeSkill > 0) {
+            return IntStream.of(this.attackModeSkill);
+        }
+        return IntStream.of(skillIds);
     }
 
     @Getter

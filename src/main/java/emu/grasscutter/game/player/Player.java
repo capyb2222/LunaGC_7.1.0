@@ -32,6 +32,8 @@ import emu.grasscutter.game.quest.QuestManager;
 import emu.grasscutter.game.quest.enums.*;
 import emu.grasscutter.game.shop.ShopLimit;
 import emu.grasscutter.game.talk.TalkManager;
+import emu.grasscutter.game.tps.TpsAvatarSystem;
+import emu.grasscutter.game.tps.TpsWeaponSystem;
 import emu.grasscutter.game.tower.*;
 import emu.grasscutter.game.world.*;
 import emu.grasscutter.net.packet.BasePacket;
@@ -121,6 +123,11 @@ public class Player implements PlayerHook, FieldFetch {
     @Getter private Map<Integer, ActiveCookCompoundData> activeCookCompounds;
     @Getter private Map<Integer, Integer> questGlobalVariables;
     @Getter private Map<Integer, Integer> openStates;
+    private Map<Integer, Integer> tpsAmmunition;
+    private List<Integer> tpsLoadout;
+    private Map<Integer, Integer> tpsMagazines;
+    @Transient private final Map<Integer, Integer> tpsAmmunitionSent = new HashMap<>();
+    @Transient @Getter @Setter private boolean tpsLoadoutPending;
     @Getter @Setter private Map<Integer, Set<Integer>> unlockedSceneAreas;
     @Getter @Setter private Map<Integer, Set<Integer>> unlockedScenePoints;
     @Getter @Setter private List<Integer> chatEmojiIdList;
@@ -593,6 +600,9 @@ public class Player implements PlayerHook, FieldFetch {
                 this.getProperty(PlayerProperty.PROP_DIVE_MAX_STAMINA));
         this.setProperty(PlayerProperty.PROP_CUR_PHLOGISTON,
             this.getProperty(PlayerProperty.PROP_PHLOGISTON_MAX_VALUE));
+        this.setProperty(PlayerProperty.PROP_MAX_TPS_STAMINA, TpsAvatarSystem.getStaminaLimit());
+        this.setProperty(PlayerProperty.PROP_CUR_PERSIST_TPS_STAMINA,
+            this.getProperty(PlayerProperty.PROP_MAX_TPS_STAMINA));
     }
 
     private void applyStartingSceneTags() {
@@ -1316,6 +1326,31 @@ public class Player implements PlayerHook, FieldFetch {
         this.getTeamManager().setPlayer(this);
     }
 
+    public Map<Integer, Integer> getTpsAmmunition() {
+        if (this.tpsAmmunition == null) {
+            this.tpsAmmunition = new HashMap<>();
+        }
+        return this.tpsAmmunition;
+    }
+
+    public Map<Integer, Integer> getTpsMagazines() {
+        if (this.tpsMagazines == null) {
+            this.tpsMagazines = new HashMap<>();
+        }
+        return this.tpsMagazines;
+    }
+
+    public Map<Integer, Integer> getTpsAmmunitionSent() {
+        return this.tpsAmmunitionSent;
+    }
+
+    public List<Integer> getTpsLoadout() {
+        if (this.tpsLoadout == null) {
+            this.tpsLoadout = new ArrayList<>();
+        }
+        return this.tpsLoadout;
+    }
+
     public void save() {
         DatabaseHelper.savePlayer(this);
     }
@@ -1359,6 +1394,17 @@ public class Player implements PlayerHook, FieldFetch {
     public void onLogin() {
 
         this.applyStartingSceneTags();
+
+        this.getTeamManager().removeUnownedAvatarsFromTeams();
+        TpsWeaponSystem.clearNonTpsWearers(this);
+        this.setProperty(PlayerProperty.PROP_MAX_TPS_STAMINA, TpsAvatarSystem.getStaminaLimit(), false);
+        this.setProperty(
+                PlayerProperty.PROP_CUR_PERSIST_TPS_STAMINA, TpsAvatarSystem.getStaminaLimit(), false);
+
+        if (TpsAvatarSystem.isTpsScene(GameData.getSceneDataMap().get(this.getSceneId()))) {
+            this.setSceneId(this.prevScene <= 0 ? 3 : this.prevScene);
+            this.position.set(ScriptLoader.getSceneMeta(this.getSceneId()).config.born_pos);
+        }
 
         if (GameHome.HOME_SCENE_IDS.contains(this.getSceneId())) {
             this.setSceneId(this.prevScene <= 0 ? 3 : this.prevScene);
@@ -1449,7 +1495,12 @@ public class Player implements PlayerHook, FieldFetch {
 
             getStaminaManager().stopSustainedStaminaHandler();
 
-            this.getServer().getDungeonSystem().exitDungeon(this);
+            try {
+                this.getServer().getDungeonSystem().exitDungeon(this);
+            } catch (Exception e) {
+                Grasscutter.getLogger()
+                        .warn("Player (UID {}) could not leave the dungeon on logout", this.getUid(), e);
+            }
 
             if (this.getWorld() != null) {
                 this.getWorld().removePlayer(this);
@@ -1526,6 +1577,7 @@ public class Player implements PlayerHook, FieldFetch {
             return switch (prop) {
                 case PROP_CUR_SPRING_VOLUME -> getProperty(PlayerProperty.PROP_MAX_SPRING_VOLUME);
                 case PROP_CUR_PERSIST_STAMINA -> getProperty(PlayerProperty.PROP_MAX_STAMINA);
+                case PROP_CUR_PERSIST_TPS_STAMINA -> getProperty(PlayerProperty.PROP_MAX_TPS_STAMINA);
                 default -> 0;
             };
         } else {

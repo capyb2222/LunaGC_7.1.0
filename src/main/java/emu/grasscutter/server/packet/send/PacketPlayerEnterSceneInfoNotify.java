@@ -12,6 +12,7 @@ import emu.grasscutter.game.entity.EntityAvatar;
 import emu.grasscutter.game.inventory.GameItem;
 import emu.grasscutter.game.player.Player;
 import emu.grasscutter.game.player.TeamManager;
+import emu.grasscutter.game.tps.TpsWeaponSystem;
 import emu.grasscutter.net.packet.*;
 import emu.grasscutter.net.proto.AbilityAppliedAbilityOuterClass.AbilityAppliedAbility;
 import emu.grasscutter.net.proto.AbilitySyncStateInfoOuterClass.AbilitySyncStateInfo;
@@ -137,6 +138,8 @@ public class PacketPlayerEnterSceneInfoNotify extends BasePacket {
                             .setWeaponEntityId(avatarEntity.getWeaponEntityId())
                             .setAvatarAbilityInfo(avatarAbilityInfo)
                             .setWeaponAbilityInfo(AbilitySyncStateInfo.newBuilder())
+                            .addAllTpsWeaponList(
+                                    TpsWeaponSystem.getSceneWeaponInfos(avatarEntity.getAvatar()))
                             .build();
 
             proto.addAvatarEnterInfo(avatarInfo);

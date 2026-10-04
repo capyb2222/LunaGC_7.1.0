@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_package = "emu.grasscutter.net.proto";
+option java_outer_classname = "WearTpsEquipReqOuterClass";
+
+message WearTpsEquipReq {
+	uint64 avatar_guid = 5;
+	repeated uint64 equip_guid_list = 13;
+}

@@ -2,6 +2,7 @@ package emu.grasscutter.server.packet.recv;
 
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.game.player.Player.SceneLoadState;
+import emu.grasscutter.game.tps.TpsWeaponSystem;
 import emu.grasscutter.net.packet.*;
 import emu.grasscutter.net.proto.EnterSceneDoneReqOuterClass.EnterSceneDoneReq;
 import emu.grasscutter.server.game.GameSession;
@@ -55,6 +56,8 @@ public class HandlerEnterSceneDoneReq extends PacketHandler {
         }
 
         player.resetSendPlayerLocTime();
+
+        TpsWeaponSystem.sendSceneAmmunition(player);
 
         session.send(new PacketEnterSceneDoneRsp(player));
     }

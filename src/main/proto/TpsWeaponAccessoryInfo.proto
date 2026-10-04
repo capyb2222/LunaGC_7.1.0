@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_package = "emu.grasscutter.net.proto";
+option java_outer_classname = "TpsWeaponAccessoryInfoOuterClass";
+
+message TpsWeaponAccessoryInfo {
+	uint32 ammunition_type = 7;
+	uint32 ammunition_config_id = 11;
+	uint32 weapon_entity_id = 12;
+	uint32 current_ammunition = 14;
+}

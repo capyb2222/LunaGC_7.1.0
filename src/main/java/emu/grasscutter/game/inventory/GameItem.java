@@ -9,6 +9,7 @@ import emu.grasscutter.database.DatabaseHelper;
 import emu.grasscutter.game.entity.EntityWeapon;
 import emu.grasscutter.game.player.Player;
 import emu.grasscutter.game.props.FightProperty;
+import emu.grasscutter.game.tps.TpsWeaponSystem;
 import emu.grasscutter.net.proto.AbilitySyncStateInfoOuterClass.AbilitySyncStateInfo;
 import emu.grasscutter.net.proto.EquipOuterClass.Equip;
 import emu.grasscutter.net.proto.FurnitureOuterClass.Furniture;
@@ -50,6 +51,7 @@ public class GameItem {
     @Getter private List<Integer> appendPropIdList;
 
     @Getter @Setter private int equipCharacter;
+    @Setter private List<Integer> tpsAccessoryIds;
     @Transient @Getter @Setter private EntityWeapon weaponEntity;
     @Transient @Getter private boolean newItem = false;
 
@@ -92,6 +94,11 @@ public class GameItem {
                     }
                 }
                 break;
+            case ITEM_TPS_WEAPON:
+                this.count = 1;
+                this.level = 1;
+                this.tpsAccessoryIds = new ArrayList<>();
+                break;
             case ITEM_RELIQUARY:
                 this.count = 1;
                 this.level = 1;
@@ -121,6 +128,13 @@ public class GameItem {
         if (inventory.getItemById(this.itemId) == null) {
             this.newItem = true;
         }
+    }
+
+    public List<Integer> getTpsAccessoryIds() {
+        if (this.tpsAccessoryIds == null) {
+            this.tpsAccessoryIds = new ArrayList<>();
+        }
+        return this.tpsAccessoryIds;
     }
 
     public ObjectId getObjectId() {
@@ -329,6 +343,9 @@ public class GameItem {
             case ITEM_RELIQUARY:
                 Reliquary relic = this.toReliquaryProto();
                 proto.setEquip(Equip.newBuilder().setReliquary(relic).setIsLocked(this.isLocked()).build());
+                break;
+            case ITEM_TPS_WEAPON:
+                proto.setTpsWeapon(TpsWeaponSystem.toTpsWeaponProto(this));
                 break;
             case ITEM_FURNITURE:
                 Furniture furniture = Furniture.newBuilder().setCount(getCount()).build();

@@ -4,6 +4,6 @@ option java_package = "emu.grasscutter.net.proto";
 option java_outer_classname = "_TpsWeaponOuterClass";
 
 message _TpsWeapon {
-	repeated uint32 OMDPJNIPFDL = 2;
+	repeated uint32 accessory_id_list = 2;
 	map<uint32, uint32> affix_map = 3;
 }

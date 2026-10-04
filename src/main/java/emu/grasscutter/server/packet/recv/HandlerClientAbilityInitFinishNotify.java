@@ -2,6 +2,7 @@ package emu.grasscutter.server.packet.recv;
 
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.game.player.Player;
+import emu.grasscutter.game.tps.TpsAvatarSystem;
 import emu.grasscutter.net.packet.*;
 import emu.grasscutter.net.proto.AbilityInvokeEntryOuterClass.AbilityInvokeEntry;
 import emu.grasscutter.net.proto.ClientAbilityInitFinishNotifyOuterClass.ClientAbilityInitFinishNotify;
@@ -22,6 +23,8 @@ public class HandlerClientAbilityInitFinishNotify extends PacketHandler {
             player.getAbilityManager().onAbilityInvoke(entry);
             player.getClientAbilityInitFinishHandler().addEntry(entry.getForwardType(), entry);
         }
+
+        TpsAvatarSystem.onAbilityInitFinish(player);
 
         if (notif.getInvokesList().size() > 0) {
             session.getPlayer().getClientAbilityInitFinishHandler().update(session.getPlayer());

@@ -41,5 +41,5 @@ message SceneAvatarInfo {
 	repeated BeyondExpressionInfo _expression_list = 28;
 	repeated uint32 _special_proud_skill_list = 29;
 	repeated uint32 _unlocked_skill_depot_id_list = 30;
-	repeated SceneWeaponInfo alt_cosmetic_plan = 31;
+	repeated SceneWeaponInfo tps_weapon_list = 31;
 }

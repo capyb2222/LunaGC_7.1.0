@@ -12,6 +12,7 @@ import emu.grasscutter.game.inventory.GameItem;
 import emu.grasscutter.game.player.Player;
 import emu.grasscutter.game.props.*;
 import emu.grasscutter.game.quest.enums.*;
+import emu.grasscutter.game.tps.TpsAvatarSystem;
 import emu.grasscutter.game.world.*;
 import emu.grasscutter.scripts.constants.EventType;
 import emu.grasscutter.scripts.data.ScriptArgs;
@@ -229,6 +230,15 @@ public final class DungeonManager {
 
     public void applyTrialTeam(Player player) {
         if (getDungeonData() == null) return;
+
+        var tpsTeam = TpsAvatarSystem.getTrialTeam(player, this.scene);
+        if (tpsTeam != null) {
+            this.trialTeam = tpsTeam;
+            player.getTeamManager().addTrialAvatars(tpsTeam.getTrialAvatarIds());
+            return;
+        }
+
+        if (getDungeonData().getType() == null) return;
 
         switch (getDungeonData().getType()) {
             case DUNGEON_ACTIVITY -> {

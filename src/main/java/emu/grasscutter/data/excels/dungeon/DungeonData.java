@@ -1,5 +1,6 @@
 package emu.grasscutter.data.excels.dungeon;
 
+import emu.grasscutter.data.common.PointData;
 import emu.grasscutter.data.*;
 import emu.grasscutter.data.excels.RewardPreviewData;
 import emu.grasscutter.game.dungeons.enums.*;
@@ -64,11 +65,37 @@ public class DungeonData extends GameResource {
     }
 
     public Position getStartPosition() {
-        return SceneMeta.of(this.getSceneId()).config.born_pos;
+        var meta = SceneMeta.of(this.getSceneId());
+        if (meta != null && meta.config != null && meta.config.born_pos != null) {
+            return meta.config.born_pos;
+        }
+        var entry = this.getEntryPoint();
+        return entry != null ? entry.getTranPos() : null;
     }
 
     public Position getStartRotation() {
-        return SceneMeta.of(this.getSceneId()).config.born_rot;
+        var meta = SceneMeta.of(this.getSceneId());
+        if (meta != null && meta.config != null && meta.config.born_rot != null) {
+            return meta.config.born_rot;
+        }
+        var entry = this.getEntryPoint();
+        return entry != null ? entry.getTranRot() : null;
+    }
+
+    private PointData getEntryPoint() {
+        var pointIds = GameData.getScenePointsPerScene().get(this.getSceneId());
+        if (pointIds == null) return null;
+
+        PointData fallback = null;
+        for (int pointId : pointIds) {
+            var entry = GameData.getScenePointEntryById(this.getSceneId(), pointId);
+            if (entry == null || entry.getPointData() == null) continue;
+            var point = entry.getPointData();
+            if (point.getTranPos() == null) continue;
+            if ("DungeonEntry".equals(point.getType())) return point;
+            if (fallback == null) fallback = point;
+        }
+        return fallback;
     }
 
     @Override

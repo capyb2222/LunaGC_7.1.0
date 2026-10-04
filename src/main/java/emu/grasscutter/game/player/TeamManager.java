@@ -11,6 +11,7 @@ import emu.grasscutter.data.excels.avatar.AvatarSkillDepotData;
 import emu.grasscutter.game.avatar.Avatar;
 import emu.grasscutter.game.entity.*;
 import emu.grasscutter.game.props.*;
+import emu.grasscutter.game.tps.TpsAvatarSystem;
 import emu.grasscutter.game.world.*;
 import emu.grasscutter.net.packet.*;
 import emu.grasscutter.net.proto.*;
@@ -173,6 +174,19 @@ public final class TeamManager extends BasePlayerDataManager {
 
     public TeamInfo getCurrentSinglePlayerTeamInfo() {
         return this.getTeams().get(this.currentTeamIndex);
+    }
+
+    public boolean removeUnownedAvatarsFromTeams() {
+        var owned = this.getPlayer().getAvatars();
+        boolean changed = false;
+        for (TeamInfo team : this.getTeams().values()) {
+            changed |= team.getAvatars().removeIf(id -> owned.getAvatarById(id) == null);
+            if (team.getAvatars().isEmpty() && team == this.getCurrentSinglePlayerTeamInfo()) {
+                var main = owned.getAvatarById(this.getPlayer().getMainCharacterId());
+                if (main != null) team.getAvatars().add(main.getAvatarId());
+            }
+        }
+        return changed;
     }
 
     public List<EntityAvatar> getActiveTeam() {
@@ -557,12 +571,16 @@ public final class TeamManager extends BasePlayerDataManager {
         this.getActiveTeam().removeIf(x -> x.getAvatar().getAvatarId() == trialAvatar.getAvatarId());
         this.getCurrentTeamInfo().getAvatars().removeIf(x -> x == trialAvatar.getAvatarId());
 
-        this.getActiveTeam()
-            .add(
-                EntityCreationEvent.call(
-                    EntityAvatar.class,
-                    new Class<?>[] {Scene.class, Avatar.class},
-                    new Object[] {player.getScene(), trialAvatar}));
+        var trialEntity =
+            EntityCreationEvent.call(
+                EntityAvatar.class,
+                new Class<?>[] {Scene.class, Avatar.class},
+                new Object[] {player.getScene(), trialAvatar});
+        if (trialEntity == null) {
+            throw new IllegalStateException(
+                "Unable to create an entity for trial avatar " + trialAvatar.getAvatarId());
+        }
+        this.getActiveTeam().add(trialEntity);
         this.getCurrentTeamInfo().addAvatar(trialAvatar);
         this.getTrialAvatars().put(trialAvatar.getAvatarId(), trialAvatar);
     }
@@ -602,6 +620,7 @@ public final class TeamManager extends BasePlayerDataManager {
 
         this.usingTrialTeam = false;
         this.trialAvatarTeam = new TeamInfo();
+        this.removeUnownedAvatarsFromTeams();
 
         this.getActiveTeam()
             .forEach(
@@ -1084,6 +1103,7 @@ public final class TeamManager extends BasePlayerDataManager {
 
         avatar.setTrialAvatarInfo(trialAvatarBasicParam.get(1), avatarId, reason, questMainId);
         avatar.equipTrialItems();
+        TpsAvatarSystem.onTrialAvatarCreated(avatar);
 
         avatar.recalcStats();
 
@@ -1124,6 +1144,7 @@ public final class TeamManager extends BasePlayerDataManager {
             });
 
         this.trialAvatarTeamPostUpdate(questId != 0 ? this.getActiveTeam().size() - 1 : 0);
+        TpsAvatarSystem.onTrialTeamReady(this.getPlayer());
     }
 
     public void removeTrialAvatar() {

@@ -4,6 +4,7 @@ import emu.grasscutter.data.*;
 import emu.grasscutter.data.ResourceType.LoadPriority;
 import emu.grasscutter.data.common.PropGrowCurve;
 import emu.grasscutter.game.props.*;
+import emu.grasscutter.game.tps.TpsAvatarSystem;
 import emu.grasscutter.utils.Utils;
 import it.unimi.dsi.fastutil.ints.*;
 import lombok.Getter;
@@ -159,7 +160,8 @@ public class AvatarData extends GameResource {
     public void buildEmbryo() {
         var split = this.iconName.split("_");
         if (split.length > 0) {
-            this.name = split[split.length - 1];
+            var tpsConfigName = TpsAvatarSystem.getConfigName(this.id);
+            this.name = tpsConfigName != null ? tpsConfigName : split[split.length - 1];
 
             var info = GameData.getAbilityEmbryoInfo().get(this.name);
             if (info != null) {

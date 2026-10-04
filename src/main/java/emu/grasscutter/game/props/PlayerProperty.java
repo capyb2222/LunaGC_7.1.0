@@ -66,7 +66,9 @@ public enum PlayerProperty {
         PROP_PHLOGISTON_ENABLE(10052, 0, 1), 
         PROP_PHLOGISTON_MAX_VALUE(
                 10053, 0, 10000),
-                PROP_CUR_PHLOGISTON                     (10054);
+                PROP_CUR_PHLOGISTON(10054),
+    PROP_MAX_TPS_STAMINA(10080, 0),
+    PROP_CUR_PERSIST_TPS_STAMINA(10081, true);
 
     private static final int inf = Integer.MAX_VALUE;
     private static final Int2ObjectMap<PlayerProperty> map = new Int2ObjectOpenHashMap<>();

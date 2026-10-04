@@ -20,6 +20,13 @@ public final class ActionTriggerAbility extends AbilityActionHandler {
             return false;
         }
         
+        if (target == null || action.abilityName == null) return false;
+        if (target == ability.getOwner()
+                && ability.getData() != null
+                && action.abilityName.equals(ability.getData().abilityName)) {
+            return true;
+        }
+
         player.getWorld().getHost().getAbilityManager().addAbilityToEntity(target, action.abilityName);
         
         return true;

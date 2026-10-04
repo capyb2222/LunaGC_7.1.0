@@ -19,21 +19,21 @@ public final class _TpsWeaponOuterClass {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
-     * @return A list containing the oMDPJNIPFDL.
+     * <code>repeated uint32 accessory_id_list = 2;</code>
+     * @return A list containing the accessoryIdList.
      */
-    java.util.List<java.lang.Integer> getOMDPJNIPFDLList();
+    java.util.List<java.lang.Integer> getAccessoryIdListList();
     /**
-     * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
-     * @return The count of oMDPJNIPFDL.
+     * <code>repeated uint32 accessory_id_list = 2;</code>
+     * @return The count of accessoryIdList.
      */
-    int getOMDPJNIPFDLCount();
+    int getAccessoryIdListCount();
     /**
-     * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
+     * <code>repeated uint32 accessory_id_list = 2;</code>
      * @param index The index of the element to return.
-     * @return The oMDPJNIPFDL at the given index.
+     * @return The accessoryIdList at the given index.
      */
-    int getOMDPJNIPFDL(int index);
+    int getAccessoryIdList(int index);
 
     /**
      * <code>map&lt;uint32, uint32&gt; affix_map = 3;</code>
@@ -82,7 +82,7 @@ public final class _TpsWeaponOuterClass {
       super(builder);
     }
     private _TpsWeapon() {
-      oMDPJNIPFDL_ = emptyIntList();
+      accessoryIdList_ = emptyIntList();
     }
 
     @java.lang.Override
@@ -118,21 +118,21 @@ public final class _TpsWeaponOuterClass {
               break;
             case 16: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                oMDPJNIPFDL_ = newIntList();
+                accessoryIdList_ = newIntList();
                 mutable_bitField0_ |= 0x00000001;
               }
-              oMDPJNIPFDL_.addInt(input.readUInt32());
+              accessoryIdList_.addInt(input.readUInt32());
               break;
             }
             case 18: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
-                oMDPJNIPFDL_ = newIntList();
+                accessoryIdList_ = newIntList();
                 mutable_bitField0_ |= 0x00000001;
               }
               while (input.getBytesUntilLimit() > 0) {
-                oMDPJNIPFDL_.addInt(input.readUInt32());
+                accessoryIdList_.addInt(input.readUInt32());
               }
               input.popLimit(limit);
               break;
@@ -166,7 +166,7 @@ public final class _TpsWeaponOuterClass {
             e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          oMDPJNIPFDL_.makeImmutable(); // C
+          accessoryIdList_.makeImmutable(); // C
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -197,33 +197,33 @@ public final class _TpsWeaponOuterClass {
               emu.grasscutter.net.proto._TpsWeaponOuterClass._TpsWeapon.class, emu.grasscutter.net.proto._TpsWeaponOuterClass._TpsWeapon.Builder.class);
     }
 
-    public static final int OMDPJNIPFDL_FIELD_NUMBER = 2;
-    private com.google.protobuf.Internal.IntList oMDPJNIPFDL_;
+    public static final int ACCESSORY_ID_LIST_FIELD_NUMBER = 2;
+    private com.google.protobuf.Internal.IntList accessoryIdList_;
     /**
-     * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
-     * @return A list containing the oMDPJNIPFDL.
+     * <code>repeated uint32 accessory_id_list = 2;</code>
+     * @return A list containing the accessoryIdList.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
-        getOMDPJNIPFDLList() {
-      return oMDPJNIPFDL_;
+        getAccessoryIdListList() {
+      return accessoryIdList_;
     }
     /**
-     * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
-     * @return The count of oMDPJNIPFDL.
+     * <code>repeated uint32 accessory_id_list = 2;</code>
+     * @return The count of accessoryIdList.
      */
-    public int getOMDPJNIPFDLCount() {
-      return oMDPJNIPFDL_.size();
+    public int getAccessoryIdListCount() {
+      return accessoryIdList_.size();
     }
     /**
-     * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
+     * <code>repeated uint32 accessory_id_list = 2;</code>
      * @param index The index of the element to return.
-     * @return The oMDPJNIPFDL at the given index.
+     * @return The accessoryIdList at the given index.
      */
-    public int getOMDPJNIPFDL(int index) {
-      return oMDPJNIPFDL_.getInt(index);
+    public int getAccessoryIdList(int index) {
+      return accessoryIdList_.getInt(index);
     }
-    private int oMDPJNIPFDLMemoizedSerializedSize = -1;
+    private int accessoryIdListMemoizedSerializedSize = -1;
 
     public static final int AFFIX_MAP_FIELD_NUMBER = 3;
     private static final class AffixMapDefaultEntryHolder {
@@ -321,12 +321,12 @@ public final class _TpsWeaponOuterClass {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      if (getOMDPJNIPFDLList().size() > 0) {
+      if (getAccessoryIdListList().size() > 0) {
         output.writeUInt32NoTag(18);
-        output.writeUInt32NoTag(oMDPJNIPFDLMemoizedSerializedSize);
+        output.writeUInt32NoTag(accessoryIdListMemoizedSerializedSize);
       }
-      for (int i = 0; i < oMDPJNIPFDL_.size(); i++) {
-        output.writeUInt32NoTag(oMDPJNIPFDL_.getInt(i));
+      for (int i = 0; i < accessoryIdList_.size(); i++) {
+        output.writeUInt32NoTag(accessoryIdList_.getInt(i));
       }
       com.google.protobuf.GeneratedMessageV3
         .serializeIntegerMapTo(
@@ -345,17 +345,17 @@ public final class _TpsWeaponOuterClass {
       size = 0;
       {
         int dataSize = 0;
-        for (int i = 0; i < oMDPJNIPFDL_.size(); i++) {
+        for (int i = 0; i < accessoryIdList_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeUInt32SizeNoTag(oMDPJNIPFDL_.getInt(i));
+            .computeUInt32SizeNoTag(accessoryIdList_.getInt(i));
         }
         size += dataSize;
-        if (!getOMDPJNIPFDLList().isEmpty()) {
+        if (!getAccessoryIdListList().isEmpty()) {
           size += 1;
           size += com.google.protobuf.CodedOutputStream
               .computeInt32SizeNoTag(dataSize);
         }
-        oMDPJNIPFDLMemoizedSerializedSize = dataSize;
+        accessoryIdListMemoizedSerializedSize = dataSize;
       }
       for (java.util.Map.Entry<java.lang.Integer, java.lang.Integer> entry
            : internalGetAffixMap().getMap().entrySet()) {
@@ -382,8 +382,8 @@ public final class _TpsWeaponOuterClass {
       }
       emu.grasscutter.net.proto._TpsWeaponOuterClass._TpsWeapon other = (emu.grasscutter.net.proto._TpsWeaponOuterClass._TpsWeapon) obj;
 
-      if (!getOMDPJNIPFDLList()
-          .equals(other.getOMDPJNIPFDLList())) return false;
+      if (!getAccessoryIdListList()
+          .equals(other.getAccessoryIdListList())) return false;
       if (!internalGetAffixMap().equals(
           other.internalGetAffixMap())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -397,9 +397,9 @@ public final class _TpsWeaponOuterClass {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      if (getOMDPJNIPFDLCount() > 0) {
-        hash = (37 * hash) + OMDPJNIPFDL_FIELD_NUMBER;
-        hash = (53 * hash) + getOMDPJNIPFDLList().hashCode();
+      if (getAccessoryIdListCount() > 0) {
+        hash = (37 * hash) + ACCESSORY_ID_LIST_FIELD_NUMBER;
+        hash = (53 * hash) + getAccessoryIdListList().hashCode();
       }
       if (!internalGetAffixMap().getMap().isEmpty()) {
         hash = (37 * hash) + AFFIX_MAP_FIELD_NUMBER;
@@ -560,7 +560,7 @@ public final class _TpsWeaponOuterClass {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        oMDPJNIPFDL_ = emptyIntList();
+        accessoryIdList_ = emptyIntList();
         bitField0_ = (bitField0_ & ~0x00000001);
         internalGetMutableAffixMap().clear();
         return this;
@@ -591,10 +591,10 @@ public final class _TpsWeaponOuterClass {
         emu.grasscutter.net.proto._TpsWeaponOuterClass._TpsWeapon result = new emu.grasscutter.net.proto._TpsWeaponOuterClass._TpsWeapon(this);
         int from_bitField0_ = bitField0_;
         if (((bitField0_ & 0x00000001) != 0)) {
-          oMDPJNIPFDL_.makeImmutable();
+          accessoryIdList_.makeImmutable();
           bitField0_ = (bitField0_ & ~0x00000001);
         }
-        result.oMDPJNIPFDL_ = oMDPJNIPFDL_;
+        result.accessoryIdList_ = accessoryIdList_;
         result.affixMap_ = internalGetAffixMap();
         result.affixMap_.makeImmutable();
         onBuilt();
@@ -645,13 +645,13 @@ public final class _TpsWeaponOuterClass {
 
       public Builder mergeFrom(emu.grasscutter.net.proto._TpsWeaponOuterClass._TpsWeapon other) {
         if (other == emu.grasscutter.net.proto._TpsWeaponOuterClass._TpsWeapon.getDefaultInstance()) return this;
-        if (!other.oMDPJNIPFDL_.isEmpty()) {
-          if (oMDPJNIPFDL_.isEmpty()) {
-            oMDPJNIPFDL_ = other.oMDPJNIPFDL_;
+        if (!other.accessoryIdList_.isEmpty()) {
+          if (accessoryIdList_.isEmpty()) {
+            accessoryIdList_ = other.accessoryIdList_;
             bitField0_ = (bitField0_ & ~0x00000001);
           } else {
-            ensureOMDPJNIPFDLIsMutable();
-            oMDPJNIPFDL_.addAll(other.oMDPJNIPFDL_);
+            ensureAccessoryIdListIsMutable();
+            accessoryIdList_.addAll(other.accessoryIdList_);
           }
           onChanged();
         }
@@ -687,80 +687,80 @@ public final class _TpsWeaponOuterClass {
       }
       private int bitField0_;
 
-      private com.google.protobuf.Internal.IntList oMDPJNIPFDL_ = emptyIntList();
-      private void ensureOMDPJNIPFDLIsMutable() {
+      private com.google.protobuf.Internal.IntList accessoryIdList_ = emptyIntList();
+      private void ensureAccessoryIdListIsMutable() {
         if (!((bitField0_ & 0x00000001) != 0)) {
-          oMDPJNIPFDL_ = mutableCopy(oMDPJNIPFDL_);
+          accessoryIdList_ = mutableCopy(accessoryIdList_);
           bitField0_ |= 0x00000001;
          }
       }
       /**
-       * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
-       * @return A list containing the oMDPJNIPFDL.
+       * <code>repeated uint32 accessory_id_list = 2;</code>
+       * @return A list containing the accessoryIdList.
        */
       public java.util.List<java.lang.Integer>
-          getOMDPJNIPFDLList() {
+          getAccessoryIdListList() {
         return ((bitField0_ & 0x00000001) != 0) ?
-                 java.util.Collections.unmodifiableList(oMDPJNIPFDL_) : oMDPJNIPFDL_;
+                 java.util.Collections.unmodifiableList(accessoryIdList_) : accessoryIdList_;
       }
       /**
-       * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
-       * @return The count of oMDPJNIPFDL.
+       * <code>repeated uint32 accessory_id_list = 2;</code>
+       * @return The count of accessoryIdList.
        */
-      public int getOMDPJNIPFDLCount() {
-        return oMDPJNIPFDL_.size();
+      public int getAccessoryIdListCount() {
+        return accessoryIdList_.size();
       }
       /**
-       * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
+       * <code>repeated uint32 accessory_id_list = 2;</code>
        * @param index The index of the element to return.
-       * @return The oMDPJNIPFDL at the given index.
+       * @return The accessoryIdList at the given index.
        */
-      public int getOMDPJNIPFDL(int index) {
-        return oMDPJNIPFDL_.getInt(index);
+      public int getAccessoryIdList(int index) {
+        return accessoryIdList_.getInt(index);
       }
       /**
-       * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
+       * <code>repeated uint32 accessory_id_list = 2;</code>
        * @param index The index to set the value at.
-       * @param value The oMDPJNIPFDL to set.
+       * @param value The accessoryIdList to set.
        * @return This builder for chaining.
        */
-      public Builder setOMDPJNIPFDL(
+      public Builder setAccessoryIdList(
           int index, int value) {
-        ensureOMDPJNIPFDLIsMutable();
-        oMDPJNIPFDL_.setInt(index, value);
+        ensureAccessoryIdListIsMutable();
+        accessoryIdList_.setInt(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
-       * @param value The oMDPJNIPFDL to add.
+       * <code>repeated uint32 accessory_id_list = 2;</code>
+       * @param value The accessoryIdList to add.
        * @return This builder for chaining.
        */
-      public Builder addOMDPJNIPFDL(int value) {
-        ensureOMDPJNIPFDLIsMutable();
-        oMDPJNIPFDL_.addInt(value);
+      public Builder addAccessoryIdList(int value) {
+        ensureAccessoryIdListIsMutable();
+        accessoryIdList_.addInt(value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
-       * @param values The oMDPJNIPFDL to add.
+       * <code>repeated uint32 accessory_id_list = 2;</code>
+       * @param values The accessoryIdList to add.
        * @return This builder for chaining.
        */
-      public Builder addAllOMDPJNIPFDL(
+      public Builder addAllAccessoryIdList(
           java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensureOMDPJNIPFDLIsMutable();
+        ensureAccessoryIdListIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, oMDPJNIPFDL_);
+            values, accessoryIdList_);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated uint32 OMDPJNIPFDL = 2;</code>
+       * <code>repeated uint32 accessory_id_list = 2;</code>
        * @return This builder for chaining.
        */
-      public Builder clearOMDPJNIPFDL() {
-        oMDPJNIPFDL_ = emptyIntList();
+      public Builder clearAccessoryIdList() {
+        accessoryIdList_ = emptyIntList();
         bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
@@ -965,12 +965,12 @@ public final class _TpsWeaponOuterClass {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020_TpsWeapon.proto\"\200\001\n\n_TpsWeapon\022\023\n\013OMD" +
-      "PJNIPFDL\030\002 \003(\r\022,\n\taffix_map\030\003 \003(\0132\031._Tps" +
-      "Weapon.AffixMapEntry\032/\n\rAffixMapEntry\022\013\n" +
-      "\003key\030\001 \001(\r\022\r\n\005value\030\002 \001(\r:\0028\001B1\n\031emu.gra" +
-      "sscutter.net.protoB\024_TpsWeaponOuterClass" +
-      "b\006proto3"
+      "\n\020_TpsWeapon.proto\"\206\001\n\n_TpsWeapon\022\031\n\021acc" +
+      "essory_id_list\030\002 \003(\r\022,\n\taffix_map\030\003 \003(\0132" +
+      "\031._TpsWeapon.AffixMapEntry\032/\n\rAffixMapEn" +
+      "try\022\013\n\003key\030\001 \001(\r\022\r\n\005value\030\002 \001(\r:\0028\001B1\n\031e" +
+      "mu.grasscutter.net.protoB\024_TpsWeaponOute" +
+      "rClassb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -981,7 +981,7 @@ public final class _TpsWeaponOuterClass {
     internal_static__TpsWeapon_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static__TpsWeapon_descriptor,
-        new java.lang.String[] { "OMDPJNIPFDL", "AffixMap", });
+        new java.lang.String[] { "AccessoryIdList", "AffixMap", });
     internal_static__TpsWeapon_AffixMapEntry_descriptor =
       internal_static__TpsWeapon_descriptor.getNestedTypes().get(0);
     internal_static__TpsWeapon_AffixMapEntry_fieldAccessorTable = new

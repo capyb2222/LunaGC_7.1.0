@@ -27,6 +27,6 @@ message SceneTeamAvatar {
 	SceneAvatarInfo scene_avatar_info = 1;
 	uint32 scene_id = 6;
 	uint64 weapon_guid = 7;
-	repeated SceneWeaponInfo DGGJCMNHDOJ = 382;
+	repeated SceneWeaponInfo tps_weapon_list = 382;
 	bool is_on_scene = 50003;
 }

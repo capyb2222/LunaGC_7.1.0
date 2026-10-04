@@ -12,6 +12,7 @@ import emu.grasscutter.game.player.*;
 import emu.grasscutter.game.props.*;
 import emu.grasscutter.game.props.ItemUseAction.UseItemParams;
 import emu.grasscutter.game.quest.enums.QuestContent;
+import emu.grasscutter.game.tps.TpsWeaponSystem;
 import emu.grasscutter.net.proto.ItemParamOuterClass.ItemParam;
 import emu.grasscutter.server.event.player.PlayerObtainItemEvent;
 import emu.grasscutter.server.packet.send.*;
@@ -39,6 +40,8 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
                 ItemType.ITEM_MATERIAL, new MaterialInventoryTab(INVENTORY_LIMITS.materials));
         this.createInventoryTab(
                 ItemType.ITEM_FURNITURE, new MaterialInventoryTab(INVENTORY_LIMITS.furniture));
+        this.createInventoryTab(
+                ItemType.ITEM_TPS_WEAPON, new EquipInventoryTab(TpsWeaponSystem.getItemLimit()));
     }
 
     public AvatarStorage getAvatarStorage() {
@@ -281,6 +284,19 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
                 this.putItem(item, tab);
                 item.save();
                 return item;
+            case ITEM_TPS_WEAPON:
+                var ownedTpsWeapon = TpsWeaponSystem.findOwnedWeapon(this.player, item.getItemId());
+                if (ownedTpsWeapon != null) {
+                    return ownedTpsWeapon;
+                }
+                if (tab.getSize() >= tab.getMaxCapacity()) {
+                    return null;
+                }
+                item.setCount(1);
+                this.putItem(item, tab);
+                TpsWeaponSystem.refreshAccessories(this.player, item, false);
+                item.save();
+                return item;
             case ITEM_VIRTUAL:
                 this.addVirtualItem(item.getItemId(), item.getCount());
                 return item;
@@ -307,6 +323,7 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
                             }
                             this.putItem(item, tab);
                             item.save();
+                            TpsWeaponSystem.onMaterialChanged(this.player, item.getItemId());
                             return item;
                         } else {
                             existingItem.setCount(
@@ -525,6 +542,7 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
             }
             deleteItem(item, tab);
             getPlayer().sendPacket(new PacketStoreItemDelNotify(item));
+            TpsWeaponSystem.onItemRemoved(getPlayer(), item);
         } else {
             getPlayer().sendPacket(new PacketStoreItemChangeNotify(item));
         }
@@ -588,6 +606,13 @@ public class Inventory extends BasePlayerManager implements Iterable<GameItem> {
             }
 
             item.setItemData(itemData);
+
+            if (TpsWeaponSystem.isTpsWeapon(item)
+                    && TpsWeaponSystem.findOwnedWeapon(this.getPlayer(), item.getItemId()) != null) {
+                item.setCount(0);
+                item.save();
+                continue;
+            }
 
             InventoryTab tab = null;
             if (item.getItemData() != null) {

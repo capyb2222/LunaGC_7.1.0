@@ -153,6 +153,11 @@ public class AvatarStorage extends BasePlayerManager implements Iterable<Avatar>
                 continue;
             }
 
+            if (avatar.getTrialAvatarId() > 0) {
+                DatabaseHelper.deleteAvatar(avatar);
+                continue;
+            }
+
             AvatarData avatarData = GameData.getAvatarDataMap().get(avatar.getAvatarId());
             AvatarSkillDepotData skillDepot =
                     GameData.getAvatarSkillDepotDataMap().get(avatar.getSkillDepotId());

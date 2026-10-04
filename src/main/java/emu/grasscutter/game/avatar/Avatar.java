@@ -21,6 +21,7 @@ import emu.grasscutter.game.entity.*;
 import emu.grasscutter.game.inventory.*;
 import emu.grasscutter.game.player.Player;
 import emu.grasscutter.game.props.*;
+import emu.grasscutter.game.tps.TpsWeaponSystem;
 import emu.grasscutter.net.proto.AvatarFetterInfoOuterClass.AvatarFetterInfo;
 import emu.grasscutter.net.proto.AvatarInfoOuterClass.AvatarInfo;
 import emu.grasscutter.net.proto.AvatarSkillInfoOuterClass.AvatarSkillInfo;
@@ -64,6 +65,7 @@ public class Avatar {
     @Transient @Getter private Set<String> extraAbilityEmbryos;
 
     private List<Integer> fetters;
+    private List<Integer> tpsWeaponIds;
 
     private Map<Integer, Integer> skillLevelMap = new Int2IntArrayMap(7);
 
@@ -400,6 +402,13 @@ public class Avatar {
         } else return 0;
     }
 
+    public List<Integer> getTpsWeaponIds() {
+        if (this.tpsWeaponIds == null) {
+            this.tpsWeaponIds = new ArrayList<>();
+        }
+        return this.tpsWeaponIds;
+    }
+
     public boolean equipItem(GameItem item, boolean shouldRecalc) {
         EquipType itemEquipType = item.getItemData().getEquipType();
         if (itemEquipType == EquipType.EQUIP_NONE) {
@@ -610,6 +619,8 @@ public class Avatar {
                 }
             }
         }
+
+        TpsWeaponSystem.applyAffixes(this);
 
         var talentOwners = new HashSet<String>();
         AvatarSkillDepotData skillDepot =
@@ -945,6 +956,7 @@ public class Avatar {
     }
 
     public void save() {
+        if (this.trialAvatarId > 0) return;
         DatabaseHelper.saveAvatar(this);
     }
 
@@ -1007,6 +1019,7 @@ public class Avatar {
                                         skillId, AvatarSkillInfo.newBuilder().setMaxChargeCount(count).build()));
 
         this.getEquips().forEach((k, item) -> avatarInfo.addEquipGuidList(item.getGuid()));
+        avatarInfo.addAllTpsWeaponList(TpsWeaponSystem.getSceneWeaponInfos(this));
 
         avatarInfo.putPropMap(
                 PlayerProperty.PROP_LEVEL.getId(),

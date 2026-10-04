@@ -30,6 +30,7 @@ import emu.grasscutter.data.excels.reliquary.ReliquaryMainPropData;
 import emu.grasscutter.data.excels.reliquary.ReliquarySetData;
 import emu.grasscutter.data.excels.scene.*;
 import emu.grasscutter.data.excels.tower.TowerFloorData;
+import emu.grasscutter.data.excels.tps.*;
 import emu.grasscutter.data.excels.tower.TowerLevelData;
 import emu.grasscutter.data.excels.tower.TowerScheduleData;
 import emu.grasscutter.data.excels.trial.*;
@@ -326,6 +327,22 @@ public final class GameData {
             new Int2ObjectOpenHashMap<>();
 
     @Getter private static final Int2ObjectMap<ItemData> itemDataMap = new Int2ObjectOpenHashMap<>();
+
+    @Getter
+    private static final Int2ObjectMap<ConstValueData> constValueDataMap =
+            new Int2ObjectOpenHashMap<>();
+
+    @Getter
+    private static final Int2ObjectMap<TpsAmmunitionData> tpsAmmunitionDataMap =
+            new Int2ObjectOpenHashMap<>();
+
+    @Getter
+    private static final Int2ObjectMap<TpsWeaponAccessoryData> tpsWeaponAccessoryDataMap =
+            new Int2ObjectOpenHashMap<>();
+
+    @Getter
+    private static final Int2ObjectMap<TpsWeaponData> tpsWeaponDataMap =
+            new Int2ObjectOpenHashMap<>();
 
     @Getter
     private static final Int2ObjectMap<BattlePassRewardPlanData> battlePassRewardPlanDataMap =

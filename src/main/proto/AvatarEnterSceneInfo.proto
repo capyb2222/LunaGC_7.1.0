@@ -11,7 +11,7 @@ message AvatarEnterSceneInfo {
 	uint64 weapon_guid = 4;
 	repeated ServerBuff server_buff_list = 6;
 	repeated uint32 buff_id_list = 14;
-	repeated SceneWeaponInfo DGGJCMNHDOJ = 13;
+	repeated SceneWeaponInfo tps_weapon_list = 13;
 	uint32 weapon_entity_id = 2;
 	uint32 avatar_entity_id = 9;
 	AbilitySyncStateInfo avatar_ability_info = 50000;

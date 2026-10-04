@@ -86,7 +86,7 @@ public final class GameServerPacketHandler {
                         return;
                     }
                 } else if (opcode == PacketOpcodes.SetPlayerBornDataReq) {
-                    if (state != SessionState.PICKING_CHARACTER) {
+                    if (state != SessionState.PICKING_CHARACTER && state != SessionState.ACTIVE) {
                         return;
                     }
                 } else {

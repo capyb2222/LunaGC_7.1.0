@@ -43,7 +43,7 @@ public class HandlerSetPlayerBornDataReq extends PacketHandler {
         if (player.getAvatars().getAvatarCount() == 0) {
             Avatar mainCharacter = new Avatar(avatarId);
 
-            if (!GAME_OPTIONS.questing.enabled) {
+            if (!GAME_OPTIONS.questing.enabled && !emu.grasscutter.game.quest.PrologueIntro.isEnabled()) {
                 mainCharacter.setSkillDepotData(
                         GameData.getAvatarSkillDepotDataMap().get(startingSkillDepot));
             }
@@ -56,19 +56,20 @@ public class HandlerSetPlayerBornDataReq extends PacketHandler {
                     .getCurrentSinglePlayerTeamInfo()
                     .getAvatars()
                     .add(mainCharacter.getAvatarId());
+            emu.grasscutter.game.quest.PrologueIntro.markNewAccount(player);
             player.save();
         } else {
+            Grasscutter.getLogger()
+                    .info("[intro] Confirm pressed again by {}; repeating the reply.", player.getUid());
+            sendRsp(session);
             return;
         }
 
         session.getPlayer().onLogin();
 
-        int rspCmdId = GAME_OPTIONS.newAccountIntro.setPlayerBornDataRsp;
         Grasscutter.getLogger()
-                .info("[intro] character creation finished: {} picked avatar {} (rsp cmdId={}).",
-                        req.getNickName(), avatarId, rspCmdId > 0 ? rspCmdId : "unsent");
-        if (rspCmdId > 0) session.send(new BasePacket(rspCmdId));
-        else session.send(new BasePacket(PacketOpcodes.SetPlayerBornDataRsp));
+                .info("[intro] character creation finished: {} picked avatar {}.", req.getNickName(), avatarId);
+        sendRsp(session);
 
         var welcomeMail = GAME_INFO.joinOptions.welcomeMail;
         MailBuilder mailBuilder = new MailBuilder(player.getUid(), new Mail());
@@ -80,5 +81,11 @@ public class HandlerSetPlayerBornDataReq extends PacketHandler {
         mailBuilder.mail.itemList.addAll(Arrays.asList(welcomeMail.items));
         mailBuilder.mail.importance = 1;
         player.sendMail(mailBuilder.mail);
+    }
+
+    private static void sendRsp(GameSession session) {
+        int rspCmdId = GAME_OPTIONS.newAccountIntro.setPlayerBornDataRsp;
+        if (rspCmdId <= 0) rspCmdId = PacketOpcodes.SetPlayerBornDataRsp;
+        if (rspCmdId > 0) session.send(new BasePacket(rspCmdId));
     }
 }

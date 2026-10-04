@@ -381,6 +381,18 @@ public final class QuestManager extends BasePlayerManager {
         return quest;
     }
 
+    public GameQuest addQuestSilently(int questId) {
+        var questConfig = GameData.getQuestDataMap().get(questId);
+        if (questConfig == null) return null;
+
+        var mainQuest = this.getMainQuestById(questConfig.getMainId());
+        if (mainQuest == null) {
+            mainQuest = new GameMainQuest(this.getPlayer(), questConfig.getMainId());
+            this.getMainQuests().put(mainQuest.getParentQuestId(), mainQuest);
+        }
+        return mainQuest.getChildQuestById(questConfig.getSubId());
+    }
+
     public void startMainQuest(int mainQuestId) {
         var mainQuestData = GameData.getMainQuestDataMap().get(mainQuestId);
 
@@ -423,6 +435,9 @@ public final class QuestManager extends BasePlayerManager {
         potentialQuests.forEach(
                 questData -> {
                     if (this.wasSubQuestStarted(questData)) {
+                        return;
+                    }
+                    if (!PrologueIntro.allowAccept(owner, questData)) {
                         return;
                     }
                     val acceptCond = questData.getAcceptCond();

@@ -17,7 +17,9 @@ public class PacketFinishedParentQuestNotify extends BasePacket {
 
         for (GameMainQuest mainQuest : player.getQuestManager().getMainQuests().values()) {
             if (mainQuest.getState() == ParentQuestState.PARENT_QUEST_STATE_CANCELED) continue;
-            if (!questingEnabled && mainQuest.getState() != ParentQuestState.PARENT_QUEST_STATE_FINISHED)
+            if (!questingEnabled
+                    && mainQuest.getState() != ParentQuestState.PARENT_QUEST_STATE_FINISHED
+                    && !emu.grasscutter.game.quest.PrologueIntro.isVisible(player, mainQuest))
                 continue;
             proto.addParentQuestList(mainQuest.toProto(false));
         }

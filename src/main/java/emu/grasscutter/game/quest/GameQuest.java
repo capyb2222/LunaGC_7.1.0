@@ -256,6 +256,8 @@ public class GameQuest {
 
         this.save();
         Grasscutter.getLogger().debug("Quest {} was completed.", subQuestId);
+
+        PrologueIntro.onQuestFinished(this);
     }
 
     public void fail() {

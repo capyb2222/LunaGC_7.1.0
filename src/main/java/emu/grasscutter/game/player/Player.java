@@ -135,6 +135,7 @@ public class Player implements PlayerHook, FieldFetch {
     @Getter private Set<Integer> forcedFinishedQuests;
 
     @Getter @Setter private boolean playedFirstLoginCutscene;
+    @Getter @Setter private int prologueIntroStage;
 
     @Transient private long nextGuid = 0;
     @Transient @Getter @Setter private int peerId;
@@ -1431,6 +1432,8 @@ public class Player implements PlayerHook, FieldFetch {
         session.send(new PacketAvatarDataNotify(this));
 
         this.getProgressManager().onPlayerLogin();
+
+        emu.grasscutter.game.quest.PrologueIntro.onLogin(this);
 
         session.send(new PacketFinishedParentQuestNotify(this));
         if (emu.grasscutter.config.Configuration.GAME_OPTIONS.forceFinishMainQuestsOnLogin) {

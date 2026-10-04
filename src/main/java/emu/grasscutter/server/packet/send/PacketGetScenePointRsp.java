@@ -15,7 +15,10 @@ public class PacketGetScenePointRsp extends BasePacket {
         GetScenePointRsp.Builder p = GetScenePointRsp.newBuilder().setSceneId(sceneId);
 
         var unlockedPoints = player.getUnlockedScenePoints(sceneId);
-        if (GameData.getScenePointIdList().size() == 0 || unlockedPoints.isEmpty()) {
+        boolean intro =
+                emu.grasscutter.game.quest.PrologueIntro.isActive(player)
+                        || (sceneId == 3 && emu.grasscutter.game.quest.PrologueIntro.wentThrough(player));
+        if (!intro && (GameData.getScenePointIdList().size() == 0 || unlockedPoints.isEmpty())) {
             for (int i = 1; i < 1000; i++) {
                 p.addUnlockedPointList(i);
                 p.addUnhidePointList(i);
@@ -32,7 +35,7 @@ public class PacketGetScenePointRsp extends BasePacket {
 
     private static Collection<Integer> areas(Player player, int sceneId) {
         var unlocked = player.getUnlockedSceneAreas(sceneId);
-        if (!unlocked.isEmpty()) return unlocked;
+        if (!unlocked.isEmpty() || emu.grasscutter.game.quest.PrologueIntro.isActive(player)) return unlocked;
         var all = new TreeSet<Integer>();
         for (var area : GameData.getWorldAreaDataMap().values()) {
             if (area.getSceneId() == sceneId && area.getChildArea() == 0) all.add(area.getParentArea());

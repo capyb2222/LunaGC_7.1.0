@@ -13,7 +13,11 @@ public class HandlerAddQuestContentProgressReq extends PacketHandler {
         var req = AddQuestContentProgressReq.parseFrom(payload);
 
         var type = QuestContent.getContentTriggerByValue(req.getContentType());
-        if (type != null) {
+        boolean handled =
+                type == QuestContent.QUEST_CONTENT_FINISH_PLOT
+                        && emu.grasscutter.game.quest.PrologueIntro.onClientPlotFinished(
+                                session.getPlayer(), req.getParam());
+        if (type != null && !handled) {
             session.getPlayer().getQuestManager().queueEvent(type, req.getParam());
         }
 

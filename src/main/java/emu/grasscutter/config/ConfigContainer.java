@@ -246,6 +246,7 @@ public class ConfigContainer {
             public int setPlayerBornDataRsp = 0;
 
             public int fallbackSeconds = 15;
+            public boolean meetPaimon = true;
         }
 
         @SerializedName(value = "questing", alternate = "questOptions")

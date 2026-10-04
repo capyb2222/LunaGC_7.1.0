@@ -20,7 +20,9 @@ public class PacketQuestListNotify extends BasePacket {
                         quest -> {
                             var state = quest.getState();
                             if (state == QuestState.QUEST_STATE_UNSTARTED) return;
-                            if (!questingEnabled && state != QuestState.QUEST_STATE_FINISHED) return;
+                            if (!questingEnabled
+                                    && state != QuestState.QUEST_STATE_FINISHED
+                                    && !emu.grasscutter.game.quest.PrologueIntro.isVisible(player, quest)) return;
                             proto.addQuestList(quest.toProto());
                         });
 

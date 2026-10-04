@@ -27,15 +27,18 @@ public class HandlerPlayerLoginReq extends PacketHandler {
         if (player.getAvatars().getAvatarCount() == 0 && intro.enabled) {
             session.setState(SessionState.PICKING_CHARACTER);
 
-            if (intro.doSetPlayerBornDataNotify > 0) {
-                session.send(new BasePacket(intro.doSetPlayerBornDataNotify));
+            int notifyCmdId = intro.doSetPlayerBornDataNotify > 0
+                    ? intro.doSetPlayerBornDataNotify
+                    : PacketOpcodes.DoSetPlayerBornDataNotify;
+            if (notifyCmdId > 0) {
+                session.send(new BasePacket(notifyCmdId));
             }
             Grasscutter.getLogger()
                     .info("[intro] new account, waiting for character creation (notify cmdId={}).",
-                            intro.doSetPlayerBornDataNotify > 0 ? intro.doSetPlayerBornDataNotify : "unsent");
+                            notifyCmdId > 0 ? notifyCmdId : "unsent");
 
             session.send(new PacketPlayerLoginRsp(session));
-            this.scheduleFallback(session, player);
+            if (notifyCmdId <= 0) this.scheduleFallback(session, player);
             return;
         }
 
@@ -71,7 +74,7 @@ public class HandlerPlayerLoginReq extends PacketHandler {
         int avatarId = 10000007;
         Avatar mainCharacter = new Avatar(avatarId);
 
-        if (!GAME_OPTIONS.questing.enabled) {
+        if (!GAME_OPTIONS.questing.enabled && !emu.grasscutter.game.quest.PrologueIntro.isEnabled()) {
             mainCharacter.setSkillDepotData(GameData.getAvatarSkillDepotDataMap().get(704));
         }
 
@@ -79,6 +82,7 @@ public class HandlerPlayerLoginReq extends PacketHandler {
         player.setMainCharacterId(avatarId);
         player.setHeadImage(avatarId);
         player.getTeamManager().getCurrentSinglePlayerTeamInfo().getAvatars().add(avatarId);
+        emu.grasscutter.game.quest.PrologueIntro.markNewAccount(player);
         player.save();
     }
 }

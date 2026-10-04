@@ -25,7 +25,9 @@ public class HandlerSceneInitFinishReq extends PacketHandler {
         session.send(new PacketWorldPlayerInfoNotify(world));
         session.send(new PacketWorldDataNotify(world));
         session.send(new PacketPlayerWorldSceneInfoListNotify(player));
-        session.send(new PacketSceneForceUnlockNotify(1, true));
+        if (!emu.grasscutter.game.quest.PrologueIntro.isActive(player)) {
+            session.send(new PacketSceneForceUnlockNotify(1, true));
+        }
         session.send(new PacketHostPlayerNotify(world));
         session.send(new PacketSceneDataNotify(player.getSceneId()));
 

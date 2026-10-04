@@ -185,6 +185,15 @@ public class GameMainQuest {
             }
         }
     }
+
+    public void finishWithoutRewards() {
+        synchronized (this) {
+            this.isFinished = true;
+            this.state = ParentQuestState.PARENT_QUEST_STATE_FINISHED;
+        }
+        this.save();
+    }
+
     public void fail() {}
 
     public void cancel() {}

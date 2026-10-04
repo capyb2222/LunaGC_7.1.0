@@ -8,6 +8,7 @@ import emu.grasscutter.data.binout.ScenePointEntry;
 import emu.grasscutter.data.excels.OpenStateData;
 import emu.grasscutter.data.excels.OpenStateData.OpenStateCondType;
 import emu.grasscutter.game.props.ActionReason;
+import emu.grasscutter.game.quest.PrologueIntro;
 import emu.grasscutter.game.quest.enums.*;
 import emu.grasscutter.net.proto.RetcodeOuterClass.Retcode;
 import emu.grasscutter.scripts.data.ScriptArgs;
@@ -62,8 +63,8 @@ public final class PlayerProgressManager extends BasePlayerDataManager {
 
         this.addStatueQuestsOnLogin();
 
-        if (!GAME_OPTIONS.questing.enabled) {
-            this.player.getUnlockedScenePoints(3).add(7);
+        if (!GAME_OPTIONS.questing.enabled && !PrologueIntro.isActive(this.player)) {
+            if (!PrologueIntro.wentThrough(this.player)) this.player.getUnlockedScenePoints(3).add(7);
             this.player.getUnlockedSceneAreas(3).add(1);
         }
     }
@@ -101,7 +102,7 @@ public final class PlayerProgressManager extends BasePlayerDataManager {
                     }
                 }
                 case OPEN_STATE_COND_QUEST -> {
-                    if (GAME_OPTIONS.questing.enabled) {
+                    if (this.questsGateFeatures()) {
                         var quest = this.player.getQuestManager().getQuestById(condition.getParam());
                         if (quest == null || quest.getState() != QuestState.QUEST_STATE_FINISHED) {
                             return false;
@@ -109,7 +110,7 @@ public final class PlayerProgressManager extends BasePlayerDataManager {
                     }
                 }
                 case OPEN_STATE_COND_PARENT_QUEST -> {
-                    if (GAME_OPTIONS.questing.enabled) {
+                    if (this.questsGateFeatures()) {
                         var mainQuest = this.player.getQuestManager().getMainQuestById(condition.getParam());
                         if (mainQuest == null
                                 || mainQuest.getState() != ParentQuestState.PARENT_QUEST_STATE_FINISHED) {
@@ -122,6 +123,10 @@ public final class PlayerProgressManager extends BasePlayerDataManager {
         }
 
         return true;
+    }
+
+    private boolean questsGateFeatures() {
+        return GAME_OPTIONS.questing.enabled || PrologueIntro.isActive(this.player);
     }
 
     public void setOpenStateFromClient(int openState, int value) {
@@ -156,6 +161,14 @@ public final class PlayerProgressManager extends BasePlayerDataManager {
                     && !BLACKLIST_OPEN_STATES.contains(state.getId())
                     && !IGNORED_OPEN_STATES.contains(state.getId())) {
                 this.setOpenState(state.getId(), 1, sendNotify);
+            }
+        }
+    }
+
+    public void markClientOpenStatesSeen() {
+        for (var state : GameData.getOpenStateList()) {
+            if (state.isAllowClientOpen() && this.getOpenState(state.getId()) == 0) {
+                this.setOpenState(state.getId(), 1, false);
             }
         }
     }

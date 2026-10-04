@@ -542,7 +542,7 @@ public final class PacketOpcodes {
     public static final int AvatarUpgradeRsp = 9873;
     public static final int QueryPathReq = 2328;
     public static final int QueryPathRsp = 2343;
-    public static final int UnlockTransPointReq = -119;
+    public static final int UnlockTransPointReq = 9369;
     public static final int UnlockTransPointRsp = -120;
     public static final int PlayerEnterChildMapLayerNotify = -121;
     public static final int PlayerEnterMapLayerNotify = -122;

@@ -4,6 +4,6 @@ option java_package = "emu.grasscutter.net.proto";
 option java_outer_classname = "UnlockTransPointReqOuterClass";
 
 message UnlockTransPointReq {
-	uint32 point_id = 12;
-	uint32 scene_id = 14;
+	uint32 point_id = 1;
+	uint32 scene_id = 12;
 }

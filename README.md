@@ -36,7 +36,7 @@ Contribute if you want/can...
 - Install [**Rust**](https://rust-lang.org/learn/get-started/) and **Cargo** (comes with rustup)
 - Go to the `patch/` folder (make sure you have cloned this repository with the `--recurse-submodules` flag). If that folder is empty, run `git submodule update --init` or clone [animegamepatch](https://github.com/capyb2222/animegamepatch) yourself
 - Run `cargo build --release` to build the DLL `ext.dll` at `target/release`
-- Inject the DLL into the game. You can do this by renaming the patch to `Astrolabe.dll` and putting it in the game folder at `GenshinImpact_Data/Plugins`. Make sure you back up the old `Astrolabe.dll` in the plugins folder.
+- Inject the DLL into the game. You can do this by renaming the patch to `Astrolabe.dll` and putting it in the game folder, next to `GenshinImpact.exe`.
 
 ### Getting started
 

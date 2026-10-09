@@ -1,5 +1,6 @@
 package emu.grasscutter.game.world;
 
+import emu.grasscutter.game.combat.DamageLog;
 import static emu.grasscutter.server.event.player.PlayerTeleportEvent.TeleportType.SCRIPT;
 
 import emu.grasscutter.GameConstants;
@@ -48,6 +49,7 @@ public class World implements Iterable<Player> {
     @Getter private Player host;
     @Getter private final List<Player> players;
     @Getter private final Int2ObjectMap<Scene> scenes;
+    @Getter private final DamageLog damageLog = new DamageLog();
 
     @Getter private EntityWorld entity;
     private int nextEntityId = 0;

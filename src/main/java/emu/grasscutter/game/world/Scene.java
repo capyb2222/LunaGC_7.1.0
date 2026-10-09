@@ -1193,6 +1193,7 @@ public class Scene {
         var owner = gadget.getOwner();
 
         this.addEntityDirectly(gadget);
+        this.getWorld().getDamageLog().trackGadget(gadget);
         owner.getTeamManager().getGadgets().add(gadget);
 
         for (var player : this.getPlayers()) {

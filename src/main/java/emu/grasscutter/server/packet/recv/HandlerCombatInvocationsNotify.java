@@ -1,6 +1,7 @@
 package emu.grasscutter.server.packet.recv;
 
 import emu.grasscutter.Grasscutter;
+import emu.grasscutter.game.entity.EntityAvatar;
 import emu.grasscutter.game.entity.GameEntity;
 import emu.grasscutter.game.player.Player;
 import emu.grasscutter.game.props.FightProperty;
@@ -35,7 +36,9 @@ public class HandlerCombatInvocationsNotify extends PacketHandler {
 
                     if (attackResult.getAttackerId()
                                     != player.getTeamManager().getCurrentAvatarEntity().getId()
-                            && player.getAbilityManager().isAbilityInvulnerable()) break;
+                            && player.getAbilityManager().isAbilityInvulnerable()
+                            && player.getScene().getEntityById(attackResult.getDefenseId())
+                                    instanceof EntityAvatar) break;
 
 
                     player.getAttackResults().add(attackResult);

@@ -122,6 +122,7 @@ public final class Grasscutter {
             httpServer.addRouter(AnnouncementsHandler.class);
             httpServer.addRouter(AuthenticationHandler.class);
             httpServer.addRouter(GachaHandler.class);
+            httpServer.addRouter(DamageLogHandler.class);
             httpServer.addRouter(DocumentationServerHandler.class);
             httpServer.addRouter(HandbookHandler.class);
         }

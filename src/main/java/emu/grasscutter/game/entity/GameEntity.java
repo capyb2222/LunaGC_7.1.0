@@ -370,6 +370,18 @@ public abstract class GameEntity {
             return;
         }
 
+        if (killerId != 0) {
+            this.getScene()
+                    .getWorld()
+                    .getDamageLog()
+                    .record(
+                            killerId,
+                            event.getDamager(),
+                            this,
+                            event.getDamage(),
+                            attackType == null ? 0 : attackType.getValue());
+        }
+
         float effectiveDamage = 0;
         float curHp = getFightProperty(FightProperty.FIGHT_PROP_CUR_HP);
         if (limbo) {
